@@ -1,24 +1,52 @@
-# README
+■ER図
+[![Image from Gyazo](https://i.gyazo.com/fbafc7651d654787c11b9121b6ab9dc3.png)](https://gyazo.com/fbafc7651d654787c11b9121b6ab9dc3)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+■サービス概要
+一日に一回だけ投稿できる。
+投稿できるのは17音の俳句または川柳のみ。
+テーマとなる画像も一緒に投稿できる。
 
-Things you may want to cover:
+■ このサービスへの思い・作りたい理由
+プレバトというテレビ番組が好き。
+俳句は誰でも簡単に作ることができるし、川柳は季語が必要なくさらに自由に作れる。
+日本語の難しさや面白さを伝えることができる。
 
-* Ruby version
+■ ユーザー層について
+日本語ができる人。
 
-* System dependencies
+■サービスの利用イメージ
+画像と句を投稿できるようにし、ほかのユーザーが投稿した画像でまた違う句を詠むことができる。
 
-* Configuration
+■ ユーザーの獲得について
+投稿した画像でほかのユーザーがどのような句を詠むのかがわかり、視点が広がる。
 
-* Database creation
+■ サービスの差別化ポイント・推しポイント
+投稿できるのは17音前後のみに限定し感想も17音にすれば面白いと思う。
+投稿された句はあえて編集できないようにする。
 
-* Database initialization
+■ 機能候補
+MVPリリース時
+ユーザー登録機能
+ログイン機能・認証機能
+句の投稿機能
+画像の投稿機能
+句の削除
 
-* How to run the test suite
+本リリース時
+投稿数の制限
+投稿された句に対してのコメント替わりの句を投稿できる（これは1日の制限に含めない）。
+投稿された画像に対しての句を投稿できる（こちらは1日の制限に含める）。
+俳句と川柳のカテゴリ分けをタグで行う。
+いいね機能を追加。
+通知機能としてWebSocket通信・ActionCable（コメントが投稿されたときや、投稿した画像で違う句が読まれたとき）。
+投稿された画像サイズを統一するためにMiniMagickを導入。
 
-* Services (job queues, cache servers, search engines, etc.)
+■ 機能の実装方針予定
+現時点では考えていないがGPSを使用して投稿を行った場所を任意で表示させてもいいかもしれない。
+ユーザー同士のフォローなどは実装せずあくまで句を中心としたものにしたい。（ある程度の評価が集まれば投稿したユーザーがわかるなど）。
+歳時記を利用し俳句と川柳を自動で振り分けれるといいかもしれない。
+投稿した句を編集できないようにするが、番組での添削のようなことをできるようにしたい。
 
-* Deployment instructions
-
-* ...
+Ruby: 3.2.2
+Rails: 7.0.8
+PostgreSQL: 14.10
