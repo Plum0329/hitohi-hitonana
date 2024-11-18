@@ -1,0 +1,20 @@
+databases:
+  - name: graduation_project_db
+    databaseName: graduation_project_production
+    user: graduation_project
+    region: singapore
+
+services:
+  - type: web
+    name: graduation_project
+    env: ruby
+    region: singapore
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: graduation_project_db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
