@@ -1,2 +1,21 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div class="container">
+  <h1 class="text-center title">俳句・川柳 SNS</h1>
+  <h2 class="text-center subtitle">一日一句、想いを詠む</h2>
+
+  <div class="text-center">
+    <p>毎日一つだけ、あなたの感じた季節や心情を17音に込めて。</p>
+    <p>写真とともに俳句・川柳を投稿できます。</p>
+  </div>
+
+  <% unless logged_in? %>
+    <div class="text-center">
+      <%= link_to '新規登録', signup_path, class: 'button button-primary' %>
+      <%= link_to 'ログイン', login_path, class: 'button button-secondary' %>
+    </div>
+  <% else %>
+    <div class="text-center">
+      <%= link_to '句を詠む', '#', class: 'button button-success' %>
+      <p class="small-text">※一日一回だけ投稿できます</p>
+    </div>
+  <% end %>
+</div>
