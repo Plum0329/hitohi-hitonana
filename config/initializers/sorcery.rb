@@ -242,6 +242,9 @@ Rails.application.config.sorcery.configure do |config|
   # config.battlenet.callback_url = "http://localhost:3000/oauth/callback?provider=battlenet"
   # config.battlenet.scope = "openid"
   # --- user config ---
+  config.session_timeout = 3600  # 1時間
+  config.session_timeout_from_last_action = true
+
   config.user_config do |user|
     # -- core --
     # Specify username attributes, for example: [:username, :email].
