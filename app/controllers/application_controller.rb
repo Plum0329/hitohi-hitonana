@@ -1,11 +1,18 @@
 class ApplicationController < ActionController::Base
-before_action :require_login
-
+  include UserSessionsHelper
+  before_action :require_login
+  
   private
 
   def not_authenticated
+    flash[:alert] = 'ログインしてください'
+    redirect_to login_path
+  end
+
+  def require_login
     unless logged_in?
-      redirect_to login_path, alert: 'ログインしてください'
+      flash[:alert] = "ログインしてください"
+      redirect_to login_path
     end
   end
 end

@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">新しい句を詠む</h1>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">投稿のルール</h2>
+          <ul class="list-unstyled">
+            <li>・ひらがな・カタカナのみ使用できます</li>
+            <li>・17音前後で入力してください</li>
+            <li>・句読点（、。）や空白は使用できます</li>
+          </ul>
+        </div>
+      </div>
+
+      <%= form_with(model: @post, local: true) do |f| %>
+        <div class="mb-3">
+          <%= f.text_area :content, 
+              class: "form-control #{'is-invalid' if flash[:alert]}", 
+              rows: 3,
+              placeholder: "ひらがな・カタカナで入力してください" %>
+          
+          <% if flash[:alert] %>
+            <div class="invalid-feedback">
+              <%= flash[:alert] %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="text-center">
+          <%= f.submit "投稿する", class: 'button button-primary me-2' %>
+          <%= link_to "戻る", posts_path, class: 'button' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

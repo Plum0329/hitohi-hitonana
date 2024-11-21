@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">句一覧</h1>
+      <% @posts.each do |post| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text"><%= post.content %></p>
+            <small class="text-muted"><%= l post.created_at, format: :long %></small>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

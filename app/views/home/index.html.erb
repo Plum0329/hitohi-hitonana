@@ -7,15 +7,21 @@
     <p>写真とともに俳句・川柳を投稿できます。</p>
   </div>
 
-  <% unless logged_in? %>
-    <div class="text-center">
-      <%= link_to '新規登録', signup_path, class: 'button button-primary' %>
-      <%= link_to 'ログイン', login_path, class: 'button button-secondary' %>
-    </div>
-  <% else %>
-    <div class="text-center">
-      <%= link_to '句を詠む', '#', class: 'button button-success' %>
-      <p class="small-text">※一日一回だけ投稿できます</p>
-    </div>
-  <% end %>
+  <div class="text-center action-buttons">
+    <% unless logged_in? %>
+      <div class="mb-4">
+        <%= link_to '新規登録', signup_path, class: 'button button-primary' %>
+        <%= link_to 'ログイン', login_path, class: 'button button-secondary' %>
+      </div>
+      <p class="text-gray-600">ログインすると、みんなの句を見ることができます</p>
+    <% else %>
+      <div class="space-y-4">
+        <%= link_to '句一覧を見る', posts_path, class: 'button button-info' %>
+        <div>
+          <%= link_to '句を詠む', new_post_path, class: 'button button-success' %>
+          <p class="small-text">※一日一回だけ投稿できます</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

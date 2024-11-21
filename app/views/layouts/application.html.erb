@@ -11,10 +11,29 @@
   </head>
 
   <body>
-    <header>
-      <% if logged_in? %>
-        <%= link_to 'ログアウト', logout_path %>
-      <% end %>
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <%= link_to 'ホーム', root_path, class: 'button' %>
+          <% if logged_in? %>
+            <%= link_to '句一覧', posts_path, class: 'button' %>
+          <% end %>
+        </div>
+
+        <div class="header-right">
+          <% if logged_in? %>
+            <%= link_to '句を詠む', new_post_path, class: 'button button-success' %>
+            <%= button_to 'ログアウト', 
+                logout_path, 
+                method: :delete,
+                class: 'button',
+                data: { turbo: true } %>
+          <% else %>
+            <%= link_to 'ログイン', login_path, class: 'button' %>
+            <%= link_to '新規登録', signup_path, class: 'button' %>
+          <% end %>
+        </div>
+      </div>
     </header>
 
     <% flash.each do |key, value| %>
