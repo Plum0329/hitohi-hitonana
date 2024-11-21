@@ -2,7 +2,6 @@ class UserSessionsController < ApplicationController
   skip_before_action :require_login, only: [:new, :create]
 
   def new
-    @user = User.new
   end
 
   def create
@@ -17,11 +16,5 @@ class UserSessionsController < ApplicationController
   def destroy
     logout
     redirect_to root_path, notice: 'ログアウトしました'
-  end
-
-  private
-
-  def login_params
-    params.permit(:email, :password)
   end
 end
