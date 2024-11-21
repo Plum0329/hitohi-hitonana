@@ -1,28 +1,78 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
 
-.flash-messages {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+// 基本レイアウト
+.header {
+  background-color: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 1rem;
+  margin-bottom: 2rem;
 }
 
+.header-content {
+  max-width: 800px;  // コンテンツ幅を統一
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// ナビゲーション
+.header-left, .header-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+// ボタン
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 4px;
+  border: none;
+  background: none;  // 追加
+  font: inherit;     // 追加
+  cursor: pointer;   // 追加
+  margin: 0;         // 追加
+  
+  &-success { 
+    background-color: #28a745; 
+    color: white; 
+  }
+  &-primary { 
+    background-color: #007bff; 
+    color: white; 
+  }
+  &-danger {  // 追加
+    background-color: #dc3545; 
+    color: white; 
+  }
+}
+
+// アラート
 .alert {
-  margin: 0;
   text-align: center;
-  padding: 10px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  
+  &-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  &-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
 }
 
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+// モバイル対応（必要最小限）
+@media (max-width: 640px) {
+  .header-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
