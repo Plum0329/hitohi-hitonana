@@ -47,7 +47,7 @@ class Post < ApplicationRecord
     return if content.blank?
     
     unless content.match?(/\A[ぁ-んァ-ン゛゜ー・、。　\s]*\z/)
-      errors.add(:base, "ひらがな・カタカナのみ使用できます")
+      errors.add(:base, :kana_only)
       return
     end
   end
@@ -58,9 +58,9 @@ class Post < ApplicationRecord
     
     syllable_count = count_syllables(content)
     if syllable_count == 0
-      errors.add(:base, "句を入力してください")
+      errors.add(:base, :syllable_blank)
     elsif syllable_count > 20
-      errors.add(:base, "20音以下で入力してください（現在: #{syllable_count}音）")
+      errors.add(:base, :syllable_count, count: 20, current: syllable_count)
     end
   end
 end
