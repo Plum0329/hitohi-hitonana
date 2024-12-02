@@ -4,7 +4,7 @@ class PostsController < ApplicationController
   before_action :ensure_correct_user, only: [:destroy]
 
   def index
-    @posts = Post.order(created_at: :desc)
+    @posts = Post.includes(:user, :tags).order(created_at: :desc)
   end
 
   def show
@@ -12,11 +12,16 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
+    @tags = Tag.all
   end
 
   def create
     @post = current_user.posts.build(post_params)
+    @tags = Tag.all
     @current_count = @post.count_syllables(post_params[:content])
+
+    tag = Tag.find_by(id: params[:post][:tag_id])
+    @post.tags << tag if tag
 
     if @post.save
       redirect_to posts_path, notice: '句を投稿しました'

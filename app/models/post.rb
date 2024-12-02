@@ -1,9 +1,12 @@
 class Post < ApplicationRecord
   belongs_to :user
+  has_many :post_tags, dependent: :destroy
+  has_many :tags, through: :post_tags
 
   validates :content, presence: true
   validate :kana_only_validation
   validate :syllable_count_validation
+  validate :tag_presence_validation
 
   # privateからpublicに移動
   def count_syllables(text)
@@ -61,6 +64,14 @@ class Post < ApplicationRecord
       errors.add(:base, :syllable_blank)
     elsif syllable_count > 20
       errors.add(:base, :syllable_count, count: 20, current: syllable_count)
+    end
+  end
+
+  def tag_presence_validation
+    if tags.empty?
+      errors.add(:base, :tag_required)
+    elsif tags.count > 1
+      errors.add(:base, :one_tag_only)
     end
   end
 end
