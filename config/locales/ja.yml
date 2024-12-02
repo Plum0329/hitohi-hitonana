@@ -3,6 +3,7 @@ ja:
     models:
       user: 'ユーザー'
       post: '句'
+      tag: 'タグ'
     attributes:
       user:
         name: '名前'
@@ -12,6 +13,8 @@ ja:
       post:
         content: '内容'
         base: '' # baseエラーメッセージ用
+      tag:
+        name: 'タグ名'
     errors:
       models:
         user:
@@ -35,6 +38,8 @@ ja:
               kana_only: 'ひらがな・カタカナのみ使用できます'
               syllable_blank: '句を入力してください'
               syllable_count: '%{count}音以下で入力してください（現在: %{current}音）'
+              tag_required: '俳句か川柳を選択してください'
+              one_tag_only: '俳句か川柳のどちらか1つのみ選択できます'
 
   time:
     formats:
