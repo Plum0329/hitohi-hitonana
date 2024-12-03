@@ -22,6 +22,11 @@
 
         <div class="header-right">
           <% if logged_in? %>
+            <div class="mr-4">
+              <%= link_to profile_path, class: 'text-gray-700 hover:text-gray-900' do %>
+                <span class="font-medium"><%= current_user.name %></span>
+              <% end %>
+            </div>
             <%= link_to '句を詠む', new_post_path, class: 'button button-success' %>
             <%= button_to 'ログアウト', 
                 logout_path, 
