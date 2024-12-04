@@ -1,15 +1,27 @@
 class UserSessionsController < ApplicationController
   skip_before_action :require_login, only: [:new, :create]
 
-  def new
-  end
+  def new; end
 
   def create
-    if @user = login(params[:email], params[:password])
-      redirect_back_or_to root_path, notice: 'ログインしました'
+    # emailでユーザーを検索
+    user = User.find_by(email: params[:email])
+    
+    # ユーザーが見つかり、かつ退会済みの場合
+    if user&.deleted?
+      flash.now[:alert] = 'このアカウントは削除されています'
+      render :new, status: :unauthorized
+      return
+    end
+
+    # 通常のログイン処理
+    @user = login(params[:email], params[:password])
+
+    if @user
+      redirect_back_or_to posts_path, notice: 'ログインしました'
     else
       flash.now[:alert] = 'ログインに失敗しました'
-      render :new, status: :unprocessable_entity
+      render :new, status: :unauthorized
     end
   end
 
