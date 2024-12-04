@@ -35,6 +35,16 @@
           </div>
         <% end %>
       <% end %>
+
+      <div class="card mt-4">
+        <div class="card-body text-center">
+          <%= button_to '退会する', 
+              deactivate_registration_path,
+              method: :delete,
+              class: 'button button-danger',
+              data: { turbo_confirm: '本当に退会してもよろしいですか？' } %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include UserSessionsHelper
   before_action :require_login
-  
+
   private
 
   def not_authenticated

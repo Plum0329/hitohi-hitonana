@@ -7,4 +7,12 @@ class User < ApplicationRecord
   validates :password_confirmation, presence: true, if: -> { new_record? || changes[:crypted_password] }
   validates :email, uniqueness: true, presence: true
   validates :name, presence: true
+
+  def soft_delete
+    update(deleted_at: Time.current)
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
 end
