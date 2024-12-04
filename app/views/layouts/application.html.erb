@@ -28,11 +28,6 @@
               <% end %>
             </div>
             <%= link_to '句を詠む', new_post_path, class: 'button button-success' %>
-            <%= button_to 'ログアウト', 
-                logout_path, 
-                method: :delete,
-                class: 'button',
-                data: { turbo: true } %>
           <% else %>
             <%= link_to 'ログイン', login_path, class: 'button' %>
             <%= link_to '新規登録', signup_path, class: 'button' %>
