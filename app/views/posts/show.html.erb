@@ -3,7 +3,8 @@
     <div class="col-md-8">
       <div class="card mb-3">
         <div class="card-body">
-          <p class="card-text"><%= @post.content %></p>
+          <p class="card-text"><%= @post.display_content %></p>
+          <p class="card-text text-muted"><small>読み：<%= @post.reading %></small></p>
           <small class="text-muted"><%= l @post.created_at, format: :long %></small>
           
           <% if logged_in? && current_user == @post.user %>

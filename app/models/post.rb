@@ -3,12 +3,42 @@ class Post < ApplicationRecord
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
 
-  validates :content, presence: true
-  validate :kana_only_validation
-  validate :syllable_count_validation
+  validates :reading, presence: true
+  validates :display_content, presence: true
+
+  validate :reading_validation
+  validate :content_reading_consistency
   validate :tag_presence_validation
 
-  # privateからpublicに移動
+  def reading_validation
+    return if reading.blank?
+    
+    unless reading.match?(/\A[ぁ-んァ-ン゛゜ー・、。　\s]*\z/)
+      errors.add(:reading, :kana_only_reading)
+      return
+    end
+
+    syllable_count = count_syllables(reading)
+    if syllable_count == 0
+      errors.add(:reading, :syllable_blank_reading)
+    elsif syllable_count > 20
+      errors.add(:reading, :syllable_count, count: 20, current: syllable_count)
+    end
+  end
+
+  def content_reading_consistency
+    return if reading.blank? || display_content.blank?
+
+    reading_length = reading.gsub(/[\s　、。]/,'').length
+    content_length = display_content.gsub(/[\s　、。]/,'').length
+    
+    if content_length < (reading_length / 2)
+      errors.add(:base, "本文が読みと比べて短すぎるようです")
+    elsif content_length > (reading_length * 2)
+      errors.add(:base, "本文が読みと比べて長すぎるようです")
+    end
+  end
+
   def count_syllables(text)
     return 0 if text.blank?
     
@@ -45,27 +75,6 @@ class Post < ApplicationRecord
   end
   
   private
-
-  def kana_only_validation
-    return if content.blank?
-    
-    unless content.match?(/\A[ぁ-んァ-ン゛゜ー・、。　\s]*\z/)
-      errors.add(:base, :kana_only)
-      return
-    end
-  end
-  
-  def syllable_count_validation
-    return if content.blank?
-    return unless content.match?(/\A[ぁ-んァ-ン゛゜ー・、。　\s]*\z/)
-    
-    syllable_count = count_syllables(content)
-    if syllable_count == 0
-      errors.add(:base, :syllable_blank)
-    elsif syllable_count > 20
-      errors.add(:base, :syllable_count, count: 20, current: syllable_count)
-    end
-  end
 
   def tag_presence_validation
     if tags.empty?

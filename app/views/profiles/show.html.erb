@@ -35,7 +35,7 @@
                 <span class="badge bg-primary"><%= post.tags.first&.name %></span>
                 <small class="text-muted"><%= l post.created_at, format: :long %></small>
               </div>
-              <p class="card-text"><%= post.content %></p>
+              <p class="card-text"><%= post.display_content %></p>
             </div>
           </div>
         <% end %>
