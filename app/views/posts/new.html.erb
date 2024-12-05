@@ -3,19 +3,25 @@
     <div class="col-md-8">
       <h1 class="text-center mb-4">新しい句を詠む</h1>
 
-      <% if flash[:alert] %>
-        <div class="alert alert-danger">
-          <%= flash[:alert] %>
-        </div>
-      <% end %>
-
-      <div class="card mb-4">
+      <%# Step 1のルール（最初に表示） %>
+      <div id="reading-rules" class="card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">投稿のルール</h2>
+          <h2 class="h5 mb-3">読み方の入力ルール</h2>
           <ul class="list-unstyled">
             <li>・ひらがな・カタカナのみ使用できます</li>
             <li>・17音前後で入力してください</li>
             <li>・句読点（、。）や空白は使用できます</li>
+          </ul>
+        </div>
+      </div>
+
+      <%# Step 2のルール（最初は非表示） %>
+      <div id="content-rules" class="card mb-4" style="display: none;">
+        <div class="card-body">
+          <h2 class="h5 mb-3">本文の入力ルール</h2>
+          <ul class="list-unstyled">
+            <li>・漢字やひらがな、カタカナ、アルファベット、記号が入力できます</li>
+            <li>・読み方に合わせた内容を入力してください</li>
             <li>・俳句か川柳を選択してください</li>
           </ul>
         </div>

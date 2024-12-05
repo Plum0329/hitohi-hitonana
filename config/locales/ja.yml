@@ -36,21 +36,15 @@ ja:
         post:
           attributes:
             reading:
+              blank: '読み方を入力してください'
               kana_only_reading: 'ひらがな・カタカナのみ使用できます'
-              syllable_blank_reading: 'を入力してください'
-              blank: 'を入力してください'
+              syllable_blank_reading: '読み方を入力してください'
+              syllable_count: "%{count}音以下で入力してください（現在: %{current}音）"
             display_content:
-              blank: 'を入力してください'
-            content:
-              blank: 'を入力してください'
+              blank: '本文が入力されていません'
             base:
-              kana_only: 'ひらがな・カタカナのみ使用できます'
-              syllable_blank: '句を入力してください'
-              syllable_count: '%{count}音以下で入力してください（現在: %{current}音）'
               tag_required: '俳句か川柳を選択してください'
               one_tag_only: '俳句か川柳のどちらか1つのみ選択できます'
-              post_tags:
-                invalid: 'の選択が不正です'
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
@@ -84,3 +78,8 @@ ja:
       login: 'ログインに失敗しました'
       post_create: '句の投稿に失敗しました'
       default: '入力内容を確認してください'
+      post:
+        create: "入力内容を確認してください"
+        reading: "読み方を入力してください"
+        content: "本文が入力されていません"
+        tag: "俳句か川柳を選択してください"
