@@ -2,6 +2,7 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 import * as bootstrap from "bootstrap"
+import "./posts"
 
 document.addEventListener('turbo:load', () => {
   const flashMessages = document.querySelectorAll('.notice, .alert');

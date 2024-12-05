@@ -3,6 +3,12 @@
     <div class="col-md-8">
       <h1 class="text-center mb-4">新しい句を詠む</h1>
 
+      <% if flash[:alert] %>
+        <div class="alert alert-danger">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
       <div class="card mb-4">
         <div class="card-body">
           <h2 class="h5 mb-3">投稿のルール</h2>
@@ -16,32 +22,58 @@
       </div>
 
       <%= form_with(model: @post, local: true) do |f| %>
-        <div class="mb-3">
-          <label class="form-label">種類を選択</label>
-          <div class="d-flex gap-4 mb-3">
-            <% @tags.each do |tag| %>
-              <div class="form-check">
-                <%= f.radio_button :tag_id, tag.id, class: "form-check-input" %>
-                <%= f.label "tag_id_#{tag.id}", tag.name, class: "form-check-label" %>
-              </div>
-            <% end %>
-          </div>
-
-          <%= f.text_area :content, 
-              class: "form-control #{'is-invalid' if flash[:alert]}", 
+        <%# Step 1: 読みの入力フォーム %>
+        <div id="reading-form" class="mb-3">
+          <label class="form-label">読み方（ひらがな・カタカナ）</label>
+          <%= f.text_area :reading, 
+              class: "form-control #{'is-invalid' if @post&.errors&.include?(:reading)}", 
               rows: 3,
               placeholder: "ひらがな・カタカナで入力してください" %>
           
-          <% if flash[:alert] %>
+          <% if @post&.errors&.include?(:reading) %>
             <div class="invalid-feedback">
-              <%= flash[:alert] %>
+              <%= @post.errors[:reading].first %>
             </div>
           <% end %>
+
+          <div class="text-center mt-3">
+            <button type="button" id="next-step" class="button button-primary">次へ</button>
+            <%= link_to "戻る", posts_path, class: 'button' %>
+          </div>
         </div>
 
-        <div class="text-center">
-          <%= f.submit "投稿する", class: 'button button-primary me-2' %>
-          <%= link_to "戻る", posts_path, class: 'button' %>
+        <%# Step 2: 本文と種類の入力フォーム（最初は非表示） %>
+        <div id="content-form" class="mb-3" style="display: none;">
+          <label class="form-label">本文</label>
+          <%= f.text_area :display_content, 
+              class: "form-control #{'is-invalid' if @post&.errors&.include?(:display_content)}", 
+              rows: 3,
+              placeholder: "本文を入力してください" %>
+          
+          <% if @post&.errors&.include?(:display_content) %>
+            <div class="invalid-feedback">
+              <%= @post.errors[:display_content].first %>
+            </div>
+          <% end %>
+
+          <div id="content-warning" class="text-warning mt-2"></div>
+
+          <div class="mt-4">
+            <label class="form-label">種類を選択</label>
+            <div class="d-flex gap-4 mb-3">
+              <% @tags.each do |tag| %>
+                <div class="form-check">
+                  <%= f.radio_button :tag_id, tag.id, class: "form-check-input" %>
+                  <%= f.label "tag_id_#{tag.id}", tag.name, class: "form-check-label" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <button type="button" id="back-to-reading" class="button me-2">戻る</button>
+            <%= f.submit "投稿する", class: 'button button-primary' %>
+          </div>
         </div>
       <% end %>
     </div>

@@ -11,8 +11,11 @@ ja:
         password: 'パスワード'
         password_confirmation: 'パスワード確認'
       post:
+        reading: '読み'
+        display_content: '本文'
         content: '内容'
         base: '' # baseエラーメッセージ用
+        post_tags: 'タグ'
       tag:
         name: 'タグ名'
     errors:
@@ -32,6 +35,12 @@ ja:
               confirmation: 'とパスワードの入力が一致しません'
         post:
           attributes:
+            reading:
+              kana_only_reading: 'ひらがな・カタカナのみ使用できます'
+              syllable_blank_reading: 'を入力してください'
+              blank: 'を入力してください'
+            display_content:
+              blank: 'を入力してください'
             content:
               blank: 'を入力してください'
             base:
@@ -40,7 +49,8 @@ ja:
               syllable_count: '%{count}音以下で入力してください（現在: %{current}音）'
               tag_required: '俳句か川柳を選択してください'
               one_tag_only: '俳句か川柳のどちらか1つのみ選択できます'
-
+              post_tags:
+                invalid: 'の選択が不正です'
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
