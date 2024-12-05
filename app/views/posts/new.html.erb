@@ -1,3 +1,7 @@
+<% content_for :page_javascript do %>
+  <%= javascript_include_tag "posts", "data-turbo-track": "reload", type: "module" %>
+<% end %>
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8">
@@ -10,7 +14,7 @@
           <ul class="list-unstyled">
             <li>・ひらがな・カタカナのみ使用できます</li>
             <li>・17音前後で入力してください</li>
-            <li>・句読点（、。）や空白は使用できます</li>
+            <li>・空白を使用して区切ることができます</li>
           </ul>
         </div>
       </div>
@@ -50,6 +54,14 @@
 
         <%# Step 2: 本文と種類の入力フォーム（最初は非表示） %>
         <div id="content-form" class="mb-3" style="display: none;">
+          <%# 読み方の表示エリアを追加 %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <label class="form-label mb-2">入力された読み方：</label>
+                <div id="reading-display" class="font-weight-bold"></div>
+              </div>
+            </div>
+
           <label class="form-label">本文</label>
           <%= f.text_area :display_content, 
               class: "form-control #{'is-invalid' if @post&.errors&.include?(:display_content)}", 
