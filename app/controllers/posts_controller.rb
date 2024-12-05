@@ -18,7 +18,6 @@ class PostsController < ApplicationController
   def create
     @post = current_user.posts.build(post_params.except(:tag_id))
     @tags = Tag.all
-    @current_count = @post.count_syllables(post_params[:reading])
 
     if params[:post][:tag_id].present?
       tag = Tag.find_by(id: params[:post][:tag_id])
@@ -26,17 +25,17 @@ class PostsController < ApplicationController
     end
 
     if @post.save
-      redirect_to posts_path, notice: '句を投稿しました'
+      redirect_to posts_path, notice: t('flash.success.post_created')
     else
-      error_message = if @post.errors[:base].any?
-                       @post.errors[:base].first
-                       elsif @post.errors.any?
-                        @post.errors.full_messages.first
-                     else
-                       "入力内容を確認してください"
-                     end
-      
-      flash.now[:alert] = error_message
+      error_messages = []
+      error_messages << t('flash.error.post.content') if @post.display_content.blank?
+      error_messages << t('flash.error.post.tag') if @post.tags.empty?
+    
+      flash.now[:alert] = if error_messages.any?
+                          error_messages.join("<br>").html_safe
+                        else
+                         @post.errors.full_messages.join("<br>").html_safe
+                        end
       render :new, status: :unprocessable_entity
     end
   end

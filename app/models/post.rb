@@ -3,8 +3,8 @@ class Post < ApplicationRecord
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
 
-  validates :reading, presence: true
-  validates :display_content, presence: true
+  validates :reading, presence: { message: "読み方を入力してください" }
+  validates :display_content, presence: { message: "本文が入力されていません" }
 
   validate :reading_validation
   validate :content_reading_consistency
@@ -78,9 +78,9 @@ class Post < ApplicationRecord
 
   def tag_presence_validation
     if tags.empty?
-      errors.add(:base, :tag_required)
+      errors.add(:base, "俳句か川柳を選択してください")
     elsif tags.count > 1
-      errors.add(:base, :one_tag_only)
+      errors.add(:base, "俳句か川柳のどちらか一方を選択してください")
     end
   end
 end
