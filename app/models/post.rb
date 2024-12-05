@@ -13,7 +13,7 @@ class Post < ApplicationRecord
   def reading_validation
     return if reading.blank?
     
-    unless reading.match?(/\A[ぁ-んァ-ン゛゜ー・、。　\s]*\z/)
+    unless reading.match?(/\A[ぁ-んァ-ン゛゜ー・　\s]*\z/)
       errors.add(:reading, :kana_only_reading)
       return
     end
@@ -29,8 +29,8 @@ class Post < ApplicationRecord
   def content_reading_consistency
     return if reading.blank? || display_content.blank?
 
-    reading_length = reading.gsub(/[\s　、。]/,'').length
-    content_length = display_content.gsub(/[\s　、。]/,'').length
+    reading_length = reading.gsub(/[\s　]/,'').length
+    content_length = display_content.gsub(/[\s　]/,'').length
     
     if content_length < (reading_length / 2)
       errors.add(:base, "本文が読みと比べて短すぎるようです")
