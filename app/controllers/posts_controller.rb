@@ -12,6 +12,10 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
+    if Tag.count == 0
+      Tag.find_or_create_by!(name: '俳句')
+      Tag.find_or_create_by!(name: '川柳')
+    end
     @tags = Tag.all
   end
 
