@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">読み方を入力</h1>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">選択した種類：<%= @tag&.name %></h2>
+          <h3 class="h5 mb-3">入力ルール</h3>
+          <ul class="list-unstyled">
+            <li>・ひらがな・カタカナのみ使用できます</li>
+            <li>・句切れは空白で入力してください</li>
+          </ul>
+        </div>
+      </div>
+
+      <%= form_with(model: @post, url: new_content_posts_path, method: :get, local: true) do |f| %>
+        <div class="form-group mb-4">
+          <%= f.text_area :reading,
+              class: "form-control",
+              rows: 3,
+              placeholder: "ひらがな・カタカナで入力してください",
+              data: { controller: "reading-validation" },
+              required: true %>
+        </div>
+
+        <%= f.hidden_field :tag_id, value: session.dig(:post_params, 'tag_id') %>
+
+        <div class="text-center mt-3">
+          <%= f.submit "次へ", class: "button button-primary" %>
+          <%= link_to "戻る", new_type_posts_path, class: "button" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

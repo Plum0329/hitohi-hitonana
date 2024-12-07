@@ -5,9 +5,15 @@ Rails.application.routes.draw do
   get 'login', to: 'user_sessions#new'
   post 'login', to: 'user_sessions#create'
   delete 'logout', to: 'user_sessions#destroy'
-  
-  resources :users, only: [:new, :create]
-  resources :posts
+
+  resources :posts do
+    collection do
+      get :new_type
+      get :new_reading
+      get :new_content
+      get :confirm
+    end
+  end
   
   resource :profile, only: [:show, :edit, :update] do
     get 'password', to: 'profiles#edit_password'

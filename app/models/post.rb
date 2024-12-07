@@ -1,4 +1,5 @@
 class Post < ApplicationRecord
+  attr_accessor :tag_id
   belongs_to :user
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags

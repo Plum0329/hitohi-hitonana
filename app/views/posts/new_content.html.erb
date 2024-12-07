@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">本文を入力</h1>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">選択した種類：<%= @tag&.name %></h2>
+          <h3 class="h5 mb-3">入力した読み方：</h3>
+          <p class="mb-0"><%= @post&.reading %></p>
+        </div>
+      </div>
+
+      <%= form_with(model: @post, url: confirm_posts_path, method: :get, local: true) do |f| %>
+        <div class="form-group mb-4">
+          <%= f.text_area :display_content, class: "form-control", rows: 3,
+              placeholder: "本文を入力してください" %>
+          <%= f.hidden_field :reading, value: @post&.reading %>
+          <%= f.hidden_field :tag_id, value: @tag&.id %>
+        </div>
+
+        <div class="text-center mt-3">
+          <%= f.submit "確認", class: "button button-primary" %>
+          <%= link_to "戻る", new_reading_posts_path, class: "button" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

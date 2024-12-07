@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">種類を選択</h1>
+
+      <%= form_with(model: @post, url: new_reading_posts_path, method: :get, local: true) do |f| %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex gap-4 justify-content-center">
+              <% @tags.each do |tag| %>
+                <div class="form-check">
+                  <%= f.radio_button :tag_id, tag.id, class: "form-check-input" %>
+                  <%= f.label "tag_id_#{tag.id}", tag.name, class: "form-check-label" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-3">
+          <%= f.submit "次へ", class: "button button-primary" %>
+          <%= link_to "戻る", posts_path, class: "button" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

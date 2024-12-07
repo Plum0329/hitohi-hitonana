@@ -6,7 +6,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all", as: "style" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
     <%= yield :page_javascript %>
   </head>
@@ -28,7 +28,7 @@
                 <span class="font-medium"><%= current_user.name %></span>
               <% end %>
             </div>
-            <%= link_to '句を詠む', new_post_path, class: 'button button-success' %>
+            <%= link_to '句を詠む', new_type_posts_path, class: 'button button-success' %>
           <% else %>
             <%= link_to 'ログイン', login_path, class: 'button' %>
             <%= link_to '新規登録', signup_path, class: 'button' %>
