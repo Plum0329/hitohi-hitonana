@@ -16,10 +16,10 @@
 
       <%= form_with(model: @post, url: new_content_posts_path, method: :get, local: true) do |f| %>
         <div class="form-group mb-4">
-          <%= f.text_area :reading,
+          <%= f.text_field :reading,
               class: "form-control",
               rows: 3,
-              placeholder: "ひらがな・カタカナで入力してください",
+              placeholder: "ひらがな・カタカナで入力してください（句切れは空白で入力）",
               data: { controller: "reading-validation" },
               required: true %>
         </div>
