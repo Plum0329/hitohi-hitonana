@@ -40,6 +40,8 @@ ja:
               kana_only_reading: 'ひらがな・カタカナのみ使用できます'
               syllable_blank_reading: '読み方を入力してください'
               syllable_count: "%{count}音以下で入力してください（現在: %{current}音）"
+              invalid_spaces: "句全体で1つまたは2つの空白を入れてください"
+              consecutive_spaces: "空白は連続して入力できません"
             display_content:
               blank: '本文が入力されていません'
             base:

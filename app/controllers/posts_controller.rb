@@ -18,12 +18,12 @@ class PostsController < ApplicationController
 
   def new_reading
     if params[:post] && params[:post][:tag_id].present?
-      session[:post_params] ||= {}
+      session[:post_params] ||= {} 
       session[:post_params]['tag_id'] = params[:post][:tag_id]
     end
   
     @post = Post.new(session[:post_params])
-    @tag = Tag.find_by(id: session[:post_params]['tag_id'])
+    @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
   
     redirect_to new_type_posts_path, alert: '句の種類を選択してください' unless @tag
   end
