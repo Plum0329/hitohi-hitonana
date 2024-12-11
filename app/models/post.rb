@@ -10,6 +10,7 @@ class Post < ApplicationRecord
   validate :reading_validation
   validate :content_reading_consistency
   validate :tag_presence_validation
+  validate :validate_reading_spaces
 
   def reading_validation
     return if reading.blank?
@@ -82,6 +83,24 @@ class Post < ApplicationRecord
       errors.add(:base, "俳句か川柳を選択してください")
     elsif tags.count > 1
       errors.add(:base, "俳句か川柳のどちらか一方を選択してください")
+    end
+  end
+
+  def validate_reading_spaces
+    # 全角空白を半角空白に統一
+    normalized_reading = reading.gsub('　', ' ')
+    
+    # 連続した空白のチェック
+    if normalized_reading.match?(/\s{2,}/)
+      errors.add(:reading, "空白は連続して入力できません")
+      return
+    end
+
+    # 空白文字数のカウント
+    space_count = normalized_reading.count(' ')
+    
+    unless (1..2).include?(space_count)
+      errors.add(:reading, "句全体で1つまたは2つの空白を入れてください")
     end
   end
 end
