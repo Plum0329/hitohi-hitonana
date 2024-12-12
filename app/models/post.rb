@@ -11,6 +11,8 @@ class Post < ApplicationRecord
   validate :content_reading_consistency
   validate :tag_presence_validation
   validate :validate_reading_spaces
+  validate :validate_display_content_newlines
+
 
   def reading_validation
     return if reading.blank?
@@ -101,6 +103,30 @@ class Post < ApplicationRecord
     
     unless (1..2).include?(space_count)
       errors.add(:reading, "句全体で1つまたは2つの空白を入れてください")
+    end
+  end
+
+  def validate_display_content_newlines
+    return if display_content.blank?
+  
+    # 改行の数をカウント
+    newline_count = display_content.count("\n")
+  
+    # 改行数のバリデーション（1以上2以下）
+    if newline_count < 1
+      errors.add(:display_content, "句全体で1つまたは2つの改行を入れてください")
+    elsif newline_count > 2
+      errors.add(:display_content, "3つ以上の改行は入力できません")
+    end
+  
+    # 本文の最初と最後に改行がないかチェック
+    if display_content.start_with?("\n") || display_content.end_with?("\n")
+      errors.add(:display_content, "句の最初と最後に改行を入れることはできません")
+    end
+  
+    # 連続した改行がないかチェック
+    if display_content.match?(/\n\n/)
+      errors.add(:display_content, "連続した改行は入力できません")
     end
   end
 end
