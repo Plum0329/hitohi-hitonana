@@ -5,52 +5,48 @@ export default class extends Controller {
 
   connect() {
     console.log("Text Direction Controller connected")
-    this.initialize()
+    console.log("Content targets:", this.contentTargets.length)
+    this.loadDirection()
   }
 
-  initialize() {
-    this.direction = localStorage.getItem('textDirection') || 'vertical'
-    this.updateDirection()
-    
-    this.observer = new MutationObserver(() => {
+  loadDirection() {
+    try {
+      this.direction = localStorage.getItem('textDirection') || 'vertical'
+      console.log("Loading direction:", this.direction)
       this.updateDirection()
-    })
-    
-    this.observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    })
-  }
-
-  disconnect() {
-    if (this.observer) {
-      this.observer.disconnect()
+    } catch (error) {
+      console.error("Error loading direction:", error)
     }
   }
 
   toggle() {
-    this.direction = this.direction === 'vertical' ? 'horizontal' : 'vertical'
-    localStorage.setItem('textDirection', this.direction)
-    this.updateDirection()
+    try {
+      console.log("Toggle clicked. Current direction:", this.direction)
+      this.direction = this.direction === 'vertical' ? 'horizontal' : 'vertical'
+      localStorage.setItem('textDirection', this.direction)
+      this.updateDirection()
+    } catch (error) {
+      console.error("Error toggling direction:", error)
+    }
   }
 
   updateDirection() {
-    if (!this.hasContentTarget) {
-      return;
-    }
-  
-    this.contentTargets.forEach(element => {
-      // アニメーションのための準備
-      element.style.transition = 'all 0.3s ease-in-out';
+    try {
+      console.log("Updating direction to:", this.direction)
+      console.log("Content targets found:", this.contentTargets.length)
       
-      // クラスの切り替え
-      element.classList.remove('vertical-text', 'horizontal-text');
-      element.classList.add(`${this.direction}-text`);
-    });
-  
-    if (this.hasToggleTarget) {
-      this.toggleTarget.textContent = 
-        this.direction === 'vertical' ? '横書きに切り替え' : '縦書きに切り替え';
+      this.contentTargets.forEach((element, index) => {
+        console.log(`Updating target ${index}:`, element)
+        element.classList.remove('vertical-text', 'horizontal-text')
+        element.classList.add(`${this.direction}-text`)
+      })
+
+      if (this.hasToggleTarget) {
+        this.toggleTarget.textContent = 
+          this.direction === 'vertical' ? '横書きに切り替え' : '縦書きに切り替え'
+      }
+    } catch (error) {
+      console.error("Error in updateDirection:", error)
     }
   }
 }

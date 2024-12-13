@@ -1,0 +1,55 @@
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons';
+
+.post-content {
+  margin: 1rem 0;
+  padding: 1rem;
+  font-family: "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", serif;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  height: 400px;  /* 固定の高さを設定 */
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.horizontal-text {
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  height: auto;
+  width: 100%;
+  padding: 1rem;
+}
+
+.toggle-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #6c757d;
+  background-color: transparent;
+  border: 1px solid #6c757d;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.toggle-button:hover {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.toggle-text {
+  display: inline-block;
+  margin-left: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .toggle-text {
+    display: none;
+  }
+}
