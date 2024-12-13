@@ -101,3 +101,39 @@
     gap: 0.5rem;
   }
 }
+
+.post-content {
+  position: relative;
+  margin: 1rem 0;
+  padding: 1rem;
+  font-family: "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", serif;
+
+  &.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    min-height: 200px;
+    height: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  &.horizontal-text {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    height: auto;
+    width: 100%;
+    padding: 1rem;
+  }
+}
+
+// カードのリンクスタイルを修正
+.card {
+  a {
+    color: inherit;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

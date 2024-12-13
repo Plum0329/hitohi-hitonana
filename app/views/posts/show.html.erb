@@ -1,9 +1,18 @@
-<div class="container">
+<div class="container" data-controller="text-direction">
+  <div class="text-end mb-3">
+    <button type="button"
+            data-text-direction-target="toggle"
+            data-action="click->text-direction#toggle"
+            class="btn btn-outline-secondary">
+      縦書き/横書き切り替え
+    </button>
+  </div>
+
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card mb-3">
         <div class="card-body">
-          <p class="card-text post-content"><%= @post.display_content %></p>
+          <%= render partial: 'post_content', locals: { content: @post.display_content } %>
           <p class="card-text text-muted"><small>読み：<%= @post.reading %></small></p>
           <small class="text-muted"><%= l @post.created_at, format: :long %></small>
           

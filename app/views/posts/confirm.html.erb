@@ -1,8 +1,16 @@
-<div class="container">
+<div class="container" data-controller="text-direction">
+  <div class="text-end mb-3">
+    <button type="button"
+            data-text-direction-target="toggle"
+            data-action="click->text-direction#toggle"
+            class="btn btn-outline-secondary">
+      縦書き/横書き切り替え
+    </button>
+  </div>
+
   <div class="row justify-content-center">
     <div class="col-md-8">
       <h1 class="text-center mb-4">投稿内容の確認</h1>
-
       <div class="card mb-4">
         <div class="card-body">
           <div class="mb-4">
@@ -17,7 +25,7 @@
 
           <div class="mb-4">
             <h2 class="h5 mb-2">本文</h2>
-            <p class="mb-0 post-content"><%= @post&.display_content %></p>
+            <%= render partial: 'post_content', locals: { content: @post&.display_content } %>
           </div>
         </div>
       </div>
