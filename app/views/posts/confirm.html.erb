@@ -1,16 +1,20 @@
 <div class="container" data-controller="text-direction">
-  <div class="text-end mb-3">
-    <button type="button"
-            data-text-direction-target="toggle"
-            data-action="click->text-direction#toggle"
-            class="btn btn-outline-secondary">
-      縦書き/横書き切り替え
-    </button>
-  </div>
-
   <div class="row justify-content-center">
     <div class="col-md-8">
       <h1 class="text-center mb-4">投稿内容の確認</h1>
+
+      <% if @image_post&.image.present? %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 mb-3">選択した画像</h2>
+            <%= image_tag url_for(@image_post.image), class: "w-100 rounded-lg" %>
+            <% if @image_post.description.present? %>
+              <p class="mt-2 text-muted"><%= @image_post.description %></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
       <div class="card mb-4">
         <div class="card-body">
           <div class="mb-4">
@@ -32,11 +36,14 @@
 
       <div class="text-center mt-4">
         <%= form_with(model: @post, local: true, class: 'd-inline') do |f| %>
+          <%= f.hidden_field :reading %>
+          <%= f.hidden_field :display_content %>
           <%= f.submit "投稿する", class: "button button-primary me-2" %>
         <% end %>
         <%= link_to "本文を修正", new_content_posts_path, class: "button me-2" %>
         <%= link_to "読み方を修正", new_reading_posts_path, class: "button me-2" %>
-        <%= link_to "種類を修正", new_type_posts_path, class: "button" %>
+        <%= link_to "種類を修正", new_type_posts_path, class: "button me-2" %>
+        <%= link_to "画像を修正", new_image_post_path, class: "button" %>
       </div>
     </div>
   </div>

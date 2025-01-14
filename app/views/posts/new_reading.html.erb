@@ -1,6 +1,18 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8">
+      <% if @image_post&.image.present? %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 mb-3">選択した画像</h2>
+            <%= image_tag url_for(@image_post.image), class: "w-100 rounded-lg" %>
+            <% if @image_post.description.present? %>
+              <p class="mt-2 text-muted"><%= @image_post.description %></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
       <h1 class="text-center mb-4">読み方を入力</h1>
 
       <div class="card mb-4">

@@ -12,6 +12,14 @@
     <div class="col-md-8">
       <div class="card mb-3">
         <div class="card-body">
+          <% if @post.image_post&.image.present? %>
+            <div class="mb-4">
+              <%= image_tag url_for(@post.image_post.image), class: "w-100 rounded-lg" %>
+              <% if @post.image_post.description.present? %>
+                <p class="mt-2 text-muted"><%= @post.image_post.description %></p>
+              <% end %>
+            </div>
+          <% end %>
           <%= render partial: 'post_content', locals: { content: @post.display_content } %>
           <p class="card-text text-muted"><small>読み：<%= @post.reading %></small></p>
           <small class="text-muted"><%= l @post.created_at, format: :long %></small>
