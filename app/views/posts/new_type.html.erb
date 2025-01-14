@@ -1,8 +1,19 @@
-<div class="container">
+<div class="container mx-auto px-4 py-8">
   <div class="row justify-content-center">
     <div class="col-md-8">
+      <% if @image_post&.image.present? %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 mb-3">選択した画像</h2>
+            <%= image_tag url_for(@image_post.image), class: "w-100 rounded-lg" %>
+            <% if @image_post.description.present? %>
+              <p class="mt-2 text-muted"><%= @image_post.description %></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
       <h1 class="text-center mb-4">種類を選択</h1>
-
       <%= form_with(model: @post, url: new_reading_posts_path, method: :get, local: true) do |f| %>
         <div class="card mb-4">
           <div class="card-body">
@@ -19,7 +30,7 @@
 
         <div class="text-center mt-3">
           <%= f.submit "次へ", class: "button button-primary" %>
-          <%= link_to "戻る", posts_path, class: "button" %>
+          <%= link_to "戻る", new_image_post_path, class: "button" %>
         </div>
       <% end %>
     </div>

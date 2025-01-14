@@ -28,7 +28,7 @@
                 <span class="font-medium"><%= current_user.name %></span>
               <% end %>
             </div>
-            <%= link_to '句を詠む', new_type_posts_path, class: 'button button-success' %>
+            <%= link_to '句を詠む', new_image_post_path, class: 'button button-success' %>
           <% else %>
             <%= link_to 'ログイン', login_path, class: 'button' %>
             <%= link_to '新規登録', signup_path, class: 'button' %>

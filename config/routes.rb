@@ -14,6 +14,13 @@ Rails.application.routes.draw do
       get :confirm
     end
   end
+
+  resources :image_posts do
+    collection do
+      post :confirm
+      get :complete
+    end
+  end
   
   resource :profile, only: [:show, :edit, :update] do
     get 'password', to: 'profiles#edit_password'

@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   attr_accessor :tag_id
   belongs_to :user
+  belongs_to :image_post, optional: true
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
 
@@ -12,6 +13,9 @@ class Post < ApplicationRecord
   validate :tag_presence_validation
   validate :validate_reading_spaces
   validate :validate_display_content_newlines
+
+  after_destroy :destroy_orphaned_image_post
+
 
 
   def reading_validation
@@ -127,6 +131,12 @@ class Post < ApplicationRecord
     # 連続した改行がないかチェック
     if display_content.match?(/\n\n/)
       errors.add(:display_content, "連続した改行は入力できません")
+    end
+  end
+
+  def destroy_orphaned_image_post
+    if image_post && image_post.posts.empty?
+      image_post.destroy
     end
   end
 end

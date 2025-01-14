@@ -1,0 +1,40 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="text-center mb-4">画像投稿</h1>
+
+          <%= form_with(model: @image_post, local: true, class: "space-y-6") do |f| %>
+            <% if @image_post.errors.any? %>
+              <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <ul class="list-disc list-inside">
+                  <% @image_post.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-4">
+              <%= f.label :image, "画像", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.file_field :image, accept: 'image/*', class: "form-control" %>
+              <small class="text-muted">※ JPG、JPEG、PNG形式、5MB以下</small>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :description, "説明文", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= f.text_area :description, class: "form-control", rows: 3 %>
+              <small class="text-muted">※ 10文字以内</small>
+            </div>
+
+            <div class="text-center">
+              <%= f.submit "次へ進む", class: "button button-primary me-2" %>
+              <%= button_to "画像なしで投稿", image_posts_path, method: :post, class: "button button-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

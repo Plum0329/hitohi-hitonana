@@ -2,8 +2,15 @@ class ProfilesController < ApplicationController
   before_action :require_login
   
   def show
-    @user = current_user
-    @posts = @user.posts.order(created_at: :desc)
+    begin
+      @user = current_user
+      @posts = @user.posts.includes(:tags, :image_post).order(created_at: :desc)
+      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    rescue => e
+      logger.error "Error in profiles#show: #{e.message}"
+      flash.now[:alert] = "プロフィールの取得中にエラーが発生しました"
+      @posts = Post.none
+    end
   end
   
   def edit
