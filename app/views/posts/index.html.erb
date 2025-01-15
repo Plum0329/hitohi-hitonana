@@ -17,12 +17,16 @@
             <div class="card-body">
               <% if post.theme.present? %>
                 <div class="mb-4">
-                  <%= image_tag post.theme.image, class: "w-100 rounded-lg" if post.theme.image.attached? %>
+                  <div class="image-container-small">
+                    <%= image_tag post.theme.image, class: "w-100 rounded-lg theme-image-small" if post.theme.image.attached? %>
+                  </div>
                   <p class="mt-2 text-muted"><%= post.theme.description %></p>
                 </div>
               <% elsif post.image_post&.image.present? %>
                 <div class="mb-4">
-                  <%= image_tag url_for(post.image_post.image), class: "w-100 rounded-lg" %>
+                  <div class="image-container-small">
+                    <%= image_tag post.image_post.image, class: "w-100 rounded-lg theme-image-small" %>
+                  </div>
                   <% if post.image_post.description.present? %>
                     <p class="mt-2 text-muted"><%= post.image_post.description %></p>
                   <% end %>

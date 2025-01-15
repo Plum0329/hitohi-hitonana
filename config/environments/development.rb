@@ -74,4 +74,5 @@ Rails.application.configure do
   config.active_storage.analyzers = []
   config.active_storage.previewers = []
   config.active_storage.track_variants = true
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
 end
