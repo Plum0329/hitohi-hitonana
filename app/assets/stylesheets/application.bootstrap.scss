@@ -137,3 +137,33 @@
     }
   }
 }
+
+// 画像サイズの制御
+.theme-image {
+  &-large {
+    max-width: 400px !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+  }
+
+  &-small {
+    max-width: 200px !important;
+    width: 100% !important;
+    height: 150px !important;
+    object-fit: cover !important;
+  }
+}
+
+// カード内の画像コンテナ
+.image-container {
+  &-large {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  &-small {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+}

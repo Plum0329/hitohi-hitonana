@@ -12,10 +12,10 @@ Rails.application.configure do
 end
 
 Rails.application.config.to_prepare do
-  ActiveStorage::Blob.class_eval do
-    def variant(variation)
-      variation = ActiveStorage::Variation.wrap(variation)
-      ActiveStorage::Variant.new(self, variation)
-    end
-  end
+  #ActiveStorage::Blob.class_eval do
+  #  def variant(variation)
+  #    variation = ActiveStorage::Variation.wrap(variation)
+  #    ActiveStorage::Variant.new(self, variation)
+  #  end
+  #end
 end

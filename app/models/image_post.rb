@@ -2,6 +2,7 @@ class ImagePost < ApplicationRecord
   has_one_attached :image
   has_one :theme
   has_many :posts, dependent: :nullify
+  
   validates :description, length: { maximum: 10 }
   
   validates :image,
@@ -14,4 +15,16 @@ class ImagePost < ApplicationRecord
       message: 'は5MB以下にしてください'
     },
     allow_nil: true
+
+  def display_image
+    if image.attached?
+      image.variant(resize_to_limit: [400, 300])
+    end
+  end
+
+  def small_image
+    if image.attached?
+      image.variant(resize_to_limit: [200, 150])
+    end
+  end
 end
