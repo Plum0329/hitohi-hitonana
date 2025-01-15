@@ -12,27 +12,51 @@
     <div class="col-md-8">
       <div class="card mb-3">
         <div class="card-body">
-          <% if @post.image_post&.image.present? %>
+          <% if @post.theme.present? || @theme.present? %>
             <div class="mb-4">
-              <%= image_tag url_for(@post.image_post.image), class: "w-100 rounded-lg" %>
+              <% theme = @post.theme || @theme %>
+              <%= image_tag theme.image, class: "w-100 rounded-lg" if theme.image.attached? %>
+              <p class="mt-2 text-muted"><%= theme.description %></p>
+              <% if logged_in? && theme.available_for?(current_user) %>
+                <%= link_to 'このお題で詠む', new_type_theme_posts_path(theme), 
+                  class: "button button-primary mt-2 d-block text-center" %>
+              <% end %>
+            </div>
+          <% elsif @post.image_post.present? %>
+            <div class="mb-4">
+              <% if @post.image_post.image.attached? %>
+                <%= image_tag url_for(@post.image_post.image), class: "w-100 rounded-lg" %>
+              <% end %>
               <% if @post.image_post.description.present? %>
                 <p class="mt-2 text-muted"><%= @post.image_post.description %></p>
               <% end %>
             </div>
           <% end %>
+
           <%= render partial: 'post_content', locals: { content: @post.display_content } %>
           <p class="card-text text-muted"><small>読み：<%= @post.reading %></small></p>
-          <small class="text-muted"><%= l @post.created_at, format: :long %></small>
+
+          <div class="post-tags mt-2">
+            <% @post.tags.each do |tag| %>
+              <span class="badge bg-secondary"><%= tag.name %></span>
+            <% end %>
+          </div>
+          
+          <small class="text-muted d-block mt-2"><%= l @post.created_at, format: :long %></small>
           
           <% if logged_in? && current_user == @post.user %>
             <div class="mt-3">
               <%= button_to '削除', post_path(@post), 
                   method: :delete, 
                   data: { turbo_confirm: "この句を削除してもよろしいですか？" },
-                  class: 'button button-danger' %>
+                  class: 'button button-danger w-100' %>
             </div>
           <% end %>
         </div>
+      </div>
+
+      <div class="mt-3 text-center">
+        <%= link_to '戻る', posts_path, class: "text-blue-500 hover:text-blue-700" %>
       </div>
     </div>
   </div>

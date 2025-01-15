@@ -3,10 +3,11 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :destroy]
   before_action :ensure_correct_user, only: [:destroy]
   before_action :load_post_from_session, only: [:new_reading, :new_content, :confirm]
+  before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
 
   def index
     begin
-      @posts = Post.includes(:user, :tags, :image_post).order(created_at: :desc)
+      @posts = Post.includes(:user, :tags, :image_post, :theme).order(created_at: :desc)
       @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     rescue => e
       logger.error "Error in posts#index: #{e.message}"
@@ -17,8 +18,12 @@ class PostsController < ApplicationController
 
   def show
     begin
-      @post = Post.includes(:image_post, :tags).find(params[:id])
-      @image_post = @post.image_post
+      @post = Post.includes(:image_post, :tags, :theme).find(params[:id])
+      @theme = if @post.theme.present?
+        @post.theme
+      elsif @post.image_post.present?
+        Theme.find_by(image_post_id: @post.image_post.id)
+      end
     rescue ActiveRecord::RecordNotFound
       redirect_to posts_path, alert: '投稿が見つかりませんでした'
     rescue => e
@@ -30,7 +35,15 @@ class PostsController < ApplicationController
   def new_type
     begin
       @post = Post.new
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+      if @theme
+        unless @theme.available_for?(current_user)
+          redirect_to theme_path(@theme), alert: 'このお題では句を詠むことができません'
+          return
+        end
+        session[:theme_id] = @theme.id
+      else
+        @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+      end
       ensure_tags_exist
     rescue => e
       logger.error "Error in posts#new_type: #{e.message}"
@@ -81,28 +94,34 @@ class PostsController < ApplicationController
 
   def create
     begin
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
       @post = current_user.posts.build(
         reading: session[:post_params]['reading'],
         display_content: session[:post_params]['display_content']
       )
-
-      @post.image_post_id = session[:image_post_id] if session[:image_post_id]
-    
+  
+      if session[:theme_id]
+        @post.theme_id = session[:theme_id]
+        theme_tag = Tag.find_or_create_by!(name: 'お題から詠まれた句')
+        @post.tags << theme_tag
+      else
+        @post.image_post_id = session[:image_post_id] if session[:image_post_id]
+      end
+      
       tag_id = session[:post_params]['tag_id'] || session[:post_params][:tag_id]
       if tag_id.present?
         tag = Tag.find_by(id: tag_id)
         @post.tags << tag if tag
       end
-    
+      
       if @post.save
         session[:post_params] = nil
         session.delete(:image_post_id)
+        session.delete(:theme_id)
         redirect_to posts_path, notice: '投稿が完了しました'
       else
         errors = @post.errors.full_messages
         flash[:alert] = errors.join("<br>").html_safe
-
+  
         if @post.tags.empty?
           redirect_to new_type_posts_path
         elsif @post.reading.blank?
@@ -141,12 +160,26 @@ class PostsController < ApplicationController
 
   def destroy
     begin
-      @post.destroy!
-      redirect_to posts_path, status: :see_other, notice: '投稿を削除しました'
+      ActiveRecord::Base.transaction do
+        if @post.image_post.present?
+          theme = Theme.find_by(image_post_id: @post.image_post.id)
+          theme.destroy! if theme
+  
+          remaining_posts = Post.where(image_post_id: @post.image_post.id)
+                              .where.not(id: @post.id)
+                              .exists?
+          @post.image_post.destroy! unless remaining_posts
+        end
+        
+        @post.destroy!
+        flash[:notice] = '投稿を削除しました'
+      end
     rescue => e
-      logger.error "Error in posts#destroy: #{e.message}"
-      redirect_to posts_path, alert: '削除中にエラーが発生しました'
+      logger.error "Post destroy error: #{e.class}: #{e.message}"
+      logger.error e.backtrace.join("\n")
+      flash[:alert] = '削除中にエラーが発生しました'
     end
+    redirect_to posts_path
   end
 
   private
@@ -156,9 +189,25 @@ class PostsController < ApplicationController
   end
 
   def set_post
-    @post = Post.includes(:image_post, :tags).find(params[:id])
+    @post = Post.includes(:user, 
+                         :post_tags, 
+                         :tags, 
+                         :theme, 
+                         :image_post)
+                .find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to posts_path, alert: '投稿が見つかりませんでした'
+  end
+
+  def set_theme
+    if params[:theme_id]
+      @theme = Theme.find(params[:theme_id])
+    elsif session[:theme_id]
+      @theme = Theme.find(session[:theme_id])
+    end
+  rescue ActiveRecord::RecordNotFound
+    session.delete(:theme_id)
+    redirect_to themes_path, alert: 'お題が見つかりませんでした'
   end
 
   def ensure_correct_user
@@ -180,6 +229,6 @@ class PostsController < ApplicationController
       Tag.find_or_create_by!(name: '俳句')
       Tag.find_or_create_by!(name: '川柳')
     end
-    @tags = Tag.all
+    @tags = Tag.where(name: ['俳句', '川柳'])
   end
 end

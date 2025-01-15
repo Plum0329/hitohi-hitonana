@@ -1,4 +1,5 @@
 class Post < ApplicationRecord
+  belongs_to :theme, optional: true
   attr_accessor :tag_id
   belongs_to :user
   belongs_to :image_post, optional: true

@@ -1,0 +1,27 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">お題一覧</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @themes.each do |theme| %>
+      <%= link_to theme_path(theme), class: "block" do %>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+          <% if theme.image.attached? %>
+            <%= image_tag theme.image, class: "w-full h-48 object-cover" %>
+          <% end %>
+          <div class="p-4">
+            <p class="text-gray-700"><%= theme.description %></p>
+            <div class="mt-4 text-sm text-gray-500">
+              <span><%= theme.created_at.strftime("%Y年%m月%d日") %></span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if logged_in? %>
+    <div class="mt-8">
+      <%= link_to '新しいお題を作成', new_theme_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  <% end %>
+</div>

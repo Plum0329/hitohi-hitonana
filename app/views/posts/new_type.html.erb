@@ -1,7 +1,14 @@
 <div class="container mx-auto px-4 py-8">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <% if @image_post&.image.present? %>
+      <% if @theme %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <%= image_tag @theme.image, class: "w-100 rounded-lg" if @theme.image.attached? %>
+            <p class="mt-2 text-muted"><%= @theme.description %></p>
+          </div>
+        </div>
+      <% elsif @image_post&.image.present? %>
         <div class="card mb-4">
           <div class="card-body">
             <h2 class="h5 mb-3">選択した画像</h2>
@@ -30,7 +37,11 @@
 
         <div class="text-center mt-3">
           <%= f.submit "次へ", class: "button button-primary" %>
-          <%= link_to "戻る", new_image_post_path, class: "button" %>
+          <% if @theme %>
+            <%= link_to "戻る", theme_path(@theme), class: "button" %>
+          <% else %>
+            <%= link_to "戻る", new_image_post_path, class: "button" %>
+          <% end %>
         </div>
       <% end %>
     </div>
