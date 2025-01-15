@@ -24,6 +24,20 @@ Rails.application.routes.draw do
       get :complete
     end
   end
+
+  resources :themes do
+    resources :posts do
+      collection do
+        get :new_type
+        get :new_reading
+        get :new_content
+        get :confirm
+      end
+    end
+    member do
+      get :write
+    end
+  end
   
   resource :profile, only: [:show, :edit, :update] do
     get 'password', to: 'profiles#edit_password'

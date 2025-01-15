@@ -18,6 +18,7 @@
           <%= link_to 'ホーム', root_path, class: 'button' %>
           <% if logged_in? %>
             <%= link_to '句一覧', posts_path, class: 'button' %>
+            <%= link_to 'お題一覧', themes_path, class: 'button' %>
           <% end %>
         </div>
 

@@ -3,7 +3,14 @@
     <div class="col-md-8">
       <h1 class="text-center mb-4">投稿内容の確認</h1>
 
-      <% if @image_post&.image.present? %>
+      <% if @theme %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <%= image_tag @theme.image, class: "w-100 rounded-lg" if @theme.image.attached? %>
+            <p class="mt-2 text-muted"><%= @theme.description %></p>
+          </div>
+        </div>
+      <% elsif @image_post&.image.present? %>
         <div class="card mb-4">
           <div class="card-body">
             <h2 class="h5 mb-3">選択した画像</h2>
@@ -43,7 +50,11 @@
         <%= link_to "本文を修正", new_content_posts_path, class: "button me-2" %>
         <%= link_to "読み方を修正", new_reading_posts_path, class: "button me-2" %>
         <%= link_to "種類を修正", new_type_posts_path, class: "button me-2" %>
-        <%= link_to "画像を修正", new_image_post_path, class: "button" %>
+        <% if @theme %>
+          <%= link_to "お題の選択に戻る", themes_path, class: "button" %>
+        <% else %>
+          <%= link_to "画像を修正", new_image_post_path, class: "button" %>
+        <% end %>
       </div>
     </div>
   </div>
