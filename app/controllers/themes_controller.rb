@@ -7,7 +7,14 @@ class ThemesController < ApplicationController
   end
 
   def show
-    @posts = @theme.posts.includes(:user, :tags).order(created_at: :desc)
+    @theme = Theme.includes(:user, posts: [:user, :tags]).find(params[:id])
+    @posts = Post.where(theme_id: @theme.id).includes(:user, :tags).order(created_at: :desc)
+    @original_post = Post.where(theme_id: @theme.id).order(created_at: :asc).first
+    
+    logger.debug "Theme ID: #{@theme.id}"
+    logger.debug "Theme posts count: #{@posts.size}"
+    logger.debug "Posts IDs: #{@posts.map { |p| "#{p.id} (#{p.created_at})" }}"
+    logger.debug "Original post: #{@original_post&.id} (#{@original_post&.created_at})"
   end
 
   def new
@@ -57,7 +64,7 @@ class ThemesController < ApplicationController
   private
 
   def set_theme
-    @theme = Theme.find(params[:id])
+    @theme = Theme.includes(posts: [:user, :tags]).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to themes_path, alert: 'お題が見つかりませんでした'
   end

@@ -1,7 +1,7 @@
 class Theme < ApplicationRecord
   belongs_to :user
   belongs_to :image_post, optional: true, dependent: :destroy
-  has_many :posts
+  has_many :posts, dependent: :nullify
   has_one_attached :image
 
   validates :description, presence: true

@@ -1,4 +1,8 @@
 class Post < ApplicationRecord
+  scope :for_theme, ->(theme_id) { where(theme_id: theme_id).includes(:user, :tags) }
+  scope :chronological, -> { order(created_at: :asc) }
+  scope :reverse_chronological, -> { order(created_at: :desc) }
+
   belongs_to :theme, optional: true
   attr_accessor :tag_id
   belongs_to :user
