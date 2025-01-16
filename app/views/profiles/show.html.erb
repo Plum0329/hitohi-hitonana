@@ -1,30 +1,21 @@
-<div class="container" data-controller="text-direction">
-  <div class="text-end mb-3">
-    <button type="button"
-            data-text-direction-target="toggle"
-            data-action="click->text-direction#toggle"
-            class="btn btn-outline-secondary">
-      縦書き/横書き切り替え
-    </button>
-  </div>
-
+<div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <h1 class="text-center mb-4">マイページ</h1>
+      <h2 class="mb-4 h4">マイページ</h2>
 
       <div class="card mb-4">
         <div class="card-body">
-          <h2 class="card-title mb-4">プロフィール情報</h2>
+          <h3 class="h5 mb-4">プロフィール情報</h3>
           <div class="mb-3">
-            <p class="text-muted mb-1">ユーザー名</p>
-            <p class="font-weight-bold"><%= @user.name %></p>
+            <p class="text-muted small mb-1">ユーザー名</p>
+            <p><%= @user.name %></p>
           </div>
           <div class="mb-3">
-            <p class="text-muted mb-1">メールアドレス</p>
-            <p class="font-weight-bold"><%= @user.email %></p>
+            <p class="text-muted small mb-1">メールアドレス</p>
+            <p><%= @user.email %></p>
           </div>
-          <div class="mt-4">
-            <%= link_to '編集', edit_profile_path, class: 'button me-2' %>
+          <div class="mt-4 d-flex gap-2 flex-wrap">
+            <%= link_to '編集', edit_profile_path, class: 'button' %>
             <%= link_to 'パスワード変更', password_profile_path, class: 'button' %>
             <%= button_to 'ログアウト', 
                 logout_path, 
@@ -35,28 +26,41 @@
         </div>
       </div>
 
-      <h2 class="text-center mb-4">投稿した句一覧</h2>
-      <% @posts.each do |post| %>
-        <div class="card mb-3">
-          <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
-            <div class="card-body">
-              <% if post.image_post&.image.present? %>
-                <div class="mb-4">
-                  <%= image_tag url_for(post.image_post.image), class: "w-100 rounded-lg" %>
-                  <% if post.image_post.description.present? %>
-                    <p class="mt-2 text-muted"><%= post.image_post.description %></p>
+      <div data-controller="text-direction">
+        <div class="text-end mb-3">
+          <button type="button"
+                  data-text-direction-target="toggle"
+                  data-action="click->text-direction#toggle"
+                  class="btn btn-outline-secondary btn-sm">
+            縦書き/横書き切り替え
+          </button>
+        </div>
+
+        <h3 class="h5 mb-4">投稿した句一覧</h3>
+        <div class="grid gap-4">
+          <% @posts.each do |post| %>
+            <div class="card mb-4">
+              <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
+                <div class="card-body">
+                  <% if post.image_post&.image.present? %>
+                    <div class="mb-4">
+                      <%= image_tag url_for(post.image_post.image), class: "w-100 rounded" %>
+                      <% if post.image_post.description.present? %>
+                        <p class="mt-2 text-muted small"><%= post.image_post.description %></p>
+                      <% end %>
+                    </div>
                   <% end %>
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="badge bg-primary"><%= post.tags.first&.name %></span>
+                    <small class="text-muted"><%= l post.created_at, format: :long %></small>
+                  </div>
+                  <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
                 </div>
               <% end %>
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="badge bg-primary"><%= post.tags.first&.name %></span>
-                <small class="text-muted"><%= l post.created_at, format: :long %></small>
-              </div>
-              <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
             </div>
           <% end %>
         </div>
-      <% end %>      
+      </div>
 
       <div class="card mt-4">
         <div class="card-body text-center">
