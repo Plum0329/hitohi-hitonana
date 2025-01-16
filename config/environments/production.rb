@@ -90,4 +90,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.hosts << 'hitohi-hitonana.com'
+  config.hosts << 'www.hitohi-hitonana.com'
 end
