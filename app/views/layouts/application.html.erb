@@ -9,6 +9,38 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all", as: "style" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
     <%= yield :page_javascript %>
+
+    <style>
+      .back-button {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        position: relative;
+        transition: opacity 0.2s ease-in-out;
+      }
+      
+      .back-button.loading {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      
+      .back-button.loading::after {
+        content: '';
+        position: absolute;
+        right: -1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(59, 130, 246, 0.5);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+      
+      @keyframes spin {
+        to { transform: translateY(-50%) rotate(360deg); }
+      }
+    </style>
   </head>
 
   <body>

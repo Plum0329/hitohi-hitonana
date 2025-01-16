@@ -33,6 +33,8 @@
               <%= button_to "画像なしで投稿", image_posts_path, method: :post, class: "button button-secondary" %>
             </div>
           <% end %>
+
+          <%= render 'shared/back_button', fallback_path: root_path %>
         </div>
       </div>
     </div>
