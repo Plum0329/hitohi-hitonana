@@ -1,3 +1,5 @@
+https://hitohi-hitonana.com/
+
 ■ER図
 [![Image from Gyazo](https://i.gyazo.com/fbafc7651d654787c11b9121b6ab9dc3.png)](https://gyazo.com/fbafc7651d654787c11b9121b6ab9dc3)
 
@@ -60,5 +62,3 @@ CSS等でレイアウト等の調整
 Ruby: 3.2.2
 Rails: 7.0.8
 PostgreSQL: 14.10
-
-Rails: 7がログアウトと相性がよくなさそう？バージョンダウン検討中。
