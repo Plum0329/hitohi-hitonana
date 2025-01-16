@@ -93,4 +93,5 @@ Rails.application.configure do
 
   config.hosts << 'hitohi-hitonana.com'
   config.hosts << 'www.hitohi-hitonana.com'
+  config.hosts << 'graduation-project-q8k9.onrender.com'
 end
