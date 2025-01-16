@@ -44,31 +44,7 @@
   </head>
 
   <body>
-    <header class="header">
-      <div class="header-content">
-        <div class="header-left">
-          <%= link_to 'ホーム', root_path, class: 'button' %>
-          <% if logged_in? %>
-            <%= link_to '句一覧', posts_path, class: 'button' %>
-            <%= link_to 'お題一覧', themes_path, class: 'button' %>
-          <% end %>
-        </div>
-
-        <div class="header-right">
-          <% if logged_in? %>
-            <div class="mr-4">
-              <%= link_to profile_path, class: 'text-gray-700 hover:text-gray-900' do %>
-                <span class="font-medium"><%= current_user.name %></span>
-              <% end %>
-            </div>
-            <%= link_to '句を詠む', new_image_post_path, class: 'button button-success' %>
-          <% else %>
-            <%= link_to 'ログイン', login_path, class: 'button' %>
-            <%= link_to '新規登録', signup_path, class: 'button' %>
-          <% end %>
-        </div>
-      </div>
-    </header>
+    <%= render 'shared/header' %>
 
     <% flash.each do |key, value| %>
       <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
