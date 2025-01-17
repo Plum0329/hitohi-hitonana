@@ -7,12 +7,15 @@ class PostsController < ApplicationController
 
   def index
     begin
-      @posts = Post.includes(:user, :tags, :image_post, theme: [:image_attachment]).order(created_at: :desc).to_a
+      @posts = Post.includes(:user, :tags, :image_post, theme: [:image_attachment])
+                   .order(created_at: :desc)
+                   .page(params[:page])
+                   .per(10)
       @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     rescue => e
       logger.error "Error in posts#index: #{e.message}"
       logger.error e.backtrace.join("\n")
-      @posts = []
+      @posts = Post.none.page(params[:page])
       flash.now[:alert] = "投稿の取得中にエラーが発生しました"
     end
   end

@@ -1,0 +1,21 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-4 h4"><%= @user.name %>さんが作成したお題一覧</h2>
+
+      <div class="grid gap-4">
+        <% if @themes.any? %>
+          <%= render partial: 'themes/theme', collection: @themes %>
+        <% else %>
+          <p class="text-center text-muted">まだお題を作成していません</p>
+        <% end %>
+      </div>
+
+      <div class="mt-4">
+        <%= paginate @themes %>
+      </div>
+
+      <%= render 'shared/back_button', fallback_path: profile_path %>
+    </div>
+  </div>
+</div>

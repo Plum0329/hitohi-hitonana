@@ -6,52 +6,68 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all", as: "style" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
     <%= yield :page_javascript %>
-
-    <style>
-      .back-button {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        position: relative;
-        transition: opacity 0.2s ease-in-out;
-      }
-      
-      .back-button.loading {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-      
-      .back-button.loading::after {
-        content: '';
-        position: absolute;
-        right: -1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1rem;
-        height: 1rem;
-        border: 2px solid rgba(59, 130, 246, 0.5);
-        border-top-color: transparent;
-        border-radius: 50%;
-        animation: spin 0.6s linear infinite;
-      }
-      
-      @keyframes spin {
-        to { transform: translateY(-50%) rotate(360deg); }
-      }
-    </style>
   </head>
 
   <body>
-    <%= render 'shared/header' %>
+    <div class="page-wrapper" data-controller="text-direction">
+      <header class="header">
+        <div class="container">
+          <div class="header-content">
+            <div class="header-left">
+              <%= link_to 'ホーム', root_path, class: 'button' %>
+              <% if logged_in? %>
+                <%= link_to '句一覧', posts_path, class: 'button' %>
+                <%= link_to 'お題一覧', themes_path, class: 'button' %>
+              <% end %>
+            </div>
 
-    <% flash.each do |key, value| %>
-      <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
-        <%= value %>
-      </div>
-    <% end %>
+            <div class="header-right">
+              <% if logged_in? %>
+                <%= link_to profile_path, class: 'text-decoration-none text-dark' do %>
+                  <span class="fw-medium"><%= current_user.name %></span>
+                <% end %>
+                <%= link_to '句を詠む', new_image_post_path, class: 'button button-success ms-3' %>
+              <% else %>
+                <%= link_to 'ログイン', login_path, class: 'button' %>
+                <%= link_to '新規登録', signup_path, class: 'button' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </header>
 
-    <%= yield %>
+      <% if flash.any? %>
+        <div class="alert-wrapper">
+          <% flash.each do |key, value| %>
+            <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %> text-center">
+              <%= value %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <main class="main-content-wrapper">
+        <% if content_for?(:with_direction_toggle) %>
+          <div class="container">
+            <div class="direction-toggle-container text-end">
+              <button type="button"
+                      data-text-direction-target="toggle"
+                      data-action="click->text-direction#toggle"
+                      class="btn btn-outline-secondary">
+                縦書き/横書き切り替え
+              </button>
+            </div>
+            <%= yield %>
+          </div>
+        <% else %>
+          <div class="container">
+            <%= yield %>
+          </div>
+        <% end %>
+      </main>
+    </div>
   </body>
 </html>

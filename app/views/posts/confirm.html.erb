@@ -1,69 +1,62 @@
-<div class="container" data-controller="text-direction">
-  <div class="text-end mb-3">
-    <button type="button"
-            data-text-direction-target="toggle"
-            data-action="click->text-direction#toggle"
-            class="btn btn-outline-secondary">
-      縦書き/横書き切り替え
-    </button>
-  </div>
+<% content_for :with_direction_toggle, true %>
 
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <h1 class="text-center mb-4">投稿内容の確認</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h1 class="text-center mb-4">投稿内容の確認</h1>
 
-      <% if @theme %>
-        <div class="card mb-4">
-          <div class="card-body">
-            <%= image_tag @theme.image, class: "w-100 rounded-lg" if @theme.image.attached? %>
-            <p class="mt-2 text-muted"><%= @theme.description %></p>
-          </div>
-        </div>
-      <% elsif @image_post&.image.present? %>
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 mb-3">選択した画像</h2>
-            <%= image_tag url_for(@image_post.image), class: "w-100 rounded-lg" %>
-            <% if @image_post.description.present? %>
-              <p class="mt-2 text-muted"><%= @image_post.description %></p>
+    <div class="card mb-4">
+      <div class="card-body">
+        <% if @post.image_post.present? && @post.image_post.image.present? %>
+          <div class="mb-4">
+            <div class="image-container">
+              <%= image_tag @post.image_post.image, class: "w-100 rounded-lg" %>
+            </div>
+            <% if @post.image_post.description.present? %>
+              <p class="mt-2 text-muted"><%= @post.image_post.description %></p>
             <% end %>
           </div>
-        </div>
-      <% end %>
-      
-      <div class="card mb-4">
-        <div class="card-body">
-          <div class="mb-4">
-            <h2 class="h5 mb-2">種類</h2>
-            <p class="mb-0"><%= @tag&.name %></p>
-          </div>
-
-          <div class="mb-4">
-            <h2 class="h5 mb-2">読み方</h2>
-            <p class="mb-0"><%= @post&.reading %></p>
-          </div>
-
-          <div class="mb-4">
-            <h2 class="h5 mb-2">本文</h2>
-            <%= render partial: 'post_content', locals: { content: @post&.display_content } %>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center mt-4">
-        <%= form_with(model: @post, local: true, class: 'd-inline') do |f| %>
-          <%= f.hidden_field :reading %>
-          <%= f.hidden_field :display_content %>
-          <%= f.submit "投稿する", class: "button button-primary me-2" %>
         <% end %>
-        <%= link_to "本文を修正", new_content_posts_path, class: "button me-2" %>
-        <%= link_to "読み方を修正", new_reading_posts_path, class: "button me-2" %>
-        <%= link_to "種類を修正", new_type_posts_path, class: "button me-2" %>
-        <% if @theme %>
-          <%= link_to "お題の選択に戻る", themes_path, class: "button" %>
-        <% else %>
-          <%= link_to "画像を修正", new_image_post_path, class: "button" %>
+
+        <% if @post.theme.present? %>
+          <div class="mb-4">
+            <% if @post.theme.image.attached? %>
+              <div class="image-container">
+                <%= image_tag @post.theme.image, class: "w-100 rounded-lg" %>
+              </div>
+            <% end %>
+            <p class="mt-2 text-muted"><%= @post.theme.description %></p>
+          </div>
         <% end %>
+
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <span class="badge bg-primary"><%= @post.tags.first&.name %></span>
+        </div>
+
+        <%= render partial: 'posts/post_content', locals: { content: @post.display_content } %>
+
+        <div class="d-flex justify-content-between mt-4">
+          <%= button_to '戻る', { action: 'new_content' }, 
+              method: :get,
+              params: { 
+                content: @post.content,
+                theme_id: @post.theme_id,
+                tag: @post.tags.first&.name,
+                image_post: @post.image_post&.attributes&.slice('description')
+              },
+              class: 'button' %>
+
+          <%= button_to '投稿する',
+              { action: 'create' },
+              method: :post,
+              params: { 
+                content: @post.content,
+                theme_id: @post.theme_id,
+                tag: @post.tags.first&.name,
+                image_post: @post.image_post&.attributes&.slice('description')
+              },
+              class: 'button button-primary',
+              form: { data: { turbo: false } } %>
+        </div>
       </div>
     </div>
   </div>
