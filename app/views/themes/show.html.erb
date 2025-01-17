@@ -16,7 +16,12 @@
             <%= image_tag @theme.image, class: "w-100 rounded-lg" %>
           <% end %>
           
-          <p class="mt-2 text-muted"><%= @theme.description %></p>
+          <div class="mt-2">
+            <p class="text-muted"><%= @theme.description %></p>
+            <% if logged_in? && current_user == @theme.user %>
+              <span class="badge bg-info">自分が投稿したお題</span>
+            <% end %>
+          </div>
           
           <% if logged_in? && @theme.available_for?(current_user) %>
             <%= link_to 'このお題で詠む', new_type_theme_posts_path(@theme), 
