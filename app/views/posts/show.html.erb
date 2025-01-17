@@ -1,64 +1,50 @@
-<div class="container" data-controller="text-direction">
-  <div class="text-end mb-3">
-    <button type="button"
-            data-text-direction-target="toggle"
-            data-action="click->text-direction#toggle"
-            class="btn btn-outline-secondary">
-      縦書き/横書き切り替え
-    </button>
-  </div>
+<% content_for :with_direction_toggle, true %>
 
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card mb-3">
-        <div class="card-body">
-          <% if @post.theme.present? || @theme.present? %>
-            <div class="mb-4">
-              <% theme = @post.theme || @theme %>
-              <%= image_tag theme.image, class: "w-100 rounded-lg" if theme.image.attached? %>
-              <p class="mt-2 text-muted"><%= theme.description %></p>
-              <% if logged_in? && theme.available_for?(current_user) %>
-                <%= link_to 'このお題で詠む', new_type_theme_posts_path(theme), 
-                  class: "button button-primary mt-2 d-block text-center" %>
-              <% end %>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="mb-4">
+          <% if @post.theme.present? %>
+            <% if @post.theme.image.attached? %>
+              <div class="image-container">
+                <%= image_tag @post.theme.image, class: "w-100 rounded-lg" %>
+              </div>
+            <% end %>
+            <p class="mt-2 text-muted"><%= @post.theme.description %></p>
+          <% elsif @post.image_post&.image.present? %>
+            <div class="image-container">
+              <%= image_tag @post.image_post.image, class: "w-100 rounded-lg" %>
             </div>
-          <% elsif @post.image_post.present? %>
-            <div class="mb-4">
-              <% if @post.image_post.image.attached? %>
-                <%= image_tag url_for(@post.image_post.image), class: "w-100 rounded-lg" %>
-              <% end %>
-              <% if @post.image_post.description.present? %>
-                <p class="mt-2 text-muted"><%= @post.image_post.description %></p>
-              <% end %>
-            </div>
+            <% if @post.image_post.description.present? %>
+              <p class="mt-2 text-muted"><%= @post.image_post.description %></p>
+            <% end %>
           <% end %>
 
-          <%= render partial: 'post_content', locals: { content: @post.display_content } %>
-          <p class="card-text text-muted"><small>読み：<%= @post.reading %></small></p>
-
-          <div class="post-tags mt-2">
-            <% @post.tags.each do |tag| %>
-              <span class="badge bg-secondary"><%= tag.name %></span>
-            <% end %>
-            <% if logged_in? && current_user == @post.user %>
-              <span class="badge bg-success">自分が詠んだ句</span>
-            <% end %>
+          <div class="d-flex justify-content-between align-items-start mt-3">
+            <div>
+              <span class="badge bg-primary me-1"><%= @post.tags.first&.name %></span>
+              <% if logged_in? && current_user == @post.user %>
+                <span class="badge bg-success me-1">自分が詠んだ句</span>
+              <% end %>
+            </div>
+            <small class="text-muted"><%= l @post.created_at, format: :long %></small>
           </div>
-          
-          <small class="text-muted d-block mt-2"><%= l @post.created_at, format: :long %></small>
-          
-          <% if logged_in? && current_user == @post.user %>
-            <div class="mt-3">
-              <%= button_to '削除', post_path(@post), 
-                  method: :delete, 
-                  data: { turbo_confirm: "この句を削除してもよろしいですか？" },
-                  class: 'button button-danger w-100' %>
-            </div>
-          <% end %>
         </div>
-      </div>
 
-      <%= render 'shared/back_button', fallback_path: posts_path %>
+        <%= render partial: 'posts/post_content', locals: { content: @post.display_content } %>
+
+        <% if logged_in? && current_user == @post.user %>
+          <div class="mt-3">
+            <%= button_to '削除', post_path(@post), 
+                method: :delete, 
+                form: { data: { turbo_confirm: '本当に削除してもよろしいですか？' } },
+                class: 'button button-danger' %>
+          </div>
+        <% end %>
+      </div>
     </div>
+
+    <%= render 'shared/back_button', fallback_path: posts_path %>
   </div>
 </div>

@@ -3,7 +3,12 @@ Rails.application.routes.draw do
   
   get 'signup', to: 'users#new'
   post 'signup', to: 'users#create'
-  resources :users, only: [:create]
+  resources :users, only: [:create] do
+    member do
+      get 'posts'
+      get 'themes', to: 'themes#user_themes'
+    end
+  end
 
   get 'login', to: 'user_sessions#new'
   post 'login', to: 'user_sessions#create'

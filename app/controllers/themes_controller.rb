@@ -3,18 +3,13 @@ class ThemesController < ApplicationController
   before_action :set_theme, only: [:show, :write]
 
   def index
-    @themes = Theme.all.order(created_at: :desc)
+    @themes = Theme.all.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show
     @theme = Theme.includes(:user, posts: [:user, :tags]).find(params[:id])
     @posts = Post.where(theme_id: @theme.id).includes(:user, :tags).order(created_at: :desc)
     @original_post = Post.where(theme_id: @theme.id).order(created_at: :asc).first
-    
-    logger.debug "Theme ID: #{@theme.id}"
-    logger.debug "Theme posts count: #{@posts.size}"
-    logger.debug "Posts IDs: #{@posts.map { |p| "#{p.id} (#{p.created_at})" }}"
-    logger.debug "Original post: #{@original_post&.id} (#{@original_post&.created_at})"
   end
 
   def new
@@ -59,6 +54,11 @@ class ThemesController < ApplicationController
       logger.error e.backtrace.join("\n")
       redirect_to @theme, alert: '削除中にエラーが発生しました'
     end
+  end
+
+  def user_themes
+    @user = User.find(params[:id])
+    @themes = @user.themes.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   private
