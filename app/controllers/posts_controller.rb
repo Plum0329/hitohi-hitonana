@@ -6,140 +6,179 @@ class PostsController < ApplicationController
   before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
 
   def index
-    begin
-      @posts = Post.includes(:user, :tags, :image_post, theme: [:image_attachment])
-                   .order(created_at: :desc)
-                   .page(params[:page])
-                   .per(10)
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
-    rescue => e
-      logger.error "Error in posts#index: #{e.message}"
-      logger.error e.backtrace.join("\n")
-      @posts = Post.none.page(params[:page])
-      flash.now[:alert] = "投稿の取得中にエラーが発生しました"
-    end
+    @posts = Post.includes(:user, :tags, :image_post, theme: [:image_attachment])
+                 .order(created_at: :desc)
+                 .page(params[:page])
+                 .per(10)
+    @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+  rescue => e
+    logger.error "Error in posts#index: #{e.message}"
+    logger.error e.backtrace.join("\n")
+    @posts = Post.none.page(params[:page])
+    flash.now[:alert] = "投稿の取得中にエラーが発生しました"
   end
 
   def show
-    begin
-      @post = Post.includes(:user, :tags, :theme, :image_post).find(params[:id])
-      @theme = if @post.theme.present?
-        @post.theme
-      elsif @post.image_post.present?
-        Theme.find_by(image_post_id: @post.image_post.id)
-      end
-    rescue ActiveRecord::RecordNotFound
-      redirect_to posts_path, alert: '投稿が見つかりませんでした'
-    rescue => e
-      logger.error "Error in posts#show: #{e.message}"
-      redirect_to posts_path, alert: '投稿の取得中にエラーが発生しました'
+    @post = Post.includes(:user, :tags, :theme, :image_post).find(params[:id])
+    @theme = if @post.theme.present?
+      @post.theme
+    elsif @post.image_post.present?
+      Theme.find_by(image_post_id: @post.image_post.id)
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to posts_path, alert: '投稿が見つかりませんでした'
+  rescue => e
+    logger.error "Error in posts#show: #{e.message}"
+    redirect_to posts_path, alert: '投稿の取得中にエラーが発生しました'
   end
 
   def new_type
-    begin
-      @post = Post.new
-      ensure_tags_exist
-      if @theme
-        unless @theme.available_for?(current_user)
-          redirect_to theme_path(@theme), alert: 'このお題では句を詠むことができません'
-          return
-        end
-        session[:theme_id] = @theme.id
-      else
-        @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
-      end
-    rescue => e
-      logger.error "Error in posts#new_type: #{e.message}"
-      redirect_to posts_path, alert: 'エラーが発生しました'
+    if params[:from_confirm].present?
+      session[:from_confirm] = true
     end
+
+    if params[:post].present?
+      session[:post_params] ||= {}
+      session[:post_params].merge!(params[:post].to_unsafe_h)
+    end
+    
+    @post = Post.new(session[:post_params])
+    ensure_tags_exist
+
+    if @theme
+      unless @theme.available_for?(current_user)
+        redirect_to theme_path(@theme), alert: 'このお題では句を詠むことができません'
+        return
+      end
+      session[:theme_id] = @theme.id
+    elsif session[:no_image]
+      session.delete(:image_post_id)
+    else
+      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    end
+  rescue => e
+    logger.error "Error in posts#new_type: #{e.message}"
+    logger.error e.backtrace.join("\n")
+    redirect_to new_type_posts_path, alert: 'エラーが発生しました'
   end
 
   def new_reading
-    begin
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
-      if params[:post] && params[:post][:tag_id].present?
-        session[:post_params] ||= {} 
-        session[:post_params]['tag_id'] = params[:post][:tag_id]
-      end
-    
-      @post = Post.new(session[:post_params])
-      @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
-    
-      redirect_to new_type_posts_path, alert: '句の種類を選択してください' unless @tag
-    rescue => e
-      logger.error "Error in posts#new_reading: #{e.message}"
-      redirect_to new_type_posts_path, alert: 'エラーが発生しました'
+    if params[:from_confirm].present?
+      session[:from_confirm] = true
     end
+
+    @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    if params[:post] && params[:post][:tag_id].present?
+      session[:post_params] ||= {} 
+      session[:post_params].merge!(params[:post].to_unsafe_h)
+    end
+  
+    @post = Post.new(session[:post_params])
+    @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
+  
+    redirect_to new_type_posts_path, alert: '句の種類を選択してください' unless @tag
+  rescue => e
+    logger.error "Error in posts#new_reading: #{e.message}"
+    redirect_to new_type_posts_path, alert: 'エラーが発生しました'
   end
 
   def new_content
-    begin
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
-      if params[:post] && params[:post][:reading].present?
-        session[:post_params] ||= {}
-        session[:post_params].merge!({
-          'reading' => params[:post][:reading],
-          'tag_id' => params[:post][:tag_id]
-        })
-      end
-    
-      @post = Post.new(session[:post_params])
-      @tag = Tag.find_by(id: session[:post_params]['tag_id'])
-    
-      if !session[:post_params]&.dig('reading')
-        redirect_to new_reading_posts_path, alert: '読み方を入力してください'
-      end
-    rescue => e
-      logger.error "Error in posts#new_content: #{e.message}"
-      redirect_to new_reading_posts_path, alert: 'エラーが発生しました'
+    if params[:from_confirm].present?
+      session[:from_confirm] = true
     end
+
+    @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    if params[:post] && params[:post][:reading].present?
+      session[:post_params] ||= {}
+      session[:post_params].merge!(params[:post].to_unsafe_h)
+    end
+  
+    @post = Post.new(session[:post_params])
+    @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
+  
+    if !session[:post_params]&.dig('reading')
+      redirect_to new_reading_posts_path, alert: '読み方を入力してください'
+    end
+  rescue => e
+    logger.error "Error in posts#new_content: #{e.message}"
+    redirect_to new_reading_posts_path, alert: 'エラーが発生しました'
+  end
+
+  def confirm
+    @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    if params[:post]
+      session[:post_params] ||= {}
+      session[:post_params].merge!(params[:post].permit(:display_content, :reading, :tag_id))
+    end
+    
+    @post = Post.new(session[:post_params])
+    @tag = Tag.find_by(id: session[:post_params]['tag_id'])
+  
+    if !session[:post_params]&.dig('display_content')
+      redirect_to new_content_posts_path, alert: '本文を入力してください'
+    end
+  rescue => e
+    logger.error "Error in posts#confirm: #{e.message}"
+    redirect_to new_content_posts_path, alert: 'エラーが発生しました'
   end
 
   def create
     begin
-      @post = current_user.posts.build(
-        reading: session[:post_params]['reading'],
-        display_content: session[:post_params]['display_content']
-      )
+      ActiveRecord::Base.transaction do
+        @post = current_user.posts.build(
+          reading: session[:post_params]['reading'],
+          display_content: session[:post_params]['display_content']
+        )
 
-      if session[:theme_id]
-        @theme = Theme.find(session[:theme_id])
-        @post.theme = @theme
-        theme_tag = Tag.find_or_create_by!(name: 'お題から詠まれた句')
-        @post.tags << theme_tag
-      elsif session[:image_post_id]
-        image_post = ImagePost.find(session[:image_post_id])
-        @post.image_post = image_post
-        if image_post.theme.present?
-          @theme = image_post.theme
+        if session[:theme_id]
+          @theme = Theme.find(session[:theme_id])
           @post.theme = @theme
+          theme_tag = Tag.find_or_create_by!(name: 'お題から詠まれた句')
+          @post.tags << theme_tag
+        elsif session[:image_post_id]
+          @image_post = ImagePost.find(session[:image_post_id])
+          @post.image_post = @image_post
+          
+          # 画像投稿からお題を作成
+          theme = current_user.themes.build(
+            description: @image_post.description,
+            image_post: @image_post
+          )
+          
+          if @image_post.image.present?
+            theme.image.attach(@image_post.image.blob)
+          end
+          
+          theme.save
+          @post.theme = theme
         end
-      end
 
-      tag_id = session[:post_params]['tag_id'] || session[:post_params][:tag_id]
-      if tag_id.present?
-        tag = Tag.find_by(id: tag_id)
-        @post.tags << tag if tag
-      end
+        tag_id = session[:post_params]['tag_id']
+        if tag_id.present?
+          tag = Tag.find_by(id: tag_id)
+          @post.tags << tag if tag
+        end
 
-      if @post.save
-        session[:post_params] = nil
-        session.delete(:image_post_id)
-        session.delete(:theme_id)
-        redirect_to posts_path, notice: '投稿が完了しました'
-      else
-        errors = @post.errors.full_messages
-        flash[:alert] = errors.join("<br>").html_safe
-
-        if @post.tags.empty?
-          redirect_to new_type_posts_path
-        elsif @post.reading.blank?
-          redirect_to new_reading_posts_path
-        elsif @post.display_content.blank?
-          redirect_to new_content_posts_path
+        if @post.save
+          session[:post_params] = nil
+          session.delete(:image_post_id)
+          session.delete(:theme_id)
+          session.delete(:no_image)
+          session.delete(:from_confirm)  # フラグをクリア
+          redirect_to posts_path, notice: '投稿が完了しました'
         else
-          redirect_to new_type_posts_path
+          errors = @post.errors.full_messages
+          flash[:alert] = errors.join("<br>").html_safe
+
+          if @post.tags.empty?
+            redirect_to new_type_posts_path
+          elsif @post.reading.blank?
+            redirect_to new_reading_posts_path
+          elsif @post.display_content.blank?
+            redirect_to new_content_posts_path
+          else
+            redirect_to new_type_posts_path
+          end
         end
       end
     rescue => e
@@ -149,33 +188,13 @@ class PostsController < ApplicationController
     end
   end
 
-  def confirm
-    begin
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
-      if params[:post]
-        session[:post_params] ||= {}
-        session[:post_params].merge!(params[:post].permit(:display_content, :reading, :tag_id))
-      end
-      
-      @post = Post.new(session[:post_params])
-      @tag = Tag.find_by(id: session[:post_params]['tag_id'])
-    
-      if !session[:post_params]&.dig('display_content')
-        redirect_to new_content_posts_path, alert: '本文を入力してください'
-      end
-    rescue => e
-      logger.error "Error in posts#confirm: #{e.message}"
-      redirect_to new_content_posts_path, alert: 'エラーが発生しました'
-    end
-  end
-
   def destroy
     begin
       ActiveRecord::Base.transaction do
         if @post.image_post.present?
           theme = Theme.find_by(image_post_id: @post.image_post.id)
           theme.destroy! if theme
-  
+
           remaining_posts = Post.where(image_post_id: @post.image_post.id)
                               .where.not(id: @post.id)
                               .exists?
@@ -189,8 +208,18 @@ class PostsController < ApplicationController
       logger.error "Post destroy error: #{e.class}: #{e.message}"
       logger.error e.backtrace.join("\n")
       flash[:alert] = '削除中にエラーが発生しました'
+    ensure
+      redirect_to posts_path
     end
-    redirect_to posts_path
+  end
+
+  def discard
+    session[:post_params] = nil
+    session.delete(:image_post_id)
+    session.delete(:theme_id)
+    session.delete(:no_image)
+    session.delete(:from_confirm)
+    redirect_to root_path, notice: '投稿を破棄しました'
   end
 
   private
@@ -225,8 +254,9 @@ class PostsController < ApplicationController
   def load_post_from_session
     if session[:post_params]
       @post = Post.new(session[:post_params])
-      tag_id = session[:post_params]['tag_id'] || session[:post_params][:tag_id]
-      @tag = Tag.find_by(id: tag_id)
+      @tag = Tag.find_by(id: session[:post_params]['tag_id'])
+    else
+      @post = Post.new
     end
   end
 

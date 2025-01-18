@@ -55,9 +55,19 @@
           <%= f.hidden_field :reading, value: @post&.reading %>
           <%= f.hidden_field :tag_id, value: @tag&.id %>
 
-          <div class="text-center mt-3">
+          <div class="text-center">
             <%= f.submit "確認", class: "button button-primary" %>
-            <%= link_to "戻る", new_reading_posts_path, class: "button" %>
+            <div class="mt-2">
+              <% if session[:from_confirm] %>
+                <%= link_to '確認画面に戻る',
+                    confirm_posts_path(
+                      post: session[:post_params]
+                    ),
+                    class: 'button' %>
+              <% else %>
+                <%= link_to "戻る", new_reading_posts_path, class: "button" %>
+              <% end %>
+            </div>
           </div>
         </div>
       <% end %>
