@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get :new_reading
       get :new_content
       get :confirm
+      delete :discard
     end
   end
 

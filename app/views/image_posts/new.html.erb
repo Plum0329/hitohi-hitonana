@@ -30,11 +30,17 @@
 
             <div class="text-center">
               <%= f.submit "次へ進む", class: "button button-primary me-2" %>
-              <%= button_to "画像なしで投稿", image_posts_path, method: :post, class: "button button-secondary" %>
+              <%= button_to "画像なしで投稿", image_posts_path, method: :post, class: "button button-secondary d-inline-block" %>
             </div>
           <% end %>
 
-          <%= render 'shared/back_button', fallback_path: root_path %>
+          <div class="text-center mt-4">
+            <% if session[:from_confirm] %>
+              <%= link_to "確認画面に戻る", confirm_posts_path, class: "button d-block mx-auto" %>
+            <% else %>
+              <%= render 'shared/back_button', fallback_path: root_path %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
