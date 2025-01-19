@@ -32,6 +32,10 @@ Rails.application.routes.draw do
   end
 
   resources :themes do
+    member do
+      get :all_posts
+    end
+    
     resources :posts do
       collection do
         get :new_type
@@ -39,9 +43,6 @@ Rails.application.routes.draw do
         get :new_content
         get :confirm
       end
-    end
-    member do
-      get :write
     end
   end
   

@@ -30,12 +30,7 @@
               
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div class="tags">
-                  <% post.tags.each do |tag| %>
-                    <span class="badge bg-primary me-1"><%= tag.name %></span>
-                  <% end %>
-                  <% if logged_in? && current_user == post.user %>
-                    <span class="badge bg-success me-1">自分が詠んだ句</span>
-                  <% end %>
+                  <span class="badge bg-primary me-1"><%= post.tags.first&.name %></span>
                 </div>
                 <small class="text-muted"><%= l post.created_at, format: :long %></small>
               </div>
@@ -44,12 +39,12 @@
           <% end %>
         </div>
       <% end %>
+
+      <div class="mt-4">
+        <%= paginate @posts, window: 2 %>
+      </div>
     <% else %>
       <p class="text-center text-muted">投稿された句はありません。</p>
     <% end %>
-
-    <div class="mt-4">
-      <%= paginate @posts %>
-    </div>
   </div>
 </div>

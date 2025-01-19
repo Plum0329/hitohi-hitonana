@@ -1,6 +1,5 @@
 class PostsController < ApplicationController
   before_action :require_login, except: [:show]
-  before_action :set_post, only: [:show, :destroy]
   before_action :ensure_correct_user, only: [:destroy]
   before_action :load_post_from_session, only: [:new_reading, :new_content, :confirm]
   before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
@@ -133,8 +132,6 @@ class PostsController < ApplicationController
         if session[:theme_id]
           @theme = Theme.find(session[:theme_id])
           @post.theme = @theme
-          theme_tag = Tag.find_or_create_by!(name: 'お題から詠まれた句')
-          @post.tags << theme_tag
         elsif session[:image_post_id]
           @image_post = ImagePost.find(session[:image_post_id])
           @post.image_post = @image_post
@@ -189,6 +186,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    @post = Post.find(params[:id])
     begin
       ActiveRecord::Base.transaction do
         if @post.image_post.present?
@@ -228,10 +226,11 @@ class PostsController < ApplicationController
     params.require(:post).permit(:reading, :display_content, :tag_id)
   end
 
-  def set_post
-    @post = Post.includes(:user, :tags, :theme, :image_post).find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to posts_path, alert: '投稿が見つかりませんでした'
+  def ensure_correct_user
+    @post = Post.find(params[:id])
+    unless @post.user == current_user
+      redirect_to posts_path, status: :see_other
+    end
   end
 
   def set_theme
@@ -243,12 +242,6 @@ class PostsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     session.delete(:theme_id)
     redirect_to themes_path, alert: 'お題が見つかりませんでした'
-  end
-
-  def ensure_correct_user
-    unless @post.user == current_user
-      redirect_to posts_path, status: :see_other
-    end
   end
 
   def load_post_from_session

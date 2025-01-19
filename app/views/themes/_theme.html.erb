@@ -7,9 +7,6 @@
       
       <div class="mb-3">
         <p class="text-muted"><%= theme.description %></p>
-        <% if logged_in? && current_user == theme.user %>
-          <span class="badge bg-info">自分が投稿したお題</span>
-        <% end %>
       </div>
 
       <div class="d-flex justify-content-between align-items-center">
@@ -18,13 +15,6 @@
           <span class="ms-2">投稿数: <%= theme.posts.count %></span>
         </small>
       </div>
-      
-      <% if logged_in? && theme.available_for?(current_user) && current_user != theme.user %>
-        <div class="mt-2">
-          <%= link_to 'このお題で詠む', new_type_theme_posts_path(theme), 
-              class: "button button-primary d-block text-center" %>
-        </div>
-      <% end %>
     </div>
   <% end %>
 </div>
