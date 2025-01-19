@@ -10,22 +10,82 @@
         
         <div class="mt-2">
           <p class="text-muted"><%= @theme.description %></p>
-          <% if logged_in? && current_user == @theme.user %>
-            <span class="badge bg-info">自分が投稿したお題</span>
-          <% end %>
         </div>
-        
-        <% if logged_in? && @theme.available_for?(current_user) && current_user != @theme.user %>
-          <%= link_to 'このお題で詠む', new_type_theme_posts_path(@theme), 
-              class: "button button-primary mt-2 d-block text-center" %>
-        <% elsif logged_in? && @theme.posted_by?(current_user) && current_user != @theme.user %>
-          <div class="alert alert-info mt-2">
-            このお題では既に句を詠んでいます
+
+        <% if @first_post.present? %>
+          <div class="mt-4">
+            <h2 class="h4 mb-4"><%= @first_post.user == current_user ? "最初に自分が詠んだ句" : "最初に詠まれた句" %></h2>
+            <div class="card mb-3">
+              <%= link_to post_path(@first_post), class: "text-decoration-none", data: { turbo: false } do %>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="tags">
+                      <span class="badge bg-primary me-1"><%= @first_post.tags.first&.name %></span>
+                    </div>
+                    <small class="text-muted"><%= l @first_post.created_at, format: :long %></small>
+                  </div>
+                  <%= render partial: 'posts/post_content', locals: { content: @first_post.display_content } %>
+                </div>
+              <% end %>
+            </div>
           </div>
         <% end %>
 
+        <% if @my_post.present? && @my_post != @first_post %>
+          <div class="mt-4">
+            <h2 class="h4 mb-4">自分が詠んだ句</h2>
+            <div class="card mb-3">
+              <%= link_to post_path(@my_post), class: "text-decoration-none", data: { turbo: false } do %>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="tags">
+                      <span class="badge bg-primary me-1"><%= @my_post.tags.first&.name %></span>
+                    </div>
+                    <small class="text-muted"><%= l @my_post.created_at, format: :long %></small>
+                  </div>
+                  <%= render partial: 'posts/post_content', locals: { content: @my_post.display_content } %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @random_posts.any? %>
+          <div class="mt-4">
+            <h2 class="h4 mb-4">このお題で詠まれた句</h2>
+            <div class="grid gap-4">
+              <% @random_posts.each do |post| %>
+                <div class="card mb-3">
+                  <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="tags">
+                          <span class="badge bg-primary me-1"><%= post.tags.first&.name %></span>
+                        </div>
+                        <small class="text-muted"><%= l post.created_at, format: :long %></small>
+                      </div>
+                      <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="text-center mt-4">
+          <%= link_to "このお題で詠まれたすべての句（#{@total_posts_count}件）", 
+                    all_posts_theme_path(@theme), 
+                    class: "text-decoration-none" %>
+        </div>
+        
+        <% if logged_in? && !@theme.posted_by?(current_user) && current_user != @theme.user %>
+          <%= link_to 'このお題で詠む', new_type_theme_posts_path(@theme), 
+              class: "button button-primary mt-4 d-block text-center" %>
+        <% end %>
+
         <% if logged_in? && current_user == @theme.user %>
-          <div class="mt-2">
+          <div class="mt-4">
             <%= button_to '削除', theme_path(@theme), 
                 method: :delete,
                 data: { turbo_confirm: "このお題を削除してもよろしいですか？\n（このお題で詠まれた句は削除されません）" },
@@ -34,32 +94,8 @@
         <% end %>
 
         <div class="mt-4">
-          <h2 class="h4 mb-4">このお題で詠まれた句</h2>
-          <div class="grid gap-4">
-            <% @posts.each do |post| %>
-              <div class="card mb-3">
-                <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                      <div class="tags">
-                        <% if post.id == @original_post&.id %>
-                          <span class="badge bg-primary me-1">最初に詠まれた句</span>
-                        <% end %>
-                        <% post.tags.each do |tag| %>
-                          <span class="badge bg-primary me-1"><%= tag.name %></span>
-                        <% end %>
-                      </div>
-                      <small class="text-muted"><%= l post.created_at, format: :long %></small>
-                    </div>
-                    <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
+          <%= render 'shared/back_button', fallback_path: themes_path %>
         </div>
-
-        <%= render 'shared/back_button', fallback_path: themes_path %>
       </div>
     </div>
   </div>

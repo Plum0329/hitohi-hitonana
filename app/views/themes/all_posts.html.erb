@@ -1,0 +1,44 @@
+<% content_for :with_direction_toggle, true %>
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <% if @theme.image.attached? %>
+          <%= image_tag @theme.image, class: "w-100 rounded-lg" %>
+        <% end %>
+        
+        <div class="mt-2">
+          <p class="text-muted"><%= @theme.description %></p>
+        </div>
+
+        <div class="mt-4">
+          <h2 class="h4 mb-4">このお題で詠まれた句（<%= @posts.total_count %>件）</h2>
+          <div class="grid gap-4">
+            <% @posts.each do |post| %>
+              <div class="card mb-3">
+                <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <div class="tags">
+                        <span class="badge bg-primary me-1"><%= post.tags.first&.name %></span>
+                      </div>
+                      <small class="text-muted"><%= l post.created_at, format: :long %></small>
+                    </div>
+                    <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+
+            <div class="mt-4">
+              <%= paginate @posts %>
+            </div>
+          </div>
+        </div>
+
+        <%= render 'shared/back_button', fallback_path: theme_path(@theme) %>
+      </div>
+    </div>
+  </div>
+</div>
