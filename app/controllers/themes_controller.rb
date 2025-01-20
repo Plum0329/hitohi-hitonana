@@ -28,6 +28,16 @@ class ThemesController < ApplicationController
     redirect_to themes_path, alert: 'お題が見つかりませんでした'
   end
 
+  def user_themes
+    @user = User.find(params[:id])
+    @themes = @user.themes.includes(:image_attachment)
+                   .order(created_at: :desc)
+                   .page(params[:page])
+                   .per(10)
+  rescue ActiveRecord::RecordNotFound
+    redirect_to themes_path, alert: 'ユーザーが見つかりませんでした'
+  end
+
   def new
     @theme = Theme.new
   end
