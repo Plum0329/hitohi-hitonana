@@ -6,7 +6,7 @@ class UserSessionsController < ApplicationController
   def create
     # emailでユーザーを検索
     user = User.find_by(email: params[:email])
-    
+
     # ユーザーが見つかり、かつ退会済みの場合
     if user&.deleted?
       flash.now[:alert] = 'このアカウントは削除されています'

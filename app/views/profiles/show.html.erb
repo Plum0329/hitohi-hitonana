@@ -18,8 +18,8 @@
         <div class="mt-4 d-flex gap-2 flex-wrap">
           <%= link_to '編集', edit_profile_path, class: 'button' %>
           <%= link_to 'パスワード変更', password_profile_path, class: 'button' %>
-          <%= button_to 'ログアウト', 
-              logout_path, 
+          <%= button_to 'ログアウト',
+              logout_path,
               method: :delete,
               class: 'button',
               data: { turbo: true } %>
@@ -30,32 +30,14 @@
     <div>
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="h5 mb-0">投稿した句一覧</h3>
-        <%= link_to "すべての句を見る (#{@posts.count})", posts_user_path(@user), 
+        <%= link_to "すべての句を見る (#{@posts.count})", posts_user_path(@user.id),
             class: "text-decoration-none" %>
       </div>
 
       <% if @posts.exists? %>
         <div class="grid gap-4">
           <% @posts.limit(3).each do |post| %>
-            <div class="card mb-4">
-              <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
-                <div class="card-body">
-                  <% if post.image_post&.image.present? %>
-                    <div class="mb-4">
-                      <%= image_tag url_for(post.image_post.image), class: "w-100 rounded" %>
-                      <% if post.image_post.description.present? %>
-                        <p class="mt-2 text-muted small"><%= post.image_post.description %></p>
-                      <% end %>
-                    </div>
-                  <% end %>
-                  <div class="d-flex justify-content-between align-items-start mb-3">
-                    <span class="badge bg-primary"><%= post.tags.first&.name %></span>
-                    <small class="text-muted"><%= l post.created_at, format: :long %></small>
-                  </div>
-                  <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
-                </div>
-              <% end %>
-            </div>
+            <%= render partial: 'posts/post', locals: { post: post } %>
           <% end %>
         </div>
       <% else %>
@@ -66,7 +48,7 @@
     <div class="mb-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="h5 mb-0">作成したお題一覧</h3>
-        <%= link_to "すべてのお題を見る (#{@user.themes.count})", themes_user_path(@user), 
+        <%= link_to "すべてのお題を見る (#{@user.themes.count})", themes_user_path(@user.id),
             class: "text-decoration-none" %>
       </div>
 
@@ -79,7 +61,7 @@
 
     <div class="card mb-4">
       <div class="card-body text-center">
-        <%= button_to '退会する', 
+        <%= button_to '退会する',
             deactivate_registration_path,
             method: :delete,
             class: 'button button-danger',
