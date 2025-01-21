@@ -22,7 +22,6 @@ class UsersController < ApplicationController
   def themes
     @user = User.find(params[:id])
     @themes = @user.themes.order(created_at: :desc).page(params[:page])
-    render template: 'themes/index'
   end
 
   private
