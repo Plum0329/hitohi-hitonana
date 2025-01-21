@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :require_login, only: [:new, :create]
-  
+
   def new
     @user = User.new
   end
@@ -8,8 +8,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      auto_login(@user)
-      redirect_to root_path, notice: '新規登録が完了しました'
+      redirect_to root_path, notice: 'ユーザー登録が完了しました'
     else
       render :new, status: :unprocessable_entity
     end
@@ -17,7 +16,13 @@ class UsersController < ApplicationController
 
   def posts
     @user = User.find(params[:id])
-    @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(10)
+    @posts = @user.posts.order(created_at: :desc).page(params[:page])
+  end
+
+  def themes
+    @user = User.find(params[:id])
+    @themes = @user.themes.order(created_at: :desc).page(params[:page])
+    render template: 'themes/index'
   end
 
   private

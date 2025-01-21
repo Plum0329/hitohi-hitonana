@@ -1,0 +1,23 @@
+<footer class="footer py-3 bg-light mt-auto">
+  <div class="container">
+    <nav class="d-flex justify-content-center mb-3">
+      <ul class="nav">
+        <li class="nav-item mx-3">
+          <%= link_to "このサイトについて", about_path, class: "btn btn-outline-secondary" %>
+        </li>
+        <li class="nav-item mx-3">
+          <%= link_to "利用規約", terms_path, class: "btn btn-outline-secondary" %>
+        </li>
+        <li class="nav-item mx-3">
+          <%= link_to "プライバシーポリシー", privacy_path, class: "btn btn-outline-secondary" %>
+        </li>
+        <li class="nav-item mx-3">
+          <%= link_to "お問い合わせ", contact_path, class: "btn btn-outline-secondary" %>
+        </li>
+      </ul>
+    </nav>
+    <div class="text-center text-muted">
+      <p class="mb-0">&copy; <%= Time.current.year %> ひとひ人七. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

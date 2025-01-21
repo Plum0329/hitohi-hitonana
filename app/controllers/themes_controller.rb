@@ -1,41 +1,16 @@
 class ThemesController < ApplicationController
-  before_action :require_login, except: [:index, :show, :all_posts]
-  
+  before_action :set_theme, only: [:show, :edit, :update, :destroy, :all_posts]
+  skip_before_action :require_login, only: [:index, :show, :all_posts]
+
   def index
-    @themes = Theme.includes(:image_attachment, :user)
-                   .order(created_at: :desc)
-                   .page(params[:page])
-                   .per(10)
+    @themes = Theme.includes(:user, :image_post).order(created_at: :desc).page(params[:page])
   end
 
   def show
-    @theme = Theme.find(params[:id])
-    all_posts = @theme.posts.includes(:user, :tags)
-    @first_post = all_posts.order(created_at: :asc).first
-    
-    # ログインユーザーの投稿を取得（存在する場合）
-    @my_post = all_posts.find_by(user: current_user) if current_user
-
-    # 最初の投稿とユーザーの投稿を除いた残りの投稿をランダムに並び替え
-    excluded_post_ids = [@first_post&.id, @my_post&.id].compact
-    @random_posts = all_posts
-                    .where.not(id: excluded_post_ids)
-                    .order(Arel.sql('RANDOM()'))
-                    .limit(3)
-    
-    @total_posts_count = all_posts.count
-  rescue ActiveRecord::RecordNotFound
-    redirect_to themes_path, alert: 'お題が見つかりませんでした'
-  end
-
-  def user_themes
-    @user = User.find(params[:id])
-    @themes = @user.themes.includes(:image_attachment)
-                   .order(created_at: :desc)
-                   .page(params[:page])
-                   .per(10)
-  rescue ActiveRecord::RecordNotFound
-    redirect_to themes_path, alert: 'ユーザーが見つかりませんでした'
+    @first_post = @theme.posts.order(:created_at).first
+    @my_post = @theme.posts.find_by(user: current_user) if logged_in?
+    @random_posts = @theme.posts.where.not(id: [@first_post&.id, @my_post&.id].compact).order("RANDOM()").limit(3)
+    @total_posts_count = @theme.posts.count
   end
 
   def new
@@ -44,35 +19,40 @@ class ThemesController < ApplicationController
 
   def create
     @theme = current_user.themes.build(theme_params)
-
     if @theme.save
-      redirect_to themes_path, notice: 'お題を投稿しました'
+      redirect_to themes_path, notice: 'お題を作成しました'
     else
       render :new, status: :unprocessable_entity
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @theme.update(theme_params)
+      redirect_to theme_path(@theme), notice: 'お題を更新しました'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def destroy
-    @theme = current_user.themes.find(params[:id])
     @theme.destroy
-    redirect_to themes_path, notice: 'お題を削除しました', status: :see_other
-  rescue ActiveRecord::RecordNotFound
-    redirect_to themes_path, alert: 'お題が見つかりませんでした'
+    redirect_to themes_path, notice: 'お題を削除しました'
   end
 
   def all_posts
-    @theme = Theme.find(params[:id])
-    @posts = @theme.posts.includes(:user, :tags)
-                  .order(created_at: :asc)
-                  .page(params[:page])
-                  .per(10)
-  rescue ActiveRecord::RecordNotFound
-    redirect_to themes_path, alert: 'お題が見つかりませんでした'
+    @posts = @theme.posts.includes(:user, :tags).order(created_at: :desc).page(params[:page])
   end
 
   private
 
+  def set_theme
+    @theme = Theme.find(params[:id])
+  end
+
   def theme_params
-    params.require(:theme).permit(:description, :image)
+    params.require(:theme).permit(:title, :description, :image)
   end
 end

@@ -1,10 +1,16 @@
-<div class="card mb-3">
+<div class="card mb-4">
   <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start mb-2">
-        <div class="tags">
-          <span class="badge bg-primary me-1"><%= post.tags.first&.name %></span>
+      <% if post.image_post&.image.present? %>
+        <div class="mb-4">
+          <%= image_tag url_for(post.image_post.image), class: "w-100 rounded" %>
+          <% if post.image_post.description.present? %>
+            <p class="mt-2 text-muted small"><%= post.image_post.description %></p>
+          <% end %>
         </div>
+      <% end %>
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <span class="badge bg-primary"><%= post.tags.first&.name %></span>
         <small class="text-muted"><%= l post.created_at, format: :long %></small>
       </div>
       <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>

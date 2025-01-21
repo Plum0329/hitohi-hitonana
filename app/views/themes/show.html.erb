@@ -7,7 +7,7 @@
         <% if @theme.image.attached? %>
           <%= image_tag @theme.image, class: "w-100 rounded-lg" %>
         <% end %>
-        
+
         <div class="mt-2">
           <p class="text-muted"><%= @theme.description %></p>
         </div>
@@ -74,19 +74,19 @@
         <% end %>
 
         <div class="text-center mt-4">
-          <%= link_to "このお題で詠まれたすべての句（#{@total_posts_count}件）", 
-                    all_posts_theme_path(@theme), 
+          <%= link_to "このお題で詠まれたすべての句（#{@total_posts_count}件）",
+                    all_posts_theme_path(@theme),
                     class: "text-decoration-none" %>
         </div>
-        
+
         <% if logged_in? && !@theme.posted_by?(current_user) && current_user != @theme.user %>
-          <%= link_to 'このお題で詠む', new_type_theme_posts_path(@theme), 
+          <%= link_to 'このお題で詠む', new_type_theme_posts_path(@theme),
               class: "button button-primary mt-4 d-block text-center" %>
         <% end %>
 
         <% if logged_in? && current_user == @theme.user %>
           <div class="mt-4">
-            <%= button_to '削除', theme_path(@theme), 
+            <%= button_to '削除', theme_path(@theme),
                 method: :delete,
                 data: { turbo_confirm: "このお題を削除してもよろしいですか？\n（このお題で詠まれた句は削除されません）" },
                 class: 'button button-danger' %>

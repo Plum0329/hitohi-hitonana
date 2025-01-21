@@ -1,16 +1,19 @@
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <h1 class="text-center mb-4">お題一覧</h1>
-    <% if @themes.present? %>
-      <% @themes.each do |theme| %>
-        <%= render partial: 'themes/theme', locals: { theme: theme } %>
-      <% end %>
-    <% else %>
-      <p class="text-center text-muted">お題はまだありません</p>
-    <% end %>
+<% content_for :with_direction_toggle, false %>
 
-    <div class="mt-4">
-      <%= paginate @themes %>
+<h1 class="text-center mb-4">お題一覧</h1>
+
+<% if @themes.any? %>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <% @themes.each do |theme| %>
+        <%= render partial: 'theme', locals: { theme: theme } %>
+      <% end %>
+
+      <div class="d-flex justify-content-center mt-4">
+        <%= paginate @themes %>
+      </div>
     </div>
   </div>
-</div>
+<% else %>
+  <p class="text-center text-muted">お題がありません</p>
+<% end %>

@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: [:create] do
     member do
       get 'posts'
-      get 'themes', to: 'themes#user_themes'
+      get 'themes'
     end
   end
 
@@ -54,4 +54,10 @@ Rails.application.routes.draw do
   resource :registration, only: [] do
     delete 'deactivate', to: 'registrations#deactivate'
   end
+
+  # フッター用のルーティング
+  get 'about', to: 'pages#about', as: :about
+  get 'terms', to: 'pages#terms', as: :terms
+  get 'privacy', to: 'pages#privacy', as: :privacy
+  get 'contact', to: 'pages#contact', as: :contact
 end
