@@ -37,7 +37,7 @@
       <% if @posts.exists? %>
         <div class="grid gap-4">
           <% @posts.limit(3).each do |post| %>
-            <%= render partial: 'posts/post', locals: { post: post } %>
+            <%= render partial: 'posts/post', locals: { post: post, show_like_button: false } %>
           <% end %>
         </div>
       <% else %>
@@ -53,7 +53,7 @@
       </div>
 
       <% if @user.themes.exists? %>
-        <%= render partial: 'themes/theme', collection: @user.themes.order(created_at: :desc).limit(3) %>
+        <%= render partial: 'themes/theme', collection: @user.themes.order(created_at: :desc).limit(3), locals: { show_like_button: false } %>
       <% else %>
         <p class="text-center text-muted">まだお題を作成していません</p>
       <% end %>

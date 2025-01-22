@@ -33,6 +33,16 @@
 
         <%= render partial: 'posts/post_content', locals: { content: @post.display_content } %>
 
+        <div class="d-flex justify-content-end mt-3">
+          <% if @show_like_button %>
+            <%= render 'shared/like_button', likeable: @post %>
+          <% else %>
+            <div class="likes-count text-muted">
+              <i class="far fa-heart"></i> <%= @post.likes_count %>
+            </div>
+          <% end %>
+        </div>
+
         <% if logged_in? && current_user == @post.user %>
           <div class="mt-3">
             <%= button_to '削除', post_path(@post), 

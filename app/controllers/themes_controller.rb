@@ -4,6 +4,7 @@ class ThemesController < ApplicationController
 
   def index
     @themes = Theme.includes(:user, :image_post).order(created_at: :desc).page(params[:page])
+    @show_like_button = false
   end
 
   def show
@@ -11,6 +12,7 @@ class ThemesController < ApplicationController
     @my_post = @theme.posts.find_by(user: current_user) if logged_in?
     @random_posts = @theme.posts.where.not(id: [@first_post&.id, @my_post&.id].compact).order("RANDOM()").limit(3)
     @total_posts_count = @theme.posts.count
+    @show_like_button = true
   end
 
   def new
@@ -38,12 +40,23 @@ class ThemesController < ApplicationController
   end
 
   def destroy
-    @theme.destroy
-    redirect_to themes_path, notice: 'お題を削除しました'
+    begin
+      ActiveRecord::Base.transaction do
+        # 関連する投稿のimage_post_idをnilに更新
+        @theme.posts.update_all(image_post_id: nil)
+        # お題を削除
+        @theme.destroy!
+      end
+      redirect_to themes_path, notice: 'お題を削除しました'
+    rescue => e
+      logger.error "Theme destroy error: #{e.message}"
+      redirect_to themes_path, alert: '削除中にエラーが発生しました'
+    end
   end
 
   def all_posts
     @posts = @theme.posts.includes(:user, :tags).order(created_at: :desc).page(params[:page])
+    @show_like_button = false
   end
 
   private

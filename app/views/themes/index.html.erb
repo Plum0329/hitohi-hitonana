@@ -6,7 +6,7 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <% @themes.each do |theme| %>
-        <%= render partial: 'theme', locals: { theme: theme } %>
+        <%= render partial: 'theme', locals: { theme: theme, show_like_button: false } %>
       <% end %>
 
       <div class="d-flex justify-content-center mt-4">
