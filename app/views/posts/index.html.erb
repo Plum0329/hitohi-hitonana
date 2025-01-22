@@ -1,50 +1,19 @@
 <% content_for :with_direction_toggle, true %>
 
+<h1 class="text-center mb-4">句一覧</h1>
+
 <div class="row justify-content-center">
   <div class="col-md-8">
-    <h1 class="text-center mb-4">句一覧</h1>
-    <% if @posts.present? %>
+    <% if @posts.any? %>
       <% @posts.each do |post| %>
-        <div class="card mb-3">
-          <%= link_to post_path(post), class: "text-decoration-none", data: { turbo: false } do %>
-            <div class="card-body">
-              <% if post.theme.present? %>
-                <div class="mb-4">
-                  <% if post.theme.image.attached? %>
-                    <div class="image-container-small">
-                      <%= image_tag post.theme.image, class: "w-100 rounded-lg theme-image-small" %>
-                    </div>
-                  <% end %>
-                  <p class="mt-2 text-muted"><%= post.theme.description %></p>
-                </div>
-              <% elsif post.image_post&.image.present? %>
-                <div class="mb-4">
-                  <div class="image-container-small">
-                    <%= image_tag post.image_post.image, class: "w-100 rounded-lg theme-image-small" %>
-                  </div>
-                  <% if post.image_post.description.present? %>
-                    <p class="mt-2 text-muted"><%= post.image_post.description %></p>
-                  <% end %>
-                </div>
-              <% end %>
-
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div class="tags">
-                  <span class="badge bg-primary me-1"><%= post.tags.first&.name %></span>
-                </div>
-                <small class="text-muted"><%= l post.created_at, format: :long %></small>
-              </div>
-              <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
-            </div>
-          <% end %>
-        </div>
+        <%= render partial: 'post', locals: { post: post, show_like_button: false } %>
       <% end %>
 
-      <div class="mt-4">
-        <%= paginate @posts, window: 2 %>
+      <div class="d-flex justify-content-center mt-4">
+        <%= paginate @posts %>
       </div>
     <% else %>
-      <p class="text-center text-muted">投稿された句はありません。</p>
+      <p class="text-center text-muted">まだ句が投稿されていません</p>
     <% end %>
   </div>
 </div>

@@ -3,6 +3,8 @@ class Theme < ApplicationRecord
   belongs_to :image_post, optional: true, dependent: :destroy
   has_many :posts, dependent: :nullify
   has_one_attached :image
+  has_many :likes, as: :likeable, dependent: :destroy
+  has_many :users_who_liked, through: :likes, source: :user
 
   validates :description, presence: true
 

@@ -6,7 +6,7 @@
           <%= image_tag theme.display_image, class: "w-100 rounded" %>
         </div>
       <% end %>
-      
+
       <div class="d-flex justify-content-between align-items-start mb-2">
         <span class="badge bg-primary">お題</span>
         <small class="text-muted"><%= l theme.created_at, format: :long %></small>
@@ -19,4 +19,10 @@
       </div>
     </div>
   <% end %>
+
+  <div class="card-footer bg-transparent">
+    <div class="d-flex justify-content-end">
+      <%= render 'shared/like_count', likeable: theme %>
+    </div>
+  </div>
 </div>

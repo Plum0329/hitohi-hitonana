@@ -1,0 +1,11 @@
+<div class="d-flex align-items-center gap-2">
+  <span class="like-heart <%= logged_in? && current_user.likes?(likeable) ? 'text-danger' : '' %>"><%= logged_in? && current_user.likes?(likeable) ? '♥' : '♡' %></span>
+  <span class="text-muted"><%= likeable.likes_count %></span>
+</div>
+
+<style>
+  .like-heart {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+</style>

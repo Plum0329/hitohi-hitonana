@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'home#index'
-  
+
   get 'signup', to: 'users#new'
   post 'signup', to: 'users#create'
   resources :users, only: [:create] do
@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     member do
       get :all_posts
     end
-    
+
     resources :posts do
       collection do
         get :new_type
@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  
+
   resource :profile, only: [:show, :edit, :update] do
     get 'password', to: 'profiles#edit_password'
     patch 'password', to: 'profiles#update_password'
@@ -55,7 +55,9 @@ Rails.application.routes.draw do
     delete 'deactivate', to: 'registrations#deactivate'
   end
 
-  # フッター用のルーティング
+  post 'like', to: 'likes#create', as: :like
+  delete 'unlike', to: 'likes#destroy', as: :unlike
+
   get 'about', to: 'pages#about', as: :about
   get 'terms', to: 'pages#terms', as: :terms
   get 'privacy', to: 'pages#privacy', as: :privacy

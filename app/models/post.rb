@@ -9,6 +9,8 @@ class Post < ApplicationRecord
   belongs_to :image_post, optional: true
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
+  has_many :likes, as: :likeable, dependent: :destroy
+  has_many :users_who_liked, through: :likes, source: :user
 
   validates :reading, presence: { message: "読み方を入力してください" }
   validates :display_content, presence: { message: "本文が入力されていません" }

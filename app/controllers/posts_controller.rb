@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :require_login, except: [:show]
+  before_action :require_login, except: [:show, :index]
   before_action :ensure_correct_user, only: [:destroy]
   before_action :load_post_from_session, only: [:new_reading, :new_content, :confirm]
   before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
@@ -10,6 +10,7 @@ class PostsController < ApplicationController
                  .page(params[:page])
                  .per(10)
     @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    @show_like_button = false
   rescue => e
     logger.error "Error in posts#index: #{e.message}"
     logger.error e.backtrace.join("\n")
@@ -24,6 +25,7 @@ class PostsController < ApplicationController
     elsif @post.image_post.present?
       Theme.find_by(image_post_id: @post.image_post.id)
     end
+    @show_like_button = true
   rescue ActiveRecord::RecordNotFound
     redirect_to posts_path, alert: '投稿が見つかりませんでした'
   rescue => e
@@ -40,7 +42,7 @@ class PostsController < ApplicationController
       session[:post_params] ||= {}
       session[:post_params].merge!(params[:post].to_unsafe_h)
     end
-    
+
     @post = Post.new(session[:post_params])
     ensure_tags_exist
 
@@ -71,10 +73,10 @@ class PostsController < ApplicationController
       session[:post_params] ||= {} 
       session[:post_params].merge!(params[:post].to_unsafe_h)
     end
-  
+
     @post = Post.new(session[:post_params])
     @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
-  
+
     redirect_to new_type_posts_path, alert: '句の種類を選択してください' unless @tag
   rescue => e
     logger.error "Error in posts#new_reading: #{e.message}"
@@ -91,10 +93,10 @@ class PostsController < ApplicationController
       session[:post_params] ||= {}
       session[:post_params].merge!(params[:post].to_unsafe_h)
     end
-  
+
     @post = Post.new(session[:post_params])
     @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
-  
+
     if !session[:post_params]&.dig('reading')
       redirect_to new_reading_posts_path, alert: '読み方を入力してください'
     end
@@ -109,10 +111,10 @@ class PostsController < ApplicationController
       session[:post_params] ||= {}
       session[:post_params].merge!(params[:post].permit(:display_content, :reading, :tag_id))
     end
-    
+
     @post = Post.new(session[:post_params])
     @tag = Tag.find_by(id: session[:post_params]['tag_id'])
-  
+
     if !session[:post_params]&.dig('display_content')
       redirect_to new_content_posts_path, alert: '本文を入力してください'
     end
@@ -135,17 +137,17 @@ class PostsController < ApplicationController
         elsif session[:image_post_id]
           @image_post = ImagePost.find(session[:image_post_id])
           @post.image_post = @image_post
-          
+
           # 画像投稿からお題を作成
           theme = current_user.themes.build(
             description: @image_post.description,
             image_post: @image_post
           )
-          
+
           if @image_post.image.present?
             theme.image.attach(@image_post.image.blob)
           end
-          
+
           theme.save
           @post.theme = theme
         end
@@ -198,7 +200,7 @@ class PostsController < ApplicationController
                               .exists?
           @post.image_post.destroy! unless remaining_posts
         end
-        
+
         @post.destroy!
         flash[:notice] = '投稿を削除しました'
       end
