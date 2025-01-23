@@ -55,7 +55,7 @@ class ThemesController < ApplicationController
   end
 
   def all_posts
-    @posts = @theme.posts.includes(:user, :tags).order(created_at: :desc).page(params[:page])
+    @posts = @theme.posts.includes(:user, :tags).order(created_at: :asc).page(params[:page])
     @show_like_button = false
   end
 

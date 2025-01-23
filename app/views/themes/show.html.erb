@@ -10,6 +10,7 @@
 
         <div class="mt-2">
           <p class="text-muted"><%= @theme.description %></p>
+          <%= render 'shared/theme_badges', theme: @theme %>
         </div>
 
         <div class="d-flex justify-content-end mt-3">
@@ -37,6 +38,7 @@
                           <span class="badge bg-secondary me-1"><%= tag.name %></span>
                         <% end %>
                       <% end %>
+                      <%= render 'shared/post_badges', post: @first_post %>
                     </div>
                     <small class="text-muted"><%= l @first_post.created_at, format: :long %></small>
                   </div>
@@ -62,6 +64,7 @@
                           <span class="badge bg-secondary me-1"><%= tag.name %></span>
                         <% end %>
                       <% end %>
+                      <%= render 'shared/post_badges', post: @my_post %>
                     </div>
                     <small class="text-muted"><%= l @my_post.created_at, format: :long %></small>
                   </div>
@@ -89,6 +92,7 @@
                               <span class="badge bg-secondary me-1"><%= tag.name %></span>
                             <% end %>
                           <% end %>
+                          <%= render 'shared/post_badges', post: post %>
                         </div>
                         <small class="text-muted"><%= l post.created_at, format: :long %></small>
                       </div>

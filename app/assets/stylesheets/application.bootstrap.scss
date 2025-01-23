@@ -109,22 +109,38 @@ body {
   cursor: pointer;
   background: #f8f9fa;
   color: #495057;
-  
+
   &:hover {
     background: #e9ecef;
     text-decoration: none;
     color: #212529;
   }
-  
-  &-success { 
-    background-color: #28a745; 
-    color: white; 
-    
+
+  &-success {
+    background-color: #28a745;
+    color: white;
+
     &:hover {
       background-color: #218838;
       color: white;
     }
   }
+}
+
+// バッジスタイル
+body .badge.bg-info {
+  background-color: #87CEEB !important;
+  color: #FFFFFF !important;
+}
+
+body .badge.bg-success-light {
+  background-color: #98FB98 !important;
+  color: #FFFFFF !important;
+}
+
+body .badge.bg-success {
+  background-color: #198754 !important;
+  color: #FFFFFF !important;
 }
 
 // writing-modeの影響を受けないようにする要素
