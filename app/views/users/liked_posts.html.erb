@@ -1,0 +1,15 @@
+<% content_for :with_direction_toggle, true %>
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-4 h4">いいねした句一覧</h2>
+
+    <% if @posts.present? %>
+      <div class="grid gap-4">
+        <%= render partial: 'posts/post', collection: @posts, locals: { show_like_button: @show_like_button } %>
+      </div>
+    <% else %>
+      <p class="text-center text-muted">まだいいねした句はありません</p>
+    <% end %>
+  </div>
+</div>

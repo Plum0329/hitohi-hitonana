@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     member do
       get 'posts'
       get 'themes'
+      get 'liked_posts'
+      get 'liked_themes'
     end
   end
 
