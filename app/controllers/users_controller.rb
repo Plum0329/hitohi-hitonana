@@ -16,7 +16,10 @@ class UsersController < ApplicationController
 
   def posts
     @user = User.find(params[:id])
-    @posts = @user.posts.order(created_at: :desc).page(params[:page])
+    @posts = @user.posts
+                .includes(:tags, :image_post, theme: [:posts, { image_attachment: :blob }])
+                .order(created_at: :desc)
+                .page(params[:page])
   end
 
   def themes
@@ -27,7 +30,7 @@ class UsersController < ApplicationController
   def liked_posts
     @user = User.find(params[:id])
     @posts = @user.likes.where(likeable_type: 'Post')
-                      .includes(likeable: [:tags, :image_post])
+                      .includes(likeable: [:tags, :image_post, theme: [:posts]])
                       .order(created_at: :desc)
                       .map(&:likeable)
     @show_like_button = true

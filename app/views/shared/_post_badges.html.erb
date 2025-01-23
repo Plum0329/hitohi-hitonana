@@ -1,0 +1,20 @@
+<div class="mt-2">
+  <%# お題から詠まれた句（全ページ共通） %>
+  <% if post.theme.present? && post.image_post.nil? %>
+    <span class="badge bg-info me-1">お題から詠まれた句</span>
+  <% end %>
+
+  <%# 一覧画面とお題の句一覧画面でのみ表示 %>
+  <% if ['posts', 'themes'].include?(controller_name) %>
+    <%# 自分が詠んだ句 %>
+    <% if logged_in? && current_user == post.user %>
+      <span class="badge bg-success me-1">自分が詠んだ句</span>
+    <% else %>
+      <%# 最初に詠まれた句（自分の句でない場合） %>
+      <% first_post = post.theme&.posts&.order(:created_at)&.first %>
+      <% if first_post && post.id == first_post.id %>
+        <span class="badge bg-success-light me-1">最初に詠まれた句</span>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

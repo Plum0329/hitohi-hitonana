@@ -5,7 +5,7 @@ class PostsController < ApplicationController
   before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
 
   def index
-    @posts = Post.includes(:user, :tags, :image_post, theme: [:image_attachment])
+    @posts = Post.includes(:user, :tags, :image_post, theme: [:posts, :image_attachment])
                  .order(created_at: :desc)
                  .page(params[:page])
                  .per(10)

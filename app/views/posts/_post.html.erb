@@ -23,12 +23,13 @@
               <span class="badge bg-secondary me-1"><%= tag.name %></span>
             <% end %>
           <% end %>
+          <%= render 'shared/post_badges', post: post if defined?(post) %>
+            </div>
+              <small class="text-muted"><%= l post.created_at, format: :long %></small>
+            </div>
+          <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
         </div>
-        <small class="text-muted"><%= l post.created_at, format: :long %></small>
-      </div>
-      <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
-    </div>
-  <% end %>
+      <% end %>
 
   <div class="card-footer bg-transparent">
     <div class="d-flex justify-content-end">

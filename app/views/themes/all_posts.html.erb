@@ -28,6 +28,7 @@
                             <span class="badge bg-secondary me-1"><%= tag.name %></span>
                           <% end %>
                         <% end %>
+                        <%= render 'shared/post_badges', post: post %>
                       </div>
                       <small class="text-muted"><%= l post.created_at, format: :long %></small>
                     </div>
