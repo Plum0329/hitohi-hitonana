@@ -13,29 +13,7 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
-    <header class="header">
-      <div class="header-container">
-        <div class="header-left">
-          <%= link_to 'ホーム', root_path, class: 'button' %>
-          <% if logged_in? %>
-            <%= link_to '句一覧', posts_path, class: 'button' %>
-            <%= link_to 'お題一覧', themes_path, class: 'button' %>
-          <% end %>
-        </div>
-
-        <div class="header-right">
-          <% if logged_in? %>
-            <%= link_to profile_path, class: 'text-decoration-none text-dark' do %>
-              <span class="fw-medium"><%= current_user.name %></span>
-            <% end %>
-            <%= link_to '句を詠む', new_image_post_path, class: 'button button-success ms-3' %>
-          <% else %>
-            <%= link_to 'ログイン', login_path, class: 'button' %>
-            <%= link_to '新規登録', signup_path, class: 'button' %>
-          <% end %>
-        </div>
-      </div>
-    </header>
+    <%= render 'shared/header' %>
 
     <% if flash.any? %>
       <div class="alert-wrapper">
