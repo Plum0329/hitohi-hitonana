@@ -24,6 +24,24 @@ class UsersController < ApplicationController
     @themes = @user.themes.order(created_at: :desc).page(params[:page])
   end
 
+  def liked_posts
+    @user = User.find(params[:id])
+    @posts = @user.likes.where(likeable_type: 'Post')
+                      .includes(likeable: [:tags, :image_post])
+                      .order(created_at: :desc)
+                      .map(&:likeable)
+    @show_like_button = true
+  end
+
+  def liked_themes
+    @user = User.find(params[:id])
+    @themes = @user.likes.where(likeable_type: 'Theme')
+                      .includes(:likeable)
+                      .order(created_at: :desc)
+                      .map(&:likeable)
+    @show_like_button = true
+  end
+
   private
 
   def user_params
