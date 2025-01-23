@@ -30,7 +30,13 @@
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start mb-2">
                     <div class="tags">
-                      <span class="badge bg-primary me-1"><%= @first_post.tags.first&.name %></span>
+                      <% @first_post.tags.each do |tag| %>
+                        <% if ['俳句', '川柳'].include?(tag.name) %>
+                          <span class="badge bg-primary me-1"><%= tag.name %></span>
+                        <% else %>
+                          <span class="badge bg-secondary me-1"><%= tag.name %></span>
+                        <% end %>
+                      <% end %>
                     </div>
                     <small class="text-muted"><%= l @first_post.created_at, format: :long %></small>
                   </div>
@@ -49,7 +55,13 @@
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start mb-2">
                     <div class="tags">
-                      <span class="badge bg-primary me-1"><%= @my_post.tags.first&.name %></span>
+                      <% @my_post.tags.each do |tag| %>
+                        <% if ['俳句', '川柳'].include?(tag.name) %>
+                          <span class="badge bg-primary me-1"><%= tag.name %></span>
+                        <% else %>
+                          <span class="badge bg-secondary me-1"><%= tag.name %></span>
+                        <% end %>
+                      <% end %>
                     </div>
                     <small class="text-muted"><%= l @my_post.created_at, format: :long %></small>
                   </div>
@@ -70,7 +82,13 @@
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-start mb-2">
                         <div class="tags">
-                          <span class="badge bg-primary me-1"><%= post.tags.first&.name %></span>
+                          <% post.tags.each do |tag| %>
+                            <% if ['俳句', '川柳'].include?(tag.name) %>
+                              <span class="badge bg-primary me-1"><%= tag.name %></span>
+                            <% else %>
+                              <span class="badge bg-secondary me-1"><%= tag.name %></span>
+                            <% end %>
+                          <% end %>
                         </div>
                         <small class="text-muted"><%= l post.created_at, format: :long %></small>
                       </div>
