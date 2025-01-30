@@ -1,0 +1,97 @@
+<div class="calendar">
+  <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
+    <button type="button" class="btn btn-outline-secondary change-month" data-month="-1">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+
+    <h6 class="month-title mb-0" data-current-date="<%= @date.strftime('%Y-%m-%d') %>">
+      <%= @date.strftime('%Y年%-m月') %>
+    </h6>
+
+    <button type="button" class="btn btn-outline-secondary change-month" data-month="1">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+
+  <table class="table table-bordered mb-0">
+    <thead>
+      <tr>
+        <th class="text-center text-danger">日</th>
+        <th class="text-center">月</th>
+        <th class="text-center">火</th>
+        <th class="text-center">水</th>
+        <th class="text-center">木</th>
+        <th class="text-center">金</th>
+        <th class="text-center text-primary">土</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @date.beginning_of_month.beginning_of_week(:sunday).to_date.step(@date.end_of_month.end_of_week(:sunday), 7) do |week| %>
+        <tr>
+          <% week.step(week + 6.days) do |day| %>
+            <td class="text-center <%= 'text-muted' if day.month != @date.month %>">
+              <a href="<%= posts_path(date: day) %>"
+                class="calendar-date-link"
+                style="color: #212529;"
+                data-bs-dismiss="modal"
+                onclick="window.location.href=this.href;">
+                <%= day.day %>
+              </a>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function handleMonthChange(e) {
+  e.preventDefault();
+  const monthDiff = parseInt(this.dataset.month);
+  const monthTitle = document.querySelector('.month-title');
+  const currentDate = new Date(monthTitle.dataset.currentDate);
+
+  currentDate.setMonth(currentDate.getMonth() + monthDiff);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  const day = 1;
+
+  const url = `/posts?date=${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}&format=json`;
+
+  fetch(url, {
+    headers: {
+      'Accept': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    const calendarElement = document.querySelector('.calendar');
+    calendarElement.outerHTML = data.calendar_html;
+    initializeCalendarEvents();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+function initializeCalendarEvents() {
+  const calendar = document.querySelector('.calendar');
+  if (!calendar) return;
+
+  calendar.querySelectorAll('.change-month').forEach(button => {
+    button.removeEventListener('click', handleMonthChange);
+    button.addEventListener('click', handleMonthChange);
+  });
+}
+
+document.getElementById('calendarModal').addEventListener('shown.bs.modal', function() {
+  initializeCalendarEvents();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  initializeCalendarEvents();
+});
+</script>

@@ -14,6 +14,11 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #f8f9fa;
+
+  &.modal-open {
+    overflow: hidden;
+    padding-right: 0 !important;
+  }
 }
 
 // メインコンテンツ
@@ -56,6 +61,56 @@ body {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem 1rem;
+}
+
+// カレンダー関連のスタイル
+.calendar {
+  .month-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    min-width: 120px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .table {
+    th, td {
+      text-align: center;
+      vertical-align: middle;
+      width: calc(100% / 7);
+      height: 2.5rem;
+      padding: 0;
+      font-size: 0.9rem;
+    }
+
+    td {
+      .calendar-date-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem;
+        text-decoration: none;
+        color: #212529;
+
+        &:hover {
+          background-color: rgba(13, 110, 253, 0.1);
+        }
+      }
+    }
+  }
+}
+
+// モーダル関連
+.modal {
+  z-index: 1050;
+
+  &-backdrop {
+    z-index: 1040;
+  }
+
+  &-dialog {
+    margin: 1.75rem auto;
+  }
 }
 
 // 縦書き・横書きコンテンツ

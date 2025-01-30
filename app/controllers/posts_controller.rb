@@ -5,12 +5,45 @@ class PostsController < ApplicationController
   before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
 
   def index
+    @date = if params[:date].present?
+      begin
+        Date.parse(params[:date])
+      rescue ArgumentError
+        Date.today
+      end
+    else
+      Date.today
+    end
+
     @posts = Post.includes(:user, :tags, :image_post, theme: [:posts, :image_attachment])
-                 .order(created_at: :desc)
-                 .page(params[:page])
-                 .per(10)
+                .where(created_at: @date.all_day)
+                .order(created_at: :desc)
+                .page(params[:page])
+                .per(10)
+
+    @prev_date = @date - 1.day
+    @next_date = @date + 1.day
+
+    @posted_dates = Post.where(created_at: @date.beginning_of_month..@date.end_of_month)
+                      .pluck(Arel.sql('DATE(created_at)')).uniq
+
     @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     @show_like_button = false
+
+    respond_to do |format|
+      format.html
+      format.json {
+        calendar_html = render_to_string(
+          partial: 'calendar',
+          formats: [:html],
+          layout: false
+        )
+        render json: {
+          calendar_html: calendar_html,
+          current_date: @date.strftime('%Y年%-m月')
+        }
+      }
+    end
   rescue => e
     logger.error "Error in posts#index: #{e.message}"
     logger.error e.backtrace.join("\n")
@@ -70,7 +103,7 @@ class PostsController < ApplicationController
 
     @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     if params[:post] && params[:post][:tag_id].present?
-      session[:post_params] ||= {} 
+      session[:post_params] ||= {}
       session[:post_params].merge!(params[:post].to_unsafe_h)
     end
 
@@ -138,7 +171,6 @@ class PostsController < ApplicationController
           @image_post = ImagePost.find(session[:image_post_id])
           @post.image_post = @image_post
 
-          # 画像投稿からお題を作成
           theme = current_user.themes.build(
             description: @image_post.description,
             image_post: @image_post
@@ -163,7 +195,7 @@ class PostsController < ApplicationController
           session.delete(:image_post_id)
           session.delete(:theme_id)
           session.delete(:no_image)
-          session.delete(:from_confirm)  # フラグをクリア
+          session.delete(:from_confirm)
           redirect_to posts_path, notice: '投稿が完了しました'
         else
           errors = @post.errors.full_messages
