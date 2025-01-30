@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       get :new_content
       get :confirm
       delete :discard
+      get :calendar_data
     end
   end
 

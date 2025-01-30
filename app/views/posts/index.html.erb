@@ -1,19 +1,38 @@
 <% content_for :with_direction_toggle, true %>
 
-<h1 class="text-center mb-4">句一覧</h1>
+<div class="container">
+  <div class="text-center">
+    <h1 class="mb-4"><%= @date.strftime('%Y年%-m月%-d日') %>の投稿</h1>
 
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <% if @posts.any? %>
-      <% @posts.each do |post| %>
-        <%= render partial: 'post', locals: { post: post, show_like_button: false } %>
+    <div class="d-flex justify-content-center align-items-center mb-5 gap-2">
+      <%= link_to posts_path(date: @prev_date), class: "btn btn-outline-primary" do %>
+        <i class="bi bi-arrow-left"></i> 前の日
       <% end %>
 
-      <div class="d-flex justify-content-center mt-4">
-        <%= paginate @posts %>
+      <button type="button" class="btn btn-outline-primary mx-3" data-bs-toggle="modal" data-bs-target="#calendarModal">
+        <i class="bi bi-calendar"></i> カレンダー
+      </button>
+
+      <%= link_to posts_path(date: @next_date), class: "btn btn-outline-primary" do %>
+        次の日 <i class="bi bi-arrow-right"></i>
+      <% end %>
+    </div>
+  </div>
+
+  <%# 投稿一覧 %>
+  <%= render 'daily_posts' %>
+</div>
+
+<%# カレンダーモーダル %>
+<div class="modal" id="calendarModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <% else %>
-      <p class="text-center text-muted">まだ句が投稿されていません</p>
-    <% end %>
+      <div class="modal-body">
+        <%= render 'calendar' %>
+      </div>
+    </div>
   </div>
 </div>
