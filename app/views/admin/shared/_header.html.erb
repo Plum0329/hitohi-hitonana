@@ -1,0 +1,12 @@
+<header class="header">
+  <div class="header-container">
+    <div class="header-left">
+      <%= link_to '管理画面', admin_root_path, class: 'button' %>
+    </div>
+
+    <div class="header-right">
+      <span class="fw-medium me-3"><%= current_user.email %></span>
+      <%= button_to 'ログアウト', admin_logout_path, method: :delete, class: 'button', data: { turbo: false } %>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="list-group list-group-flush">
+    <%= link_to admin_root_path,
+        class: "list-group-item list-group-item-action #{current_page?(admin_root_path) ? 'active' : ''}" do %>
+      ダッシュボード
+    <% end %>
+
+    <%= link_to '#',
+        class: "list-group-item list-group-item-action" do %>
+      ユーザー管理
+    <% end %>
+
+    <%= link_to '#',
+        class: "list-group-item list-group-item-action" do %>
+      投稿管理
+    <% end %>
+  </div>
+</div>
