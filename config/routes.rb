@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'login' => 'user_sessions#new', as: :login
+    post 'login' => 'user_sessions#create'
+    delete 'logout' => 'user_sessions#destroy', as: :logout
+    root 'dashboard#index'
+
+    resources :users, only: [:index, :edit, :update, :destroy]
+    resources :posts, only: [:index, :edit, :update, :destroy]
+  end
+
   root 'home#index'
 
   get 'signup', to: 'users#new'

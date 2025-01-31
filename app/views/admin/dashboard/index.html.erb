@@ -1,0 +1,63 @@
+<% content_for(:title, 'ダッシュボード') %>
+
+<div class="mb-4">
+  <h1 class="h3">ダッシュボード</h1>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">総ユーザー数</h5>
+        <p class="card-text h2"><%= @stats[:total_users] %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">総投稿数</h5>
+        <p class="card-text h2"><%= @stats[:total_posts] %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">本日の投稿数</h5>
+        <p class="card-text h2"><%= @stats[:today_posts] %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">最近の登録ユーザー</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        <%= render partial: 'admin/users/user', collection: @recent_users %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">最近の投稿</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        <% @recent_posts.each do |post| %>
+          <div class="list-group-item">
+            <p class="mb-1"><%= post.display_content %></p>
+            <small class="text-muted">
+              <%= post.user.name %> - <%= l post.created_at, format: :long %>
+            </small>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
