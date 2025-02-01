@@ -1,0 +1,43 @@
+<h2>ユーザー一覧</h2>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>名前</th>
+            <th>メールアドレス</th>
+            <th>ロール</th>
+            <th>ステータス</th>
+            <th>登録日時</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= link_to user.name, admin_user_path(user) %></td>
+              <td><%= user.email %></td>
+              <td>
+                <span class="badge bg-<%= user.admin? ? 'danger' : 'secondary' %>">
+                  <%= user.role_i18n %>
+                </span>
+              </td>
+              <td>
+                <% if user.inactive? %>
+                  <span class="badge bg-danger">無効</span>
+                <% else %>
+                  <span class="badge bg-success">有効</span>
+                <% end %>
+              </td>
+              <td><%= l user.created_at, format: :long %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer">
+    <%= paginate @users %>
+  </div>
+</div>

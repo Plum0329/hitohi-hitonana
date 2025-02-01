@@ -1,32 +1,36 @@
 class UserSessionsController < ApplicationController
   skip_before_action :require_login, only: [:new, :create]
 
-  def new; end
+  def new
+    @user = User.new
+  end
 
   def create
-    # emailでユーザーを検索
-    user = User.find_by(email: params[:email])
+    @user = User.find_by(email: params[:email])
 
-    # ユーザーが見つかり、かつ退会済みの場合
-    if user&.deleted?
-      flash.now[:alert] = 'このアカウントは削除されています'
-      render :new, status: :unauthorized
+    if @user.nil?
+      flash.now[:error] = "メールアドレスまたはパスワードが間違っています"
+      flash.now[:notice] = "アカウントをお持ちでない方は#{view_context.link_to('新規登録', signup_path)}を行ってください"
+      render :new, status: :unprocessable_entity
       return
     end
 
-    # 通常のログイン処理
-    @user = login(params[:email], params[:password])
+    if @user.inactive?
+      flash.now[:error] = t('.account_inactive')
+      render :new, status: :unprocessable_entity
+      return
+    end
 
-    if @user
-      redirect_back_or_to root_path, notice: t('flash.success.login')
+    if login(params[:email], params[:password])
+      redirect_back_or_to root_path, success: t('.success')
     else
-      flash.now[:alert] = t('flash.error.login')
-      render :new, status: :unauthorized
+      flash.now[:error] = t('.invalid_login')
+      render :new, status: :unprocessable_entity
     end
   end
 
   def destroy
     logout
-    redirect_to root_path, notice: t('flash.success.logout')
+    redirect_to root_path, success: t('.success')
   end
 end

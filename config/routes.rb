@@ -5,7 +5,12 @@ Rails.application.routes.draw do
     delete 'logout' => 'user_sessions#destroy', as: :logout
     root 'dashboard#index'
 
-    resources :users, only: [:index, :edit, :update, :destroy]
+    resources :users do
+      member do
+        patch :deactivate
+        patch :activate
+      end
+    end
     resources :posts, only: [:index, :edit, :update, :destroy]
   end
 

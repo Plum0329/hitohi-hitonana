@@ -54,7 +54,7 @@ ja:
       short: "%m/%d %H:%M"
     am: "午前"
     pm: "午後"
-  
+
   date:
     formats:
       default: "%Y/%m/%d"
@@ -85,3 +85,31 @@ ja:
         reading: "読み方を入力してください"
         content: "本文が入力されていません"
         tag: "俳句か川柳を選択してください"
+
+  enums:
+    user:
+      role:
+        general: '一般ユーザー'
+        admin: '管理者'
+
+  user_sessions:
+    new:
+      title: 'ログイン'
+      login_button: 'ログイン'
+      signup_link: '新規登録はこちら'
+    create:
+      success: 'ログインしました'
+      account_inactive: 'このアカウントは停止されています'
+      invalid_login: 'メールアドレスまたはパスワードが間違っています'
+    destroy:
+      success: 'ログアウトしました'
+
+  users:
+    create:
+      success: 'アカウントを作成しました'
+      fail: 'アカウントの作成に失敗しました'
+
+  admin:
+    user_sessions:
+      destroy:
+        success: 'ログアウトしました'

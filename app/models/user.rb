@@ -18,11 +18,21 @@ class User < ApplicationRecord
     likes.exists?(likeable: likeable)
   end
 
-  def soft_delete
+  def inactive?
+    deleted_at.present?
+  end
+
+  alias_method :deleted?, :inactive?
+
+  def deactivate
     update(deleted_at: Time.current)
   end
 
-  def deleted?
-    deleted_at.present?
+  def activate
+    update(deleted_at: nil)
+  end
+
+  def active_for_authentication?
+    !inactive?
   end
 end
