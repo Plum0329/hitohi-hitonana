@@ -108,6 +108,8 @@ GEM
     dotenv-rails (3.1.7)
       dotenv (= 3.1.7)
       railties (>= 6.1)
+    enum_help (0.0.19)
+      activesupport (>= 3.0.0)
     erubi (1.13.0)
     faraday (2.12.1)
       faraday-net_http (>= 2.0, < 3.5)
@@ -307,6 +309,7 @@ DEPENDENCIES
   cssbundling-rails
   debug
   dotenv-rails
+  enum_help
   image_processing (~> 1.2)
   jbuilder
   jsbundling-rails

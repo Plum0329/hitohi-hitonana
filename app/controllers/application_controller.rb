@@ -7,4 +7,16 @@ class ApplicationController < ActionController::Base
     flash[:alert] = 'ログインしてください'
     redirect_to login_path
   end
+
+  def flash_success(message)
+    flash[:success] = message
+  end
+
+  def flash_error(message)
+    flash[:error] = message
+  end
+
+  def flash_notice(message)
+    flash[:notice] = message
+  end
 end

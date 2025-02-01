@@ -1,0 +1,27 @@
+<h2>ユーザー編集</h2>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with(model: [:admin, @user], local: true) do |f| %>
+      <div class="mb-3">
+        <%= f.label :name, class: "form-label" %>
+        <%= f.text_field :name, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :role, class: "form-label" %>
+        <%= f.select :role, User.roles_i18n.invert, {}, class: "form-select" %>
+      </div>
+
+      <div class="mt-4">
+        <%= f.submit class: "btn btn-primary" %>
+        <%= link_to "キャンセル", admin_user_path(@user), class: "btn btn-secondary ms-2" %>
+      </div>
+    <% end %>
+  </div>
+</div>

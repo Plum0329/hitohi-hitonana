@@ -7,7 +7,8 @@ class Admin::BaseController < ApplicationController
 
   def check_admin
     unless current_user&.admin?
-      redirect_to root_path, alert: '管理者権限が必要です'
+      flash[:error] = '管理者権限が必要です'
+      redirect_to root_path
     end
   end
 

@@ -1,0 +1,21 @@
+<div class="container">
+  <% flash.each do |type, message| %>
+    <% if type == "success" %>
+      <div class="alert alert-success text-center">
+        <%= message %>
+      </div>
+    <% elsif type == "error" %>
+      <div class="alert alert-danger text-center">
+        <%= message %>
+      </div>
+    <% elsif type == "notice" %>
+      <div class="alert alert-info text-center">
+        <%= message.html_safe %>
+      </div>
+    <% else %>
+      <div class="alert alert-<%= type %> text-center">
+        <%= message %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
