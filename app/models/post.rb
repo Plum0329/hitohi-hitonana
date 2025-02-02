@@ -2,11 +2,14 @@ class Post < ApplicationRecord
   scope :for_theme, ->(theme_id) { where(theme_id: theme_id).includes(:user, :tags) }
   scope :chronological, -> { order(created_at: :asc) }
   scope :reverse_chronological, -> { order(created_at: :desc) }
+  scope :available, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
 
-  belongs_to :theme, optional: true
   attr_accessor :tag_id
+  attr_accessor :skip_tag_validation
   belongs_to :user
   belongs_to :image_post, optional: true
+  belongs_to :theme, optional: true
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
   has_many :likes, as: :likeable, dependent: :destroy
@@ -16,15 +19,24 @@ class Post < ApplicationRecord
   validates :display_content, presence: { message: "本文が入力されていません" }
 
   validate :reading_validation
-  validate :content_reading_consistency
-  validate :tag_presence_validation
+  validate :tag_presence_validation, unless: -> { skip_tag_validation || destroyed? }
+  validate :content_reading_consistency, unless: -> { skip_tag_validation || destroyed? }
   validate :validate_reading_spaces
   validate :validate_display_content_newlines
 
   after_save :check_syllable_count_tags
   after_destroy :destroy_orphaned_image_post
+  after_destroy :cleanup_image_post
 
+  def soft_delete
+    self.skip_tag_validation = true
+    update(deleted_at: Time.current)
+  end
 
+  def restore
+    self.skip_tag_validation = true
+    update(deleted_at: nil)
+  end
 
   def reading_validation
     return if reading.blank?
@@ -162,6 +174,12 @@ class Post < ApplicationRecord
       tags << Tag.find_by(name: '字足らず')
     elsif syllables > 17
       tags << Tag.find_by(name: '字余り')
+    end
+  end
+
+  def cleanup_image_post
+    if image_post.present? && !theme.present? && !image_post.posts.exists?
+      image_post.destroy
     end
   end
 end

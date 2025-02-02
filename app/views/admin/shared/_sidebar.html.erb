@@ -10,9 +10,14 @@
       ユーザー管理
     <% end %>
 
-    <%= link_to '#',
-        class: "list-group-item list-group-item-action" do %>
-      投稿管理
+    <%= link_to admin_posts_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'posts' ? 'active' : ''}" do %>
+      句の管理
+    <% end %>
+
+    <%= link_to admin_themes_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'themes' ? 'active' : ''}" do %>
+      お題の管理
     <% end %>
   </div>
 </div>

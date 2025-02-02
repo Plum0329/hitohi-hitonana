@@ -1,7 +1,6 @@
 class ImagePost < ApplicationRecord
-  has_many :posts
-  has_one :theme
   has_many :posts, dependent: :nullify
+  has_one :theme, dependent: :nullify
   has_one_attached :image
 
   validates :description, length: { maximum: 10 }

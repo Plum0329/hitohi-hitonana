@@ -11,7 +11,20 @@ Rails.application.routes.draw do
         patch :activate
       end
     end
-    resources :posts, only: [:index, :edit, :update, :destroy]
+
+    resources :posts do
+      member do
+        patch :soft_delete
+        patch :restore
+      end
+    end
+
+    resources :themes do
+      member do
+        patch :soft_delete
+        patch :restore
+      end
+    end
   end
 
   root 'home#index'

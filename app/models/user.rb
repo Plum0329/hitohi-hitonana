@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_many :posts
   has_many :themes
   has_many :likes, dependent: :destroy
+  has_many :visible_posts, -> { available }, class_name: 'Post'
+  has_many :visible_themes, -> { available }, class_name: 'Theme'
   has_many :liked_posts, through: :likes, source: :likeable, source_type: 'Post'
   has_many :liked_themes, through: :likes, source: :likeable, source_type: 'Theme'
 

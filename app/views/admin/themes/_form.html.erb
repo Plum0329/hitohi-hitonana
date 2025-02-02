@@ -1,0 +1,44 @@
+<%= form_with(model: [:admin, theme], local: true, data: { turbo: false }) do |f| %>
+  <% if theme.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(theme.errors.count, "error") %> が発生しました</h4>
+      <ul>
+        <% theme.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :description, "お題", class: "form-label" %>
+    <%= f.text_area :description, class: "form-control", rows: 3, required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :status, "ステータス", class: "form-label" %>
+    <%= f.select :status, Theme.statuses.keys.map { |s| [s.humanize, s] },
+        {}, class: "form-select", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :image, "画像", class: "form-label" %>
+    <%= f.file_field :image, class: "form-control", accept: 'image/jpg,image/jpeg,image/png' %>
+    <% if theme.image.attached? %>
+      <div class="mt-2">
+        <div class="card" style="max-width: 200px;">
+          <%= image_tag theme.image, class: "card-img-top" %>
+        </div>
+        <div class="form-check mt-2">
+          <%= check_box_tag :remove_image, '1', false, class: "form-check-input" %>
+          <%= label_tag :remove_image, "画像を削除", class: "form-check-label" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="text-end">
+    <%= f.submit "更新", class: "btn btn-primary" %>
+    <%= link_to "戻る", admin_theme_path(theme), class: "btn btn-secondary ms-2" %>
+  </div>
+<% end %>

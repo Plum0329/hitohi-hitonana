@@ -3,16 +3,36 @@ class ThemesController < ApplicationController
   skip_before_action :require_login, only: [:index, :show, :all_posts]
 
   def index
-    @themes = Theme.includes(:user, :image_post).order(created_at: :desc).page(params[:page])
-    @show_like_button = false
+    base_themes = Theme.available
+                      .includes(:user, :posts, :likes)
+                      .order(created_at: :desc)
+
+    @themes = if params[:user_id].present?
+                base_themes.where(user_id: params[:user_id])
+              else
+                base_themes
+              end
+
+    @themes = @themes.page(params[:page]).per(10)
   end
 
   def show
-    @first_post = @theme.posts.order(:created_at).first
-    @my_post = @theme.posts.find_by(user: current_user) if logged_in?
-    @random_posts = @theme.posts.where.not(id: [@first_post&.id, @my_post&.id].compact).order("RANDOM()").limit(3)
-    @total_posts_count = @theme.posts.count
+    ensure_theme_visible
     @show_like_button = true
+    @first_post = @theme.posts.first
+    @my_post = @theme.posts.find_by(user: current_user) if logged_in?
+    @random_posts = @theme.posts.where.not(id: [@first_post&.id, @my_post&.id].compact)
+                          .order("RANDOM()").limit(3)
+    @total_posts_count = @theme.posts.count
+  end
+
+  def all_posts
+    ensure_theme_visible
+    @show_like_button = false
+    @posts = @theme.posts.includes(:user, :tags)
+                  .order(created_at: :desc)
+                  .page(params[:page])
+                  .per(10)
   end
 
   def new
@@ -42,9 +62,7 @@ class ThemesController < ApplicationController
   def destroy
     begin
       ActiveRecord::Base.transaction do
-        # 関連する投稿のimage_post_idをnilに更新
         @theme.posts.update_all(image_post_id: nil)
-        # お題を削除
         @theme.destroy!
       end
       redirect_to themes_path, notice: 'お題を削除しました'
@@ -63,9 +81,17 @@ class ThemesController < ApplicationController
 
   def set_theme
     @theme = Theme.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to themes_path, alert: 'お題が見つかりませんでした'
   end
 
   def theme_params
     params.require(:theme).permit(:title, :description, :image)
+  end
+
+  def ensure_theme_visible
+    unless @theme.deleted_at.nil? || (current_user && current_user.admin?)
+      redirect_to themes_path, alert: 'お題が見つかりませんでした'
+    end
   end
 end
