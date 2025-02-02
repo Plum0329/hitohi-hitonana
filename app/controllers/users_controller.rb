@@ -5,6 +5,18 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def show
+    @user = User.find(params[:id])
+    @posts = @user.posts.available
+              .includes(:tags, :image_post, theme: [:posts])
+              .order(created_at: :desc)
+              .limit(5)
+    @themes = @user.themes.available
+              .includes(:posts)
+              .order(created_at: :desc)
+              .limit(5)
+  end
+
   def create
     @user = User.new(user_params)
     @user.role = :general
@@ -20,32 +32,36 @@ class UsersController < ApplicationController
 
   def posts
     @user = User.find(params[:id])
-    @posts = @user.posts
-                .includes(:tags, :image_post, theme: [:posts, { image_attachment: :blob }])
-                .order(created_at: :desc)
-                .page(params[:page])
+    @posts = @user.posts.available
+                  .includes(:tags, :image_post, theme: [:posts, { image_attachment: :blob }])
+                  .order(created_at: :desc)
+                  .page(params[:page])
   end
 
   def themes
     @user = User.find(params[:id])
-    @themes = @user.themes.order(created_at: :desc).page(params[:page])
+    @themes = @user.themes.available
+                  .order(created_at: :desc)
+                  .page(params[:page])
   end
 
   def liked_posts
     @user = User.find(params[:id])
-    @posts = @user.likes.where(likeable_type: 'Post')
-                      .includes(likeable: [:tags, :image_post, theme: [:posts]])
-                      .order(created_at: :desc)
-                      .map(&:likeable)
+    @posts = Post.available
+                .where(id: @user.likes.where(likeable_type: 'Post').select(:likeable_id))
+                .includes(:tags, :image_post, theme: [:posts])
+                .order(created_at: :desc)
+                .page(params[:page])
     @show_like_button = true
   end
 
   def liked_themes
     @user = User.find(params[:id])
-    @themes = @user.likes.where(likeable_type: 'Theme')
-                      .includes(:likeable)
-                      .order(created_at: :desc)
-                      .map(&:likeable)
+    @themes = Theme.available
+                  .where(id: @user.likes.where(likeable_type: 'Theme').select(:likeable_id))
+                  .includes(:posts)
+                  .order(created_at: :desc)
+                  .page(params[:page])
     @show_like_button = true
   end
 

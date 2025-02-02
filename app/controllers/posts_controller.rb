@@ -15,11 +15,12 @@ class PostsController < ApplicationController
       Date.today
     end
 
-    @posts = Post.includes(:user, :tags, :image_post, theme: [:posts, :image_attachment])
-                .where(created_at: @date.all_day)
-                .order(created_at: :desc)
-                .page(params[:page])
-                .per(10)
+    @posts = Post.available
+              .includes(:user, :tags, :image_post, theme: [:posts, :image_attachment])
+              .where(created_at: @date.all_day)
+              .order(created_at: :desc)
+              .page(params[:page])
+              .per(10)
 
     @prev_date = @date - 1.day
     @next_date = @date + 1.day

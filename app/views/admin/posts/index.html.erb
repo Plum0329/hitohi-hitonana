@@ -1,0 +1,77 @@
+<div class="container">
+  <h1 class="text-center mb-4">句の管理</h1>
+
+  <div class="mb-4">
+    <div class="btn-group">
+      <%= link_to '全て', admin_posts_path, class: "btn #{params[:filter].blank? ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to '表示中', admin_posts_path(filter: 'available'), class: "btn #{params[:filter] == 'available' ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to '非表示', admin_posts_path(filter: 'deleted'), class: "btn #{params[:filter] == 'deleted' ? 'btn-primary' : 'btn-outline-primary'}" %>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <% @posts.each do |post| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+
+            <% if post.theme&.image&.attached? %>
+              <div class="me-3" style="width: 100px;">
+                <%= image_tag post.theme.image, class: "img-fluid rounded" %>
+              </div>
+            <% elsif post.image_post&.image&.present? %>
+              <div class="me-3" style="width: 100px;">
+                <%= image_tag post.image_post.image, class: "img-fluid rounded" %>
+              </div>
+            <% end %>
+
+              <div class="tags">
+                <% post.tags.each do |tag| %>
+                  <% if ['俳句', '川柳'].include?(tag.name) %>
+                    <span class="badge bg-primary me-1"><%= tag.name %></span>
+                  <% else %>
+                    <span class="badge bg-secondary me-1"><%= tag.name %></span>
+                  <% end %>
+                <% end %>
+                <%= render 'shared/post_badges', post: post %>
+                <% if post.deleted_at.present? %>
+                  <span class="badge bg-danger me-1">非表示</span>
+                <% else %>
+                  <span class="badge bg-success me-1">表示中</span>
+                <% end %>
+              </div>
+              <small class="text-muted"><%= l post.created_at, format: :long %></small>
+            </div>
+
+            <div class="mb-3">
+              <%= render partial: 'posts/post_content', locals: { content: post.display_content } %>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-muted">
+                投稿者: <%= post.user.name %>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="text-muted me-3">
+                  <i class="far fa-heart"></i> <%= post.likes.count %>
+                </div>
+                <%= link_to '詳細', admin_post_path(post), class: 'btn btn-sm btn-outline-primary' %>
+              </div>
+            </div>
+
+            <% if post.theme.present? %>
+              <div class="mt-3 p-3 bg-light rounded">
+                <small class="text-muted">お題：<%= post.theme.description %></small>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="d-flex justify-content-center mt-4">
+        <%= paginate @posts %>
+      </div>
+    </div>
+  </div>
+</div>

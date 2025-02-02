@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_31_082550) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_01_145540) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_31_082550) do
     t.bigint "image_post_id"
     t.bigint "theme_id"
     t.integer "likes_count", default: 0
+    t.datetime "deleted_at"
     t.index ["image_post_id"], name: "index_posts_on_image_post_id"
     t.index ["theme_id"], name: "index_posts_on_theme_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
@@ -100,7 +101,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_31_082550) do
     t.datetime "updated_at", null: false
     t.bigint "image_post_id"
     t.integer "likes_count", default: 0
+    t.integer "status", default: 0
+    t.datetime "deleted_at"
     t.index ["image_post_id"], name: "index_themes_on_image_post_id"
+    t.index ["status"], name: "index_themes_on_status"
     t.index ["user_id"], name: "index_themes_on_user_id"
   end
 
