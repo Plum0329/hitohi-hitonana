@@ -4,7 +4,7 @@
   <div class="text-center">
     <h1 class="mb-4"><%= @date.strftime('%Y年%-m月%-d日') %>の投稿</h1>
 
-    <div class="d-flex justify-content-center align-items-center mb-5 gap-2">
+    <div class="d-flex justify-content-center align-items-center mb-3 gap-2">
       <%= link_to posts_path(date: @prev_date), class: "btn btn-outline-primary" do %>
         <i class="bi bi-arrow-left"></i> 前の日
       <% end %>
@@ -16,6 +16,10 @@
       <%= link_to posts_path(date: @next_date), class: "btn btn-outline-primary" do %>
         次の日 <i class="bi bi-arrow-right"></i>
       <% end %>
+    </div>
+
+    <div class="d-flex justify-content-center mt-2 mb-5">
+      <%= link_to 'すべての句を見る', all_posts_path, class: 'btn btn-primary' %>
     </div>
   </div>
 
