@@ -52,6 +52,14 @@ class PostsController < ApplicationController
     flash.now[:alert] = "投稿の取得中にエラーが発生しました"
   end
 
+  def all_posts
+    @posts = Post.includes(:user, :tags, :theme, :image_post)
+                .where(deleted_at: nil)
+                .order(created_at: :desc)
+                .page(params[:page])
+                .per(20)
+  end
+
   def show
     @post = Post.includes(:user, :tags, :theme, :image_post).find(params[:id])
     @theme = if @post.theme.present?
