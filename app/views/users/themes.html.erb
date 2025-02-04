@@ -3,6 +3,10 @@
     <div class="col-md-8">
       <h2 class="mb-4 h4"><%= @user.name %>さんが作成したお題一覧</h2>
 
+      <div class="mb-4">
+        <%= render 'shared/sort_options' %>
+      </div>
+
       <div class="grid gap-4">
         <% if @themes.any? %>
           <%= render partial: 'themes/theme', collection: @themes %>

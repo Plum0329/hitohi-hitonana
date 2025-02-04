@@ -13,7 +13,7 @@ class Admin::PostsController < Admin::BaseController
               @posts
             end
 
-    @posts = @posts.order(created_at: :desc).page(params[:page]).per(20)
+    @posts = sort_records(@posts).page(params[:page]).per(20)
   end
 
   def show
