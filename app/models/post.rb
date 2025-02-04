@@ -9,7 +9,7 @@ class Post < ApplicationRecord
   attr_accessor :skip_tag_validation
   belongs_to :user
   belongs_to :image_post, optional: true
-  belongs_to :theme, optional: true
+  belongs_to :theme, counter_cache: true, optional: true
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
   has_many :likes, as: :likeable, dependent: :destroy

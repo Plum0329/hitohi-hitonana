@@ -1,0 +1,34 @@
+<div class="sort-options d-flex mb-4">
+  <%= form_with(url: request.path, method: :get, local: true, class: "d-inline-flex") do |f| %>
+    <% if params[:filter].present? %>
+      <%= hidden_field_tag :filter, params[:filter] %>
+    <% end %>
+    <% options = if controller_name == 'themes'
+                  [
+                    ['新しい順', 'newest'],
+                    ['古い順', 'oldest'],
+                    ['いいねが多い順', 'most_likes'],
+                    ['いいねが少ない順', 'least_likes'],
+                    ['詠まれた句が多い順', 'most_posts'],
+                    ['詠まれた句が少ない順', 'least_posts']
+                  ]
+                else
+                  [
+                    ['新しい順', 'newest'],
+                    ['古い順', 'oldest'],
+                    ['いいねが多い順', 'most_likes'],
+                    ['いいねが少ない順', 'least_likes']
+                  ]
+                end
+    %>
+    <%= f.select :sort,
+      options_for_select(options, selected: params[:sort] || 'newest'),
+      {},
+      {
+        class: 'form-select form-select-sm',
+        style: 'width: auto;',
+        onchange: 'this.form.submit()'
+      }
+    %>
+  <% end %>
+</div>

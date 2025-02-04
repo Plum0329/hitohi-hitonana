@@ -1,19 +1,16 @@
 class ThemesController < ApplicationController
+  include Sortable
+
   before_action :set_theme, only: [:show, :edit, :update, :destroy, :all_posts]
   skip_before_action :require_login, only: [:index, :show, :all_posts]
 
   def index
-    base_themes = Theme.available
-                      .includes(:user, :posts, :likes)
-                      .order(created_at: :desc)
+    @themes = Theme.available
+                  .includes(:user, :posts, :likes)
 
-    @themes = if params[:user_id].present?
-                base_themes.where(user_id: params[:user_id])
-              else
-                base_themes
-              end
+    @themes = @themes.where(user_id: params[:user_id]) if params[:user_id].present?
 
-    @themes = @themes.page(params[:page]).per(10)
+    @themes = sort_records(@themes).page(params[:page]).per(20)
   end
 
   def show
@@ -30,9 +27,7 @@ class ThemesController < ApplicationController
     ensure_theme_visible
     @show_like_button = false
     @posts = @theme.posts.includes(:user, :tags)
-                  .order(created_at: :desc)
-                  .page(params[:page])
-                  .per(10)
+    @posts = sort_records(@posts).page(params[:page]).per(20)
   end
 
   def new

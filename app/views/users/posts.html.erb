@@ -4,6 +4,10 @@
   <div class="col-md-8">
     <h2 class="mb-4 h4"><%= @user.name %>さんの投稿一覧</h2>
 
+    <div class="mb-4">
+      <%= render 'shared/sort_options' %>
+    </div>
+
     <% if @posts.any? %>
       <div class="grid gap-4">
         <% @posts.each do |post| %>

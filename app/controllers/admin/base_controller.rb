@@ -1,4 +1,6 @@
 class Admin::BaseController < ApplicationController
+  include Sortable
+
   before_action :require_login
   before_action :check_admin
   layout 'admin/application'

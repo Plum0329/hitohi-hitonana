@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  include Sortable
+
   before_action :require_login, except: [:show, :index]
   before_action :ensure_correct_user, only: [:destroy]
   before_action :load_post_from_session, only: [:new_reading, :new_content, :confirm]
@@ -18,9 +20,8 @@ class PostsController < ApplicationController
     @posts = Post.available
               .includes(:user, :tags, :image_post, theme: [:posts, :image_attachment])
               .where(created_at: @date.all_day)
-              .order(created_at: :desc)
-              .page(params[:page])
-              .per(10)
+
+    @posts = sort_records(@posts).page(params[:page]).per(20)
 
     @prev_date = @date - 1.day
     @next_date = @date + 1.day
@@ -55,9 +56,8 @@ class PostsController < ApplicationController
   def all_posts
     @posts = Post.includes(:user, :tags, :theme, :image_post)
                 .where(deleted_at: nil)
-                .order(created_at: :desc)
-                .page(params[:page])
-                .per(20)
+
+    @posts = sort_records(@posts).page(params[:page]).per(20)
   end
 
   def show

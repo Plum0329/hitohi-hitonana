@@ -13,9 +13,7 @@ class Admin::ThemesController < Admin::BaseController
                 @themes
               end
 
-    @themes = @themes.order(created_at: :desc)
-                    .page(params[:page])
-                    .per(20)
+    @themes = sort_records(@themes).page(params[:page]).per(20)
   end
 
   def show

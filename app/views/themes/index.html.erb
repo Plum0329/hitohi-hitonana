@@ -2,6 +2,10 @@
 
 <h1 class="text-center mb-4">お題一覧</h1>
 
+<div class="mb-4">
+  <%= render 'shared/sort_options' %>
+</div>
+
 <% if @themes.any? %>
   <div class="row justify-content-center">
     <div class="col-md-8">
