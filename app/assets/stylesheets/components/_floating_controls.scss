@@ -1,0 +1,38 @@
+.floating-controls {
+  position: fixed;
+  right: calc((100% - 800px) / 2 + 20px);
+  top: 80%;
+  z-index: 1020;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  writing-mode: horizontal-tb !important;
+
+  .btn {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #dee2e6;
+    background: #f8f9fa;
+    color: #495057;
+    transition: background-color 0.2s;
+
+    i {
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+
+      &.rotated {
+        transform: rotate(90deg);
+      }
+    }
+
+    &:hover {
+      background: #e9ecef;
+      color: #212529;
+    }
+  }
+}

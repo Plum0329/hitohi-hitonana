@@ -1,0 +1,13 @@
+<div data-controller="text-direction">
+  <div class="floating-controls">
+    <% if content_for?(:with_direction_toggle) %>
+      <button type="button"
+              data-text-direction-target="toggle"
+              data-action="click->text-direction#toggle"
+              class="btn btn-outline-secondary"
+              title="縦書き/横書き切り替え">
+        <i class="bi bi-list"></i>
+      </button>
+    <% end %>
+  </div>
+</div>

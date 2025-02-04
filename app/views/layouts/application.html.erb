@@ -18,24 +18,16 @@
     <main class="flex-grow-1">
       <div class="container py-4">
         <% if content_for?(:with_direction_toggle) %>
-          <div data-controller="text-direction">
-            <div class="text-end mb-3">
-              <button type="button"
-                      data-text-direction-target="toggle"
-                      data-action="click->text-direction#toggle"
-                      class="btn btn-outline-secondary">
-                縦書き/横書き切り替え
-              </button>
-            </div>
-            <div data-text-direction-target="content">
-              <%= yield %>
-            </div>
+          <div data-text-direction-target="content">
+            <%= yield %>
           </div>
         <% else %>
           <%= yield %>
         <% end %>
       </div>
     </main>
+
+    <%= render 'shared/floating_controls' %>
 
     <footer class="footer mt-auto">
       <%= render 'shared/footer' %>
