@@ -26,8 +26,14 @@ export default class extends Controller {
     })
 
     if (this.hasToggleTarget) {
-      this.toggleTarget.textContent = 
-        direction === 'horizontal' ? '縦書きに切り替え' : '横書きに切り替え'
+      const icon = this.toggleTarget.querySelector('i')
+      if (icon) {
+        if (direction === 'horizontal') {
+          icon.classList.add('rotated')
+        } else {
+          icon.classList.remove('rotated')
+        }
+      }
     }
   }
 }
