@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_04_124851) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_05_063142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,22 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_04_124851) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.text "content", null: false
+    t.string "category", null: false
+    t.string "status", default: "pending", null: false
+    t.text "admin_memo"
+    t.boolean "privacy_policy_agreed", default: false, null: false
+    t.datetime "responded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_contacts_on_category"
+    t.index ["created_at"], name: "index_contacts_on_created_at"
+    t.index ["status"], name: "index_contacts_on_status"
   end
 
   create_table "image_posts", force: :cascade do |t|

@@ -25,6 +25,8 @@ Rails.application.routes.draw do
         patch :restore
       end
     end
+
+    resources :contacts, only: [:index, :show, :update]
   end
 
   root 'home#index'
@@ -95,4 +97,11 @@ Rails.application.routes.draw do
   get 'terms', to: 'pages#terms', as: :terms
   get 'privacy', to: 'pages#privacy', as: :privacy
   get 'contact', to: 'pages#contact', as: :contact
+
+  resources :contacts, only: [:create] do
+    collection do
+      post :confirm
+      get :thanks
+    end
+  end
 end

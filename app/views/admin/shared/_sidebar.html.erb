@@ -19,5 +19,10 @@
         class: "list-group-item list-group-item-action #{controller_name == 'themes' ? 'active' : ''}" do %>
       お題の管理
     <% end %>
+
+    <%= link_to admin_contacts_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'contacts' ? 'active' : ''}" do %>
+      お問い合わせ管理
+    <% end %>
   </div>
 </div>
