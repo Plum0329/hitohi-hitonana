@@ -1,0 +1,82 @@
+<div class="container py-4">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title h5 mb-0">お問い合わせ詳細</h2>
+    </div>
+
+    <div class="card-body">
+      <%= form_with(model: [:admin, @contact], local: true) do |f| %>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>受付日時</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= l @contact.created_at, format: :long %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>お名前</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= @contact.name %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>メールアドレス</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= mail_to @contact.email %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>種別</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= t("enums.contact.category.#{@contact.category}") %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>ステータス</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= f.select :status,
+                Contact.statuses.keys.map { |k| [t("enums.contact.status.#{k}"), k] },
+                {},
+                class: "form-select" %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>お問い合わせ内容</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= simple_format(h(@contact.content)) %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>対応メモ</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= f.text_area :admin_memo, rows: 5, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <%= link_to "戻る", admin_contacts_path, class: "btn btn-secondary me-2" %>
+          <%= f.submit "更新する", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,7 @@ ja:
       user: 'ユーザー'
       post: '句'
       tag: 'タグ'
+      contact: 'お問い合わせ'
     attributes:
       user:
         name: '名前'
@@ -18,6 +19,12 @@ ja:
         post_tags: 'タグ'
       tag:
         name: 'タグ名'
+      contact:
+        name: 'お名前'
+        email: 'メールアドレス'
+        content: 'お問い合わせ内容'
+        category: 'お問い合わせ種別'
+        privacy_policy_agreed: 'プライバシーポリシー'
     errors:
       models:
         user:
@@ -47,6 +54,19 @@ ja:
             base:
               tag_required: '俳句か川柳を選択してください'
               one_tag_only: '俳句か川柳のどちらか1つのみ選択できます'
+        contact:
+          attributes:
+            name:
+              blank: を入力してください
+            email:
+              blank: を入力してください
+              invalid: の形式が正しくありません
+            content:
+              blank: を入力してください
+            category:
+              blank: を選択してください
+            privacy_policy_agreed:
+              accepted: に同意してください
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
@@ -91,6 +111,16 @@ ja:
       role:
         general: '一般ユーザー'
         admin: '管理者'
+    contact:
+      category:
+        general: '一般的なお問い合わせ'
+        bug_report: '不具合報告'
+        feature_request: '機能要望'
+        other: 'その他'
+      status:
+        pending: '未対応'
+        in_progress: '対応中'
+        completed: '対応済み'
 
   user_sessions:
     new:

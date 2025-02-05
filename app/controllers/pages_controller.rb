@@ -11,5 +11,16 @@ class PagesController < ApplicationController
   end
 
   def contact
+    if params[:contact]
+      @contact = Contact.new(contact_params)
+    else
+      @contact = Contact.new
+    end
+  end
+
+  private
+
+  def contact_params
+    params.require(:contact).permit(:name, :email, :content, :category, :privacy_policy_agreed)
   end
 end

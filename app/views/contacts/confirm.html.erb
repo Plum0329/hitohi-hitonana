@@ -1,0 +1,68 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="text-center mb-4">お問い合わせ内容の確認</h2>
+
+      <%= form_with(model: @contact, local: true, data: { turbo: false }) do |f| %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <strong>お名前</strong>
+              </div>
+              <div class="col-sm-9">
+                <%= @contact.name %>
+                <%= f.hidden_field :name %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <strong>メールアドレス</strong>
+              </div>
+              <div class="col-sm-9">
+                <%= @contact.email %>
+                <%= f.hidden_field :email %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <strong>お問い合わせ種別</strong>
+              </div>
+              <div class="col-sm-9">
+                <%= t("enums.contact.category.#{@contact.category}") %>
+                <%= f.hidden_field :category %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <strong>お問い合わせ内容</strong>
+              </div>
+              <div class="col-sm-9">
+                <%= simple_format(h(@contact.content)) %>
+                <%= f.hidden_field :content %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%= f.hidden_field :privacy_policy_agreed %>
+
+        <div class="text-center">
+          <%= link_to "修正する", contact_path(
+            contact: {
+              name: @contact.name,
+              email: @contact.email,
+              category: @contact.category,
+              content: @contact.content,
+              privacy_policy_agreed: @contact.privacy_policy_agreed
+            }
+          ), class: "btn btn-secondary" %>
+          <%= f.submit "送信する", class: "btn btn-primary ms-2" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,55 @@
-<div class="max-w-4xl mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">お問い合わせ</h1>
-  <!-- コンテンツを追加 -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="text-center mb-4">お問い合わせ</h2>
+
+      <%= form_with(model: @contact, url: confirm_contacts_path, scope: :contact, local: true, data: { turbo: false }) do |f| %>
+        <% if @contact.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @contact.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-3">
+          <%= f.label :name, "お名前", class: "form-label" %>
+          <span class="text-danger">*</span>
+          <%= f.text_field :name, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :email, "メールアドレス", class: "form-label" %>
+          <span class="text-danger">*</span>
+          <%= f.email_field :email, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :category, "お問い合わせ種別", class: "form-label" %>
+          <span class="text-danger">*</span>
+          <%= f.select :category,
+              Contact.categories.keys.map { |k| [t("enums.contact.category.#{k}"), k] },
+              { include_blank: "選択してください" },
+              { class: "form-select" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :content, "お問い合わせ内容", class: "form-label" %>
+          <span class="text-danger">*</span>
+          <%= f.text_area :content, rows: 5, class: "form-control" %>
+        </div>
+
+        <div class="mb-3 form-check">
+          <%= f.check_box :privacy_policy_agreed, class: "form-check-input" %>
+          プライバシーポリシーに同意する
+        </div>
+
+        <div class="text-center">
+          <%= f.submit "確認する", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
