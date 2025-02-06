@@ -1,0 +1,5 @@
+<%= render 'shared/deletion_request_confirm',
+            record: @post,
+            deletion_request: @posts_deletion_request,
+            content_type: '投稿',
+            create_path: post_posts_deletion_requests_path(@post) %>

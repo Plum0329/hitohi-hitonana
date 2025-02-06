@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: user_1
+  post: post_1
+  reason: これはテスト用の削除理由です。長さを確保するためにある程度の文章を入れています。
+  status: 0
+
+two:
+  user: user_2
+  post: post_2
+  reason: 別のテスト用削除理由です。こちらも十分な長さを持たせています。
+  status: 1
+
+three:
+  user: user_1
+  post: post_3
+  reason: 3つ目のテスト用削除理由です。却下されたケースのテストに使用します。
+  status: 2

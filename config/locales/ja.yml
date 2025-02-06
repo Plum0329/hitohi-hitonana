@@ -5,7 +5,7 @@ ja:
       post: '句'
       tag: 'タグ'
       contact: 'お問い合わせ'
-      deletion_request: '削除申請'
+      posts_deletion_request: '削除申請'
     attributes:
       user:
         name: '名前'
@@ -26,7 +26,7 @@ ja:
         content: 'お問い合わせ内容'
         category: 'お問い合わせ種別'
         privacy_policy_agreed: 'プライバシーポリシー'
-      deletion_request:
+      posts_deletion_request:
         reason: '削除理由'
     errors:
       models:
@@ -70,7 +70,7 @@ ja:
               blank: を選択してください
             privacy_policy_agreed:
               accepted: に同意してください
-        deletion_request:
+        posts_deletion_request:
           attributes:
             reason:
               blank: を入力してください
@@ -130,7 +130,7 @@ ja:
         pending: '未対応'
         in_progress: '対応中'
         completed: '対応済み'
-    deletion_request:
+    posts_deletion_request:
       status:
         pending: '審査中'
         approved: '承認済み'

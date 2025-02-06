@@ -1,4 +1,4 @@
-class DeletionRequest < ApplicationRecord
+class PostsDeletionRequest < ApplicationRecord
   belongs_to :user
   belongs_to :post
 
@@ -10,7 +10,7 @@ class DeletionRequest < ApplicationRecord
   private
 
   def no_duplicate_requests
-    if DeletionRequest.exists?(post_id: post_id, status: :pending)
+    if PostsDeletionRequest.exists?(post_id: post_id, status: :pending)
       errors.add(:base, '既にこの投稿の削除申請が提出されています')
     end
   end
