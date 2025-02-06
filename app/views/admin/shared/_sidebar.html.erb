@@ -24,5 +24,10 @@
         class: "list-group-item list-group-item-action #{controller_name == 'contacts' ? 'active' : ''}" do %>
       お問い合わせ管理
     <% end %>
+
+    <%= link_to admin_deletion_requests_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'deletion_requests' ? 'active' : ''}" do %>
+      削除申請管理
+    <% end %>
   </div>
 </div>

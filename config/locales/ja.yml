@@ -5,6 +5,7 @@ ja:
       post: '句'
       tag: 'タグ'
       contact: 'お問い合わせ'
+      deletion_request: '削除申請'
     attributes:
       user:
         name: '名前'
@@ -25,6 +26,8 @@ ja:
         content: 'お問い合わせ内容'
         category: 'お問い合わせ種別'
         privacy_policy_agreed: 'プライバシーポリシー'
+      deletion_request:
+        reason: '削除理由'
     errors:
       models:
         user:
@@ -67,6 +70,12 @@ ja:
               blank: を選択してください
             privacy_policy_agreed:
               accepted: に同意してください
+        deletion_request:
+          attributes:
+            reason:
+              blank: を入力してください
+              too_short: は%{count}文字以上で入力してください
+              too_long: は%{count}文字以下で入力してください
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
@@ -121,6 +130,11 @@ ja:
         pending: '未対応'
         in_progress: '対応中'
         completed: '対応済み'
+    deletion_request:
+      status:
+        pending: '審査中'
+        approved: '承認済み'
+        rejected: '却下'
 
   user_sessions:
     new:

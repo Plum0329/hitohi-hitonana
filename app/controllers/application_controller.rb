@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
+  before_action :set_turbo_frame_request_variant
 
   private
 
@@ -18,5 +19,9 @@ class ApplicationController < ActionController::Base
 
   def flash_notice(message)
     flash[:notice] = message
+  end
+
+  def set_turbo_frame_request_variant
+    request.variant = :turbo_frame if turbo_frame_request?
   end
 end

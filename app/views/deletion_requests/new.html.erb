@@ -1,0 +1,9 @@
+<%= render 'shared/deletion_request_form',
+            title: '投稿削除申請',
+            record: @post,
+            deletion_request: @deletion_request,
+            url: confirm_post_deletion_requests_path(@post),
+            method: :post,
+            content_type: '投稿',
+            submit_text: '確認する',
+            cancel_path: post_path(@post) %>
