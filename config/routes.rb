@@ -26,6 +26,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :deletion_requests do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+
     resources :contacts, only: [:index, :show, :update]
   end
 
@@ -104,4 +111,13 @@ Rails.application.routes.draw do
       get :thanks
     end
   end
+
+  resources :posts do
+    resources :deletion_requests, only: [:new, :create] do
+      collection do
+        post :confirm
+      end
+    end
+  end
+  resources :deletion_requests, only: [:show]
 end

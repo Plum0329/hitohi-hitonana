@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :visible_themes, -> { available }, class_name: 'Theme'
   has_many :liked_posts, through: :likes, source: :likeable, source_type: 'Post'
   has_many :liked_themes, through: :likes, source: :likeable, source_type: 'Theme'
+  has_many :deletion_requests
 
   validates :password, length: { minimum: 3 }, if: -> { new_record? || changes[:crypted_password] }
   validates :password, confirmation: true, if: -> { new_record? || changes[:crypted_password] }

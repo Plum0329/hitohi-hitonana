@@ -50,12 +50,13 @@
           <% end %>
         </div>
 
-        <% if logged_in? && current_user == @post.user %>
+        <% if current_user == @post.user %>
           <div class="mt-3">
-            <%= button_to '削除', post_path(@post),
-                method: :delete,
-                form: { data: { turbo_confirm: '本当に削除してもよろしいですか？' } },
-                class: 'button button-danger' %>
+            <% if @post.deletion_requests.where(status: :pending).exists? %>
+              <button class="btn btn-secondary" disabled>申請済み</button>
+            <% else %>
+              <%= link_to "削除申請", new_post_deletion_request_path(@post), class: "btn btn-warning" %>
+            <% end %>
           </div>
         <% end %>
       </div>

@@ -14,6 +14,7 @@ class Post < ApplicationRecord
   has_many :tags, through: :post_tags
   has_many :likes, as: :likeable, dependent: :destroy
   has_many :users_who_liked, through: :likes, source: :user
+  has_many :deletion_requests
 
   validates :reading, presence: { message: "読み方を入力してください" }
   validates :display_content, presence: { message: "本文が入力されていません" }
@@ -181,5 +182,9 @@ class Post < ApplicationRecord
     if image_post.present? && !theme.present? && !image_post.posts.exists?
       image_post.destroy
     end
+  end
+
+  def has_pending_deletion_request?
+    deletion_requests.where(status: 0).exists?
   end
 end

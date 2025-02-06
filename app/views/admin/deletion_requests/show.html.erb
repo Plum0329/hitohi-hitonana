@@ -1,0 +1,71 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">削除申請詳細</h1>
+    <div>
+      <% if @deletion_request.pending? %>
+        <%= form_with(url: approve_admin_deletion_request_path(@deletion_request), method: :patch, class: 'd-inline', data: { turbo_confirm: '本当に承認しますか？' }) do |f| %>
+          <%= f.submit '承認する', class: 'btn btn-success' %>
+        <% end %>
+        <%= form_with(url: reject_admin_deletion_request_path(@deletion_request), method: :patch, class: 'd-inline ms-2', data: { turbo_confirm: '本当に却下しますか？' }) do |f| %>
+          <%= f.submit '却下する', class: 'btn btn-danger' %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">基本情報</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tr>
+              <th style="width: 200px">申請ID</th>
+              <td><%= @deletion_request.id %></td>
+            </tr>
+            <tr>
+              <th>申請者</th>
+              <td><%= @deletion_request.user.name %></td>
+            </tr>
+            <tr>
+              <th>申請日時</th>
+              <td><%= l @deletion_request.created_at, format: :long %></td>
+            </tr>
+            <tr>
+              <th>ステータス</th>
+              <td>
+                <span class="badge bg-<%= @deletion_request.pending? ? 'warning' : (@deletion_request.approved? ? 'success' : 'danger') %>">
+                  <%= t("enums.deletion_request.status.#{@deletion_request.status}") %>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">対象の投稿</h5>
+        </div>
+        <div class="card-body">
+          <%= @deletion_request.post.display_content %>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">削除理由</h5>
+        </div>
+        <div class="card-body">
+          <%= simple_format(h(@deletion_request.reason)) %>
+        </div>
+      </div>
+
+      <div class="card-footer text-end">
+        <%= link_to '削除申請一覧へ戻る', admin_deletion_requests_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+  </div>
+</div>
