@@ -65,12 +65,15 @@ class Admin::PostsController < Admin::BaseController
   def destroy
     begin
       ActiveRecord::Base.transaction do
+        # 関連する削除申請を先に削除
+        @post.posts_deletion_requests.destroy_all
+        # タグの関連を削除
         @post.post_tags.destroy_all
-
+        # 画像投稿の関連を解除
         if @post.image_post.present?
           @post.update_column(:image_post_id, nil)
         end
-
+        # 投稿を削除
         @post.destroy!
         redirect_to admin_posts_path, notice: '句を完全に削除しました'
       end

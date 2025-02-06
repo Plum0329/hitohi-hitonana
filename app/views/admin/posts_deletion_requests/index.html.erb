@@ -17,7 +17,7 @@
           </tr>
         </thead>
         <tbody>
-          <% @deletion_requests.each do |request| %>
+          <% @posts_deletion_requests.each do |request| %>
             <tr>
               <td><%= request.id %></td>
               <td><%= request.user.name %></td>
@@ -25,11 +25,11 @@
               <td><%= l request.created_at, format: :long %></td>
               <td>
                 <span class="badge bg-<%= request.pending? ? 'warning' : (request.approved? ? 'success' : 'danger') %>">
-                  <%= t("enums.deletion_request.status.#{request.status}") %>
+                  <%= t("enums.posts_deletion_request.status.#{request.status}") %>
                 </span>
               </td>
               <td>
-                <%= link_to '詳細', admin_deletion_request_path(request), class: 'btn btn-sm btn-info' %>
+                <%= link_to '詳細', admin_posts_deletion_request_path(request), class: 'btn btn-sm btn-info' %>
               </td>
             </tr>
           <% end %>
@@ -37,7 +37,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <%= paginate @deletion_requests %>
+      <%= paginate @posts_deletion_requests %>
     </div>
   </div>
 </div>

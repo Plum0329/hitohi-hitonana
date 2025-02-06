@@ -1,4 +1,4 @@
-module Admin::DeletionRequestsHelper
+module Admin::PostsDeletionRequestsHelper
   def status_color_class(status)
     case status
     when 'pending'

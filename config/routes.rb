@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :deletion_requests do
+    resources :posts_deletion_requests do
       member do
         patch :approve
         patch :reject
@@ -113,11 +113,11 @@ Rails.application.routes.draw do
   end
 
   resources :posts do
-    resources :deletion_requests, only: [:new, :create] do
+    resources :posts_deletion_requests, only: [:new, :create] do
       collection do
         post :confirm
       end
     end
   end
-  resources :deletion_requests, only: [:show]
+  resources :posts_deletion_requests, only: [:show]
 end
