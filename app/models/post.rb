@@ -15,6 +15,7 @@ class Post < ApplicationRecord
   has_many :likes, as: :likeable, dependent: :destroy
   has_many :users_who_liked, through: :likes, source: :user
   has_many :posts_deletion_requests
+  has_many :posts_reports
 
   validates :reading, presence: { message: "読み方を入力してください" }
   validates :display_content, presence: { message: "本文が入力されていません" }
@@ -101,6 +102,10 @@ class Post < ApplicationRecord
     end
 
     count
+  end
+
+  def reported_by?(user)
+    posts_reports.where(user: user, status: :pending).exists?
   end
 
   private
