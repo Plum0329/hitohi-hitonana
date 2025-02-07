@@ -135,6 +135,11 @@ ja:
         pending: '審査中'
         approved: '承認済み'
         rejected: '却下'
+    theme_deletion_request:
+      status:
+        pending: '審査中'
+        approved: '承認済み'
+        rejected: '却下'
 
   user_sessions:
     new:

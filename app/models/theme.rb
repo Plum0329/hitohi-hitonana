@@ -5,6 +5,7 @@ class Theme < ApplicationRecord
   has_one_attached :image
   has_many :likes, as: :likeable, dependent: :destroy
   has_many :users_who_liked, through: :likes, source: :user
+  has_many :theme_deletion_requests, dependent: :destroy
 
   validates :description, presence: { message: "お題を入力してください" }
   validates :status, presence: { message: "ステータスを選択してください" }
@@ -42,10 +43,6 @@ class Theme < ApplicationRecord
     image.variant(resize_to_limit: [200, 150])
   end
 
-  def status
-    'published'
-  end
-
   def soft_delete
     update!(deleted_at: Time.current)
   rescue => e
@@ -58,6 +55,10 @@ class Theme < ApplicationRecord
   rescue => e
     Rails.logger.error "Restore failed: #{e.message}"
     false
+  end
+
+  def display_content
+    description
   end
 
   private

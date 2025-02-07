@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_06_081023) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_07_014612) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -124,6 +124,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_06_081023) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "theme_deletion_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "theme_id", null: false
+    t.text "reason", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["theme_id"], name: "index_theme_deletion_requests_on_theme_id"
+    t.index ["user_id"], name: "index_theme_deletion_requests_on_user_id"
+  end
+
   create_table "themes", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -167,6 +178,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_06_081023) do
   add_foreign_key "posts_deletion_requests", "posts"
   add_foreign_key "posts_deletion_requests", "themes"
   add_foreign_key "posts_deletion_requests", "users"
+  add_foreign_key "theme_deletion_requests", "themes"
+  add_foreign_key "theme_deletion_requests", "users"
   add_foreign_key "themes", "image_posts"
   add_foreign_key "themes", "users"
 end

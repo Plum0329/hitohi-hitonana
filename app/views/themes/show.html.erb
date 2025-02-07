@@ -23,6 +23,16 @@
             </div>
           <% end %>
         </div>
+
+        <% if current_user == @theme.user %>
+          <div class="mt-3">
+            <% if @theme.theme_deletion_requests.where(status: :pending).exists? %>
+              <button class="btn btn-secondary" disabled>申請済み</button>
+            <% else %>
+              <%= link_to "削除申請", new_theme_theme_deletion_request_path(@theme), class: "btn btn-warning" %>
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
 

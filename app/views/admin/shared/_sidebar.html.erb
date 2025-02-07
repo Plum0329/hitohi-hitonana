@@ -29,5 +29,10 @@
         class: "list-group-item list-group-item-action #{controller_name == 'posts_deletion_requests' ? 'active' : ''}" do %>
       句の削除申請管理
     <% end %>
+
+    <%= link_to admin_theme_deletion_requests_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'theme_deletion_requests' ? 'active' : ''}" do %>
+      お題の削除申請管理
+    <% end %>
   </div>
 </div>
