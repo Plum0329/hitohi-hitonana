@@ -123,13 +123,6 @@
         <%= link_to 'このお題で詠む', new_type_theme_posts_path(@theme),
             class: "button button-primary mt-3 d-block" %>
       <% end %>
-
-      <% if logged_in? && current_user == @theme.user %>
-        <%= button_to '削除', theme_path(@theme),
-            method: :delete,
-            data: { turbo_confirm: "このお題を削除してもよろしいですか？\n（このお題で詠まれた句は削除されません）" },
-            class: 'button button-danger mt-3' %>
-      <% end %>
     </div>
     <%= render 'shared/back_button', fallback_path: themes_path %>
   </div>
