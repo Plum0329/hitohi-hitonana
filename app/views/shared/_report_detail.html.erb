@@ -1,0 +1,30 @@
+<div class="container py-5">
+  <h2 class="mb-4">報告内容の詳細</h2>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      報告対象の<%= content_type %>
+    </div>
+    <div class="card-body">
+      <%= record.display_content %>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      報告理由
+    </div>
+    <div class="card-body">
+      <p class="mb-3">
+        <strong>カテゴリ：</strong>
+        <%= t("#{report.class.name.underscore.pluralize}.reason_categories.#{report.reason_category}") if report.reason_category.present? %>
+      </p>
+      <strong>詳細：</strong>
+      <%= simple_format(h(report.reason)) %>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <%= link_to "戻る", return_path, class: "btn btn-secondary" %>
+  </div>
+</div>

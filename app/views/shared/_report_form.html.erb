@@ -1,0 +1,49 @@
+<div class="container py-5">
+  <h2 class="mb-4"><%= title %></h2>
+
+  <%= form_with(model: [record, report],
+              url: url,
+              method: method,
+              local: true,
+              data: { turbo: false }) do |f| %>
+    <% if report.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% report.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="card mb-4">
+      <div class="card-header">
+        報告対象の<%= content_type %>
+      </div>
+      <div class="card-body">
+        <%= record.display_content %>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :reason_category, "報告理由", class: "form-label" %>
+      <span class="text-danger">*</span>
+      <%= f.select :reason_category,
+                    report.class.reason_categories.keys.map { |key| [t("#{report.class.name.underscore.pluralize}.reason_categories.#{key}"), key] },
+                    { selected: :other },
+                    { class: 'form-select' } %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :reason, "詳細な理由", class: "form-label" %>
+      <span class="text-danger">*</span>
+      <%= f.text_area :reason, rows: 5, class: "form-control" %>
+      <div class="form-text">報告理由を10文字以上1000文字以下で具体的に記入してください。</div>
+    </div>
+
+    <div class="text-center">
+      <%= f.submit submit_text, class: "btn btn-primary" %>
+      <%= link_to "キャンセル", cancel_path, class: "btn btn-secondary ms-2" %>
+    </div>
+  <% end %>
+</div>

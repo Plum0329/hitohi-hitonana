@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">報告詳細</h1>
+    <div>
+      <% if @posts_report.pending? %>
+        <%= form_with(url: approve_admin_posts_report_path(@posts_report), method: :patch, class: 'd-inline', data: { turbo_confirm: '本当に承認しますか？' }) do |f| %>
+          <%= f.submit '承認する', class: 'btn btn-success' %>
+        <% end %>
+        <%= form_with(url: reject_admin_posts_report_path(@posts_report), method: :patch, class: 'd-inline ms-2', data: { turbo_confirm: '本当に却下しますか？' }) do |f| %>
+          <%= f.submit '却下する', class: 'btn btn-danger' %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">基本情報</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tr>
+              <th style="width: 200px">報告ID</th>
+              <td><%= @posts_report.id %></td>
+            </tr>
+            <tr>
+              <th>報告者</th>
+              <td><%= @posts_report.user.name %></td>
+            </tr>
+            <tr>
+              <th>報告日時</th>
+              <td><%= l @posts_report.created_at, format: :long %></td>
+            </tr>
+            <tr>
+              <th>ステータス</th>
+              <td>
+                <span class="badge bg-<%= @posts_report.pending? ? 'warning' : (@posts_report.approved? ? 'success' : 'danger') %>">
+                  <%= t("enums.posts_report.status.#{@posts_report.status}") %>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">対象の投稿</h5>
+        </div>
+        <div class="card-body">
+          <%= @posts_report.post.display_content %>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">報告内容</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>報告理由：</strong>
+            <%= t("posts_reports.reason_categories.#{@posts_report.reason_category}") if @posts_report.reason_category.present? %>
+          </p>
+          <p><strong>詳細：</strong></p>
+          <%= simple_format(h(@posts_report.reason)) %>
+        </div>
+      </div>
+
+      <div class="card-footer text-end">
+        <%= link_to '報告一覧へ戻る', admin_posts_reports_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+  </div>
+</div>

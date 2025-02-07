@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_07_014612) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -117,6 +117,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_014612) do
     t.index ["user_id"], name: "index_posts_deletion_requests_on_user_id"
   end
 
+  create_table "posts_reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.integer "reason_category", default: 4, null: false
+    t.text "reason", null: false
+    t.integer "status", default: 0
+    t.text "admin_note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_posts_reports_on_post_id"
+    t.index ["user_id"], name: "index_posts_reports_on_user_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -178,6 +191,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_014612) do
   add_foreign_key "posts_deletion_requests", "posts"
   add_foreign_key "posts_deletion_requests", "themes"
   add_foreign_key "posts_deletion_requests", "users"
+  add_foreign_key "posts_reports", "posts"
+  add_foreign_key "posts_reports", "users"
   add_foreign_key "theme_deletion_requests", "themes"
   add_foreign_key "theme_deletion_requests", "users"
   add_foreign_key "themes", "image_posts"

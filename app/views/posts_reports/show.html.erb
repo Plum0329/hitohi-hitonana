@@ -1,0 +1,5 @@
+<%= render 'shared/report_detail',
+            record: @posts_report.post,
+            report: @posts_report,
+            content_type: "投稿",
+            return_path: post_path(@posts_report.post) %>

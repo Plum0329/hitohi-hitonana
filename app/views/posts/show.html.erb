@@ -58,6 +58,14 @@
               <%= link_to "削除申請", new_post_posts_deletion_request_path(@post), class: "btn btn-warning" %>
             <% end %>
           </div>
+        <% else %>
+          <div class="mt-3">
+            <% if @post.reported_by?(current_user) %>
+              <button class="btn btn-secondary" disabled>報告済み</button>
+            <% else %>
+              <%= link_to "この投稿を報告", new_post_posts_report_path(@post), class: "btn btn-danger" %>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </div>

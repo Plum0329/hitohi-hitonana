@@ -6,6 +6,9 @@ ja:
       tag: 'タグ'
       contact: 'お問い合わせ'
       posts_deletion_request: '削除申請'
+      themes_deletion_request: '削除申請'
+      posts_report: '投稿報告'
+      themes_report: 'お題報告'
     attributes:
       user:
         name: '名前'
@@ -28,6 +31,11 @@ ja:
         privacy_policy_agreed: 'プライバシーポリシー'
       posts_deletion_request:
         reason: '削除理由'
+      themes_deletion_request:
+        reason: '削除理由'
+      posts_report:
+        reason: '詳細な理由'
+        reason_category: '報告理由'
     errors:
       models:
         user:
@@ -76,6 +84,19 @@ ja:
               blank: を入力してください
               too_short: は%{count}文字以上で入力してください
               too_long: は%{count}文字以下で入力してください
+        theme_deletion_request:
+          attributes:
+            reason:
+              blank: を入力してください
+              too_short: は%{count}文字以上で入力してください
+              too_long: は%{count}文字以下で入力してください
+        posts_report:
+          attributes:
+            reason:
+              blank: 'を入力してください'
+              too_short: 'は10文字以上で入力してください'
+            reason_category:
+              blank: 'を選択してください'
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
@@ -140,6 +161,11 @@ ja:
         pending: '審査中'
         approved: '承認済み'
         rejected: '却下'
+    posts_report:
+      status:
+        pending: '審査中'
+        approved: '承認済み'
+        rejected: '却下'
 
   user_sessions:
     new:
@@ -162,3 +188,11 @@ ja:
     user_sessions:
       destroy:
         success: 'ログアウトしました'
+
+  posts_reports:
+    reason_categories:
+      inappropriate: '不適切なコンテンツ'
+      spam: 'スパム'
+      copyright: '著作権侵害'
+      harassment: '嫌がらせ'
+      other: 'その他'

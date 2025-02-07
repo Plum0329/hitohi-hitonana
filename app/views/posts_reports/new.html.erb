@@ -1,0 +1,9 @@
+<%= render 'shared/report_form',
+            title: "投稿の報告",
+            record: @post,
+            report: @posts_report,
+            url: confirm_post_posts_reports_path(@post),
+            method: :post,
+            content_type: "投稿",
+            submit_text: "確認する",
+            cancel_path: post_path(@post) %>
