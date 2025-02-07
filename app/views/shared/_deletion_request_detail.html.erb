@@ -3,17 +3,6 @@
 
   <div class="card mb-4">
     <div class="card-header">
-      申請状況
-    </div>
-    <div class="card-body">
-      <span class="badge bg-<%= deletion_request.pending? ? 'warning' : (deletion_request.approved? ? 'success' : 'danger') %>">
-        <%= t("enums.deletion_request.status.#{deletion_request.status}") %>
-      </span>
-    </div>
-  </div>
-
-  <div class="card mb-4">
-    <div class="card-header">
       対象の<%= content_type %>
     </div>
     <div class="card-body">

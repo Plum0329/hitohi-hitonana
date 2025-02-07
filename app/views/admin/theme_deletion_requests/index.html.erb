@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between mb-4">
+    <h1 class="h3">お題削除申請管理</h1>
+  </div>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>申請ID</th>
+            <th>申請者</th>
+            <th>削除理由</th>
+            <th>申請日時</th>
+            <th>ステータス</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @theme_deletion_requests.each do |request| %>
+            <tr>
+              <td><%= request.id %></td>
+              <td><%= request.user.name %></td>
+              <td><%= truncate(request.reason, length: 30) %></td>
+              <td><%= l request.created_at, format: :long %></td>
+              <td>
+                <span class="badge bg-<%= request.pending? ? 'warning' : (request.approved? ? 'success' : 'danger') %>">
+                  <%= t("enums.theme_deletion_request.status.#{request.status}") %>
+                </span>
+              </td>
+              <td>
+                <%= link_to '詳細', admin_theme_deletion_request_path(request), class: 'btn btn-sm btn-info' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <%= paginate @theme_deletion_requests %>
+    </div>
+  </div>
+</div>
