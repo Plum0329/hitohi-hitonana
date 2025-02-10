@@ -47,6 +47,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :themes_reports do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+
     resources :contacts, only: [:index, :show, :update]
   end
 
@@ -152,4 +159,13 @@ Rails.application.routes.draw do
     end
   end
   resources :posts_reports, only: [:show]
+
+  resources :themes do
+    resources :themes_reports, only: [:new, :create] do
+      collection do
+        post :confirm
+      end
+    end
+  end
+  resources :themes_reports, only: [:show]
 end

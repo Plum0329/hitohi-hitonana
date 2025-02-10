@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :posts_deletion_requests
   has_many :theme_deletion_requests
   has_many :posts_reports
+  has_many :themes_reports
 
   validates :password, length: { minimum: 3 }, if: -> { new_record? || changes[:crypted_password] }
   validates :password, confirmation: true, if: -> { new_record? || changes[:crypted_password] }
