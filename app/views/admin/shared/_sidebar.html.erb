@@ -39,5 +39,10 @@
         class: "list-group-item list-group-item-action #{controller_name == 'posts_reports' ? 'active' : ''}" do %>
       句の報告管理
     <% end %>
+
+    <%= link_to admin_themes_reports_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'themes_reports' ? 'active' : ''}" do %>
+      お題の報告管理
+    <% end %>
   </div>
 </div>

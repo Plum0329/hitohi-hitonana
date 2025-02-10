@@ -36,6 +36,10 @@ ja:
       posts_report:
         reason: '詳細な理由'
         reason_category: '報告理由'
+      themes_report:
+        reason: '詳細な理由'
+        reason_category: '報告理由'
+
     errors:
       models:
         user:
@@ -91,6 +95,13 @@ ja:
               too_short: は%{count}文字以上で入力してください
               too_long: は%{count}文字以下で入力してください
         posts_report:
+          attributes:
+            reason:
+              blank: 'を入力してください'
+              too_short: 'は10文字以上で入力してください'
+            reason_category:
+              blank: 'を選択してください'
+        themes_report:
           attributes:
             reason:
               blank: 'を入力してください'
@@ -166,6 +177,11 @@ ja:
         pending: '審査中'
         approved: '承認済み'
         rejected: '却下'
+    themes_report:
+      status:
+        pending: '審査中'
+        approved: '承認済み'
+        rejected: '却下'
 
   user_sessions:
     new:
@@ -190,6 +206,14 @@ ja:
         success: 'ログアウトしました'
 
   posts_reports:
+    reason_categories:
+      inappropriate: '不適切なコンテンツ'
+      spam: 'スパム'
+      copyright: '著作権侵害'
+      harassment: '嫌がらせ'
+      other: 'その他'
+
+  themes_reports:
     reason_categories:
       inappropriate: '不適切なコンテンツ'
       spam: 'スパム'

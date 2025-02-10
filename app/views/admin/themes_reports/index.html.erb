@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between mb-4">
+    <h1 class="h3">報告管理</h1>
+  </div>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>報告ID</th>
+            <th>報告者</th>
+            <th>報告理由</th>
+            <th>報告日時</th>
+            <th>ステータス</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @themes_reports.each do |report| %>
+            <tr>
+              <td><%= report.id %></td>
+              <td><%= report.user.name %></td>
+              <td>
+                <div><%= t("themes_reports.reason_categories.#{report.reason_category}") %></div>
+              </td>
+              <td><%= l report.created_at, format: :long %></td>
+              <td>
+                <span class="badge bg-<%= report.pending? ? 'warning' : (report.approved? ? 'success' : 'danger') %>">
+                  <%= t("enums.themes_report.status.#{report.status}") %>
+                </span>
+              </td>
+              <td>
+                <%= link_to '詳細', admin_themes_report_path(report), class: 'btn btn-sm btn-info' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <%= paginate @themes_reports %>
+    </div>
+  </div>
+</div>

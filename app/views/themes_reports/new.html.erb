@@ -1,0 +1,9 @@
+<%= render 'shared/report_form',
+            title: "お題の報告",
+            record: @theme,
+            report: @themes_report,
+            url: confirm_theme_themes_reports_path(@theme),
+            method: :post,
+            content_type: "お題",
+            submit_text: "確認する",
+            cancel_path: theme_path(@theme) %>

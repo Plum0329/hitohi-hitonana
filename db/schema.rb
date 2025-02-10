@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_10_132840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -95,8 +95,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
     t.datetime "updated_at", null: false
     t.string "reading", default: "", null: false
     t.bigint "image_post_id"
-    t.bigint "theme_id"
     t.integer "likes_count", default: 0
+    t.bigint "theme_id"
     t.datetime "deleted_at"
     t.index ["created_at"], name: "index_posts_on_created_at"
     t.index ["image_post_id"], name: "index_posts_on_image_post_id"
@@ -106,14 +106,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
 
   create_table "posts_deletion_requests", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "post_id"
+    t.bigint "post_id", null: false
     t.text "reason", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "theme_id"
     t.index ["post_id"], name: "index_posts_deletion_requests_on_post_id"
-    t.index ["theme_id"], name: "index_posts_deletion_requests_on_theme_id"
     t.index ["user_id"], name: "index_posts_deletion_requests_on_user_id"
   end
 
@@ -154,8 +152,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "image_post_id"
     t.integer "likes_count", default: 0
+    t.bigint "image_post_id"
     t.integer "status", default: 0
     t.datetime "deleted_at"
     t.integer "posts_count", default: 0
@@ -164,6 +162,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
     t.index ["posts_count"], name: "index_themes_on_posts_count"
     t.index ["status"], name: "index_themes_on_status"
     t.index ["user_id"], name: "index_themes_on_user_id"
+  end
+
+  create_table "themes_reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "theme_id", null: false
+    t.integer "reason_category", default: 4, null: false
+    t.text "reason", null: false
+    t.integer "status", default: 0
+    t.text "admin_note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["theme_id"], name: "index_themes_reports_on_theme_id"
+    t.index ["user_id"], name: "index_themes_reports_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -189,7 +200,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
   add_foreign_key "posts", "themes"
   add_foreign_key "posts", "users"
   add_foreign_key "posts_deletion_requests", "posts"
-  add_foreign_key "posts_deletion_requests", "themes"
   add_foreign_key "posts_deletion_requests", "users"
   add_foreign_key "posts_reports", "posts"
   add_foreign_key "posts_reports", "users"
@@ -197,4 +207,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_07_125225) do
   add_foreign_key "theme_deletion_requests", "users"
   add_foreign_key "themes", "image_posts"
   add_foreign_key "themes", "users"
+  add_foreign_key "themes_reports", "themes"
+  add_foreign_key "themes_reports", "users"
 end
