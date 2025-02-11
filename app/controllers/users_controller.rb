@@ -1,20 +1,22 @@
-class UsersController < ApplicationController
-  skip_before_action :require_login, only: [:new, :create]
+# frozen_string_literal: true
 
-  def new
-    @user = User.new
-  end
+class UsersController < ApplicationController
+  skip_before_action :require_login, only: %i[new create]
 
   def show
     @user = User.find(params[:id])
     @posts = @user.posts.available
-              .includes(:tags, :image_post, theme: [:posts])
-              .order(created_at: :desc)
-              .limit(5)
+                  .includes(:tags, :image_post, theme: [:posts])
+                  .order(created_at: :desc)
+                  .limit(5)
     @themes = @user.themes.available
-              .includes(:posts)
-              .order(created_at: :desc)
-              .limit(5)
+                   .includes(:posts)
+                   .order(created_at: :desc)
+                   .limit(5)
+  end
+
+  def new
+    @user = User.new
   end
 
   def create
@@ -41,27 +43,27 @@ class UsersController < ApplicationController
   def themes
     @user = User.find(params[:id])
     @themes = @user.themes.available
-                  .order(created_at: :desc)
-                  .page(params[:page])
+                   .order(created_at: :desc)
+                   .page(params[:page])
   end
 
   def liked_posts
     @user = User.find(params[:id])
     @posts = Post.available
-                .where(id: @user.likes.where(likeable_type: 'Post').select(:likeable_id))
-                .includes(:tags, :image_post, theme: [:posts])
-                .order(created_at: :desc)
-                .page(params[:page])
+                 .where(id: @user.likes.where(likeable_type: 'Post').select(:likeable_id))
+                 .includes(:tags, :image_post, theme: [:posts])
+                 .order(created_at: :desc)
+                 .page(params[:page])
     @show_like_button = true
   end
 
   def liked_themes
     @user = User.find(params[:id])
     @themes = Theme.available
-                  .where(id: @user.likes.where(likeable_type: 'Theme').select(:likeable_id))
-                  .includes(:posts)
-                  .order(created_at: :desc)
-                  .page(params[:page])
+                   .where(id: @user.likes.where(likeable_type: 'Theme').select(:likeable_id))
+                   .includes(:posts)
+                   .order(created_at: :desc)
+                   .page(params[:page])
     @show_like_button = true
   end
 

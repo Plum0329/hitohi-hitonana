@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   before_action :require_login
   before_action :set_turbo_frame_request_variant
@@ -10,15 +12,15 @@ class ApplicationController < ActionController::Base
   end
 
   def flash_success(message)
-    flash[:success] = message
+    flash.now[:success] = message
   end
 
   def flash_error(message)
-    flash[:error] = message
+    flash.now[:error] = message
   end
 
   def flash_notice(message)
-    flash[:notice] = message
+    flash.now[:notice] = message
   end
 
   def set_turbo_frame_request_variant

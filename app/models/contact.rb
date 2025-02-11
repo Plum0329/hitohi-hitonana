@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Contact < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: { message: 'を入力してください' }
@@ -8,18 +10,18 @@ class Contact < ApplicationRecord
   validates :category, presence: true
   validates :privacy_policy_agreed, acceptance: true
 
-  enum status: {
+  enum :status, {
     pending: 'pending',
     in_progress: 'in_progress',
     completed: 'completed'
-  }, _default: 'pending'
+  }, default: 'pending'
 
-  enum category: {
+  enum :category, {
     general: 'general',
     bug_report: 'bug_report',
     feature_request: 'feature_request',
     other: 'other'
-  }, _default: 'pending'
+  }, default: 'pending'
 
   scope :recent, -> { order(created_at: :desc) }
   scope :by_status, ->(status) { where(status: status) if status.present? }

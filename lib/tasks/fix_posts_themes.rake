@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 namespace :posts do
-  desc "Fix posts without themes"
+  desc 'Fix posts without themes'
   task fix_themes: :environment do
     Post.includes(:theme, :image_post).find_each do |post|
-      next if post.theme.present? || !post.image_post.present?
+      next if post.theme.present? || post.image_post.blank?
 
       # 既存のお題を探すか、新しく作成
       theme = post.image_post.themes.first_or_create! do |t|

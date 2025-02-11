@@ -1,23 +1,27 @@
+# frozen_string_literal: true
+
 class ThemeDeletionRequestsController < ApplicationController
   before_action :require_login
-  before_action :set_theme, only: [:new, :confirm, :create]
-  before_action :ensure_theme_owner, only: [:new, :confirm, :create]
+  before_action :set_theme, only: %i[new confirm create]
+  before_action :ensure_theme_owner, only: %i[new confirm create]
+
+  def show
+    @theme_deletion_request = current_user.theme_deletion_requests.find(params[:id])
+  end
 
   def new
     @theme_deletion_request = if params[:theme_deletion_request].present?
-      ThemeDeletionRequest.new(theme_deletion_request_params.merge(theme: @theme))
-    else
-      ThemeDeletionRequest.new(theme: @theme)
-    end
+                                ThemeDeletionRequest.new(theme_deletion_request_params.merge(theme: @theme))
+                              else
+                                ThemeDeletionRequest.new(theme: @theme)
+                              end
   end
 
   def confirm
     @theme_deletion_request = current_user.theme_deletion_requests.build(theme_deletion_request_params)
     @theme_deletion_request.theme = @theme
 
-    unless @theme_deletion_request.valid?
-      return render :new
-    end
+    return render :new unless @theme_deletion_request.valid?
 
     render :confirm
   end
@@ -38,10 +42,6 @@ class ThemeDeletionRequestsController < ApplicationController
     end
   end
 
-  def show
-    @theme_deletion_request = current_user.theme_deletion_requests.find(params[:id])
-  end
-
   private
 
   def theme_deletion_request_params
@@ -55,8 +55,8 @@ class ThemeDeletionRequestsController < ApplicationController
   end
 
   def ensure_theme_owner
-    unless @theme.user == current_user
-      redirect_to root_path, alert: '権限がありません'
-    end
+    return if @theme.user == current_user
+
+    redirect_to root_path, alert: '権限がありません'
   end
 end

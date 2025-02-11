@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Post < ApplicationRecord
   scope :for_theme, ->(theme_id) { where(theme_id: theme_id).includes(:user, :tags) }
   scope :chronological, -> { order(created_at: :asc) }
@@ -5,8 +7,8 @@ class Post < ApplicationRecord
   scope :available, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
 
-  attr_accessor :tag_id
-  attr_accessor :skip_tag_validation
+  attr_accessor :tag_id, :skip_tag_validation
+
   belongs_to :user
   belongs_to :image_post, optional: true
   belongs_to :theme, counter_cache: true, optional: true
@@ -17,8 +19,8 @@ class Post < ApplicationRecord
   has_many :posts_deletion_requests
   has_many :posts_reports
 
-  validates :reading, presence: { message: "読み方を入力してください" }
-  validates :display_content, presence: { message: "本文が入力されていません" }
+  validates :reading, presence: { message: '読み方を入力してください' }
+  validates :display_content, presence: { message: '本文が入力されていません' }
 
   validate :reading_validation
   validate :tag_presence_validation, unless: -> { skip_tag_validation || destroyed? }
@@ -26,9 +28,9 @@ class Post < ApplicationRecord
   validate :validate_reading_spaces
   validate :validate_display_content_newlines
 
-  after_save :check_syllable_count_tags
   after_destroy :destroy_orphaned_image_post
   after_destroy :cleanup_image_post
+  after_save :check_syllable_count_tags
 
   def soft_delete
     self.skip_tag_validation = true
@@ -49,7 +51,7 @@ class Post < ApplicationRecord
     end
 
     syllable_count = count_syllables(reading)
-    if syllable_count == 0
+    if syllable_count.zero?
       errors.add(:reading, :syllable_blank_reading)
     elsif syllable_count > 20
       errors.add(:reading, :syllable_count, count: 20, current: syllable_count)
@@ -59,13 +61,13 @@ class Post < ApplicationRecord
   def content_reading_consistency
     return if reading.blank? || display_content.blank?
 
-    reading_length = reading.gsub(/[\s　]/,'').length
-    content_length = display_content.gsub(/[\s　]/,'').length
+    reading_length = reading.gsub(/[\s　]/, '').length
+    content_length = display_content.gsub(/[\s　]/, '').length
 
     if content_length < (reading_length / 2)
-      errors.add(:base, "本文が読みと比べて短すぎるようです")
+      errors.add(:base, '本文が読みと比べて短すぎるようです')
     elsif content_length > (reading_length * 2)
-      errors.add(:base, "本文が読みと比べて長すぎるようです")
+      errors.add(:base, '本文が読みと比べて長すぎるようです')
     end
   end
 
@@ -82,11 +84,11 @@ class Post < ApplicationRecord
       when /[あ-ん]/
         if i < chars.length - 1
           case chars[i + 1]
-          when /[ぁぃぅぇぉゃゅょ]/  # 拗音
+          when /[ぁぃぅぇぉゃゅょ]/ # 拗音
             count += 1
             i += 2
             next
-          when 'ー'  # 長音
+          when 'ー' # 長音
             count += 1
             i += 2
             next
@@ -105,16 +107,16 @@ class Post < ApplicationRecord
   end
 
   def reported_by?(user)
-    posts_reports.where(user: user, status: :pending).exists?
+    posts_reports.exists?(user: user, status: :pending)
   end
 
   private
 
   def tag_presence_validation
     if tags.empty?
-      errors.add(:base, "俳句か川柳を選択してください")
+      errors.add(:base, '俳句か川柳を選択してください')
     elsif tags.count > 1
-      errors.add(:base, "俳句か川柳のどちらか一方を選択してください")
+      errors.add(:base, '俳句か川柳のどちらか一方を選択してください')
     end
   end
 
@@ -124,16 +126,16 @@ class Post < ApplicationRecord
 
     # 連続した空白のチェック
     if normalized_reading.match?(/\s{2,}/)
-      errors.add(:reading, "空白は連続して入力できません")
+      errors.add(:reading, '空白は連続して入力できません')
       return
     end
 
     # 空白文字数のカウント
     space_count = normalized_reading.count(' ')
 
-    unless (1..2).include?(space_count)
-      errors.add(:reading, "句全体で1つまたは2つの空白を入れてください")
-    end
+    return if (1..2).include?(space_count)
+
+    errors.add(:reading, '句全体で1つまたは2つの空白を入れてください')
   end
 
   def validate_display_content_newlines
@@ -144,31 +146,31 @@ class Post < ApplicationRecord
 
     # 改行数のバリデーション（1以上2以下）
     if newline_count < 1
-      errors.add(:display_content, "句全体で1つまたは2つの改行を入れてください")
+      errors.add(:display_content, '句全体で1つまたは2つの改行を入れてください')
     elsif newline_count > 2
-      errors.add(:display_content, "3つ以上の改行は入力できません")
+      errors.add(:display_content, '3つ以上の改行は入力できません')
     end
 
     # 本文の最初と最後に改行がないかチェック
     if display_content.start_with?("\n") || display_content.end_with?("\n")
-      errors.add(:display_content, "句の最初と最後に改行を入れることはできません")
+      errors.add(:display_content, '句の最初と最後に改行を入れることはできません')
     end
 
     # 連続した改行がないかチェック
-    if display_content.match?(/\n\n/)
-      errors.add(:display_content, "連続した改行は入力できません")
-    end
+    return unless display_content.match?(/\n\n/)
+
+    errors.add(:display_content, '連続した改行は入力できません')
   end
 
   def destroy_orphaned_image_post
-    if image_post && image_post.posts.empty?
-      image_post.destroy
-    end
+    return unless image_post && image_post.posts.empty?
+
+    image_post.destroy
   end
 
   def check_syllable_count_tags
     # 既存の字足らず・字余りタグを削除
-    tags.where(name: ['字足らず', '字余り']).each do |tag|
+    tags.where(name: %w[字足らず 字余り]).find_each do |tag|
       post_tags.find_by(tag: tag)&.destroy
     end
 
@@ -186,12 +188,12 @@ class Post < ApplicationRecord
   end
 
   def cleanup_image_post
-    if image_post.present? && !theme.present? && !image_post.posts.exists?
-      image_post.destroy
-    end
+    return unless image_post.present? && theme.blank? && !image_post.posts.exists?
+
+    image_post.destroy
   end
 
   def has_pending_deletion_request?
-    posts_deletion_requests.where(status: 0).exists?
+    posts_deletion_requests.exists?(status: 0)
   end
 end

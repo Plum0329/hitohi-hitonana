@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContactsController < ApplicationController
   skip_before_action :require_login
 
@@ -24,8 +26,7 @@ class ContactsController < ApplicationController
     end
   end
 
-  def thanks
-  end
+  def thanks; end
 
   private
 

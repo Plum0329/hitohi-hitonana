@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Theme < ApplicationRecord
   belongs_to :user
   belongs_to :image_post, optional: true
@@ -8,8 +10,8 @@ class Theme < ApplicationRecord
   has_many :theme_deletion_requests, dependent: :destroy
   has_many :themes_reports, dependent: :destroy, class_name: 'ThemesReport'
 
-  validates :description, presence: { message: "お題を入力してください" }
-  validates :status, presence: { message: "ステータスを選択してください" }
+  validates :description, presence: { message: 'お題を入力してください' }
+  validates :status, presence: { message: 'ステータスを選択してください' }
 
   validate :validate_image_type, if: -> { image.attached? }
 
@@ -17,7 +19,7 @@ class Theme < ApplicationRecord
   scope :available, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
 
-  enum status: {
+  enum :status, {
     draft: 0,
     published: 1,
     closed: 2
@@ -29,31 +31,34 @@ class Theme < ApplicationRecord
 
   def available_for?(user)
     return false if user.nil?
-    return false if user.id == self.user_id
+    return false if user.id == user_id
     return false if posted_by?(user)
+
     true
   end
 
   def display_image
     return nil unless image.attached?
+
     image.variant(resize_to_limit: [400, 300])
   end
 
   def small_image
     return nil unless image.attached?
+
     image.variant(resize_to_limit: [200, 150])
   end
 
   def soft_delete
     update!(deleted_at: Time.current)
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Soft delete failed: #{e.message}"
     false
   end
 
   def restore
     update!(deleted_at: nil)
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Restore failed: #{e.message}"
     false
   end
@@ -63,14 +68,14 @@ class Theme < ApplicationRecord
   end
 
   def reported_by?(user)
-    themes_reports.where(user: user, status: :pending).exists?
+    themes_reports.exists?(user: user, status: :pending)
   end
 
   private
 
   def validate_image_type
-    if !image.content_type.in?(%w[image/jpeg image/jpg image/png])
-      errors.add(:image, 'はJPEG、JPG、PNG形式のみ許可されています')
-    end
+    return if image.content_type.in?(%w[image/jpeg image/jpg image/png])
+
+    errors.add(:image, 'はJPEG、JPG、PNG形式のみ許可されています')
   end
 end

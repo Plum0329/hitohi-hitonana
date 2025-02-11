@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def back_button(fallback_path = nil)
     fallback_path ||= root_path
@@ -5,7 +7,7 @@ module ApplicationHelper
   end
 
   def with_turbo_frame_reload(&block)
-    turbo_frame_tag "_top" do
+    turbo_frame_tag '_top' do
       capture(&block)
     end
   end

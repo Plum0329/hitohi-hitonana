@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PostsReportsHelper
   def reason_category_name(report)
     return '' if report.nil? || report.reason_category.nil?

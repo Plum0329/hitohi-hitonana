@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class ThemeDeletionRequest < ApplicationRecord
   belongs_to :user
   belongs_to :theme
 
   validates :reason, presence: true, length: { minimum: 10, maximum: 1000 }
-  enum status: { pending: 0, approved: 1, rejected: 2 }
+  enum :status, { pending: 0, approved: 1, rejected: 2 }
 
   validate :no_duplicate_requests, on: :create
 
@@ -21,7 +23,7 @@ class ThemeDeletionRequest < ApplicationRecord
         false
       end
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Theme deletion failed: #{e.message}"
     false
   end
@@ -29,8 +31,8 @@ class ThemeDeletionRequest < ApplicationRecord
   private
 
   def no_duplicate_requests
-    if ThemeDeletionRequest.exists?(theme_id: theme_id, status: :pending)
-      errors.add(:base, '既にこのお題の削除申請が提出されています')
-    end
+    return unless ThemeDeletionRequest.exists?(theme_id: theme_id, status: :pending)
+
+    errors.add(:base, '既にこのお題の削除申請が提出されています')
   end
 end

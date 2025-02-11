@@ -1,23 +1,27 @@
+# frozen_string_literal: true
+
 class PostsReportsController < ApplicationController
   before_action :require_login
-  before_action :set_post, only: [:new, :confirm, :create]
-  before_action :ensure_not_post_owner, only: [:new, :confirm, :create]
+  before_action :set_post, only: %i[new confirm create]
+  before_action :ensure_not_post_owner, only: %i[new confirm create]
+
+  def show
+    @posts_report = current_user.posts_reports.find(params[:id])
+  end
 
   def new
     @posts_report = if params[:posts_report].present?
-      PostsReport.new(posts_report_params.merge(post: @post))
-    else
-      PostsReport.new(post: @post)
-    end
+                      PostsReport.new(posts_report_params.merge(post: @post))
+                    else
+                      PostsReport.new(post: @post)
+                    end
   end
 
   def confirm
     @posts_report = current_user.posts_reports.build(posts_report_params)
     @posts_report.post = @post
 
-    unless @posts_report.valid?
-      return render :new
-    end
+    return render :new unless @posts_report.valid?
 
     render :confirm
   end
@@ -38,10 +42,6 @@ class PostsReportsController < ApplicationController
     end
   end
 
-  def show
-    @posts_report = current_user.posts_reports.find(params[:id])
-  end
-
   private
 
   def posts_report_params
@@ -55,8 +55,8 @@ class PostsReportsController < ApplicationController
   end
 
   def ensure_not_post_owner
-    if @post.user == current_user
-      redirect_to root_path, alert: '自分の投稿は報告できません'
-    end
+    return unless @post.user == current_user
+
+    redirect_to root_path, alert: '自分の投稿は報告できません'
   end
 end
