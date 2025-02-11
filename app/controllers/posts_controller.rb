@@ -1,40 +1,42 @@
+# frozen_string_literal: true
+
 class PostsController < ApplicationController
   include Sortable
 
-  before_action :require_login, except: [:show, :index]
+  before_action :require_login, except: %i[show index]
   before_action :ensure_correct_user, only: [:destroy]
-  before_action :load_post_from_session, only: [:new_reading, :new_content, :confirm]
-  before_action :set_theme, only: [:new_type, :new_reading, :new_content, :confirm]
+  before_action :load_post_from_session, only: %i[new_reading new_content confirm]
+  before_action :set_theme, only: %i[new_type new_reading new_content confirm]
 
   def index
     @date = if params[:date].present?
-      begin
-        Date.parse(params[:date])
-      rescue ArgumentError
-        Date.today
-      end
-    else
-      Date.today
-    end
+              begin
+                Date.parse(params[:date])
+              rescue ArgumentError
+                Time.zone.today
+              end
+            else
+              Time.zone.today
+            end
 
     @posts = Post.available
-              .includes(:user, :tags, :image_post, theme: [:posts, :image_attachment])
-              .where(created_at: @date.all_day)
+                 .includes(:user, :tags, :image_post, theme: %i[posts image_attachment])
+                 .where(created_at: @date.all_day)
 
     @posts = sort_records(@posts).page(params[:page]).per(20)
 
     @prev_date = @date - 1.day
     @next_date = @date + 1.day
 
-    @posted_dates = Post.where(created_at: @date.beginning_of_month..@date.end_of_month)
-                      .pluck(Arel.sql('DATE(created_at)')).uniq
+    @posted_dates = Post.where(created_at: @date.all_month)
+                        .pluck(Arel.sql('DATE(created_at)')).uniq
 
     @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     @show_like_button = false
 
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         calendar_html = render_to_string(
           partial: 'calendar',
           formats: [:html],
@@ -44,18 +46,18 @@ class PostsController < ApplicationController
           calendar_html: calendar_html,
           current_date: @date.strftime('%Y年%-m月')
         }
-      }
+      end
     end
-  rescue => e
+  rescue StandardError => e
     logger.error "Error in posts#index: #{e.message}"
     logger.error e.backtrace.join("\n")
     @posts = Post.none.page(params[:page])
-    flash.now[:alert] = "投稿の取得中にエラーが発生しました"
+    flash.now[:alert] = '投稿の取得中にエラーが発生しました'
   end
 
   def all_posts
     @posts = Post.includes(:user, :tags, :theme, :image_post)
-                .where(deleted_at: nil)
+                 .where(deleted_at: nil)
 
     @posts = sort_records(@posts).page(params[:page]).per(20)
   end
@@ -63,22 +65,20 @@ class PostsController < ApplicationController
   def show
     @post = Post.includes(:user, :tags, :theme, :image_post).find(params[:id])
     @theme = if @post.theme.present?
-      @post.theme
-    elsif @post.image_post.present?
-      Theme.find_by(image_post_id: @post.image_post.id)
-    end
+               @post.theme
+             elsif @post.image_post.present?
+               Theme.find_by(image_post_id: @post.image_post.id)
+             end
     @show_like_button = true
   rescue ActiveRecord::RecordNotFound
     redirect_to posts_path, alert: '投稿が見つかりませんでした'
-  rescue => e
+  rescue StandardError => e
     logger.error "Error in posts#show: #{e.message}"
     redirect_to posts_path, alert: '投稿の取得中にエラーが発生しました'
   end
 
   def new_type
-    if params[:from_confirm].present?
-      session[:from_confirm] = true
-    end
+    session[:from_confirm] = true if params[:from_confirm].present?
 
     if params[:post].present?
       session[:post_params] ||= {}
@@ -96,19 +96,17 @@ class PostsController < ApplicationController
       session[:theme_id] = @theme.id
     elsif session[:no_image]
       session.delete(:image_post_id)
-    else
-      @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
+    elsif session[:image_post_id]
+      @image_post = ImagePost.find_by(id: session[:image_post_id])
     end
-  rescue => e
+  rescue StandardError => e
     logger.error "Error in posts#new_type: #{e.message}"
     logger.error e.backtrace.join("\n")
     redirect_to new_type_posts_path, alert: 'エラーが発生しました'
   end
 
   def new_reading
-    if params[:from_confirm].present?
-      session[:from_confirm] = true
-    end
+    session[:from_confirm] = true if params[:from_confirm].present?
 
     @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     if params[:post] && params[:post][:tag_id].present?
@@ -120,15 +118,13 @@ class PostsController < ApplicationController
     @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
 
     redirect_to new_type_posts_path, alert: '句の種類を選択してください' unless @tag
-  rescue => e
+  rescue StandardError => e
     logger.error "Error in posts#new_reading: #{e.message}"
     redirect_to new_type_posts_path, alert: 'エラーが発生しました'
   end
 
   def new_content
-    if params[:from_confirm].present?
-      session[:from_confirm] = true
-    end
+    session[:from_confirm] = true if params[:from_confirm].present?
 
     @image_post = ImagePost.find_by(id: session[:image_post_id]) if session[:image_post_id]
     if params[:post] && params[:post][:reading].present?
@@ -139,10 +135,8 @@ class PostsController < ApplicationController
     @post = Post.new(session[:post_params])
     @tag = Tag.find_by(id: session[:post_params]&.dig('tag_id'))
 
-    if !session[:post_params]&.dig('reading')
-      redirect_to new_reading_posts_path, alert: '読み方を入力してください'
-    end
-  rescue => e
+    redirect_to new_reading_posts_path, alert: '読み方を入力してください' unless session[:post_params]&.dig('reading')
+  rescue StandardError => e
     logger.error "Error in posts#new_content: #{e.message}"
     redirect_to new_reading_posts_path, alert: 'エラーが発生しました'
   end
@@ -157,75 +151,69 @@ class PostsController < ApplicationController
     @post = Post.new(session[:post_params])
     @tag = Tag.find_by(id: session[:post_params]['tag_id'])
 
-    if !session[:post_params]&.dig('display_content')
-      redirect_to new_content_posts_path, alert: '本文を入力してください'
-    end
-  rescue => e
+    redirect_to new_content_posts_path, alert: '本文を入力してください' unless session[:post_params]&.dig('display_content')
+  rescue StandardError => e
     logger.error "Error in posts#confirm: #{e.message}"
     redirect_to new_content_posts_path, alert: 'エラーが発生しました'
   end
 
   def create
-    begin
-      ActiveRecord::Base.transaction do
-        @post = current_user.posts.build(
-          reading: session[:post_params]['reading'],
-          display_content: session[:post_params]['display_content']
+    ActiveRecord::Base.transaction do
+      @post = current_user.posts.build(
+        reading: session[:post_params]['reading'],
+        display_content: session[:post_params]['display_content']
+      )
+
+      if session[:theme_id]
+        @theme = Theme.find(session[:theme_id])
+        @post.theme = @theme
+      elsif session[:image_post_id]
+        @image_post = ImagePost.find(session[:image_post_id])
+        @post.image_post = @image_post
+
+        theme = current_user.themes.build(
+          description: @image_post.description,
+          image_post: @image_post
         )
 
-        if session[:theme_id]
-          @theme = Theme.find(session[:theme_id])
-          @post.theme = @theme
-        elsif session[:image_post_id]
-          @image_post = ImagePost.find(session[:image_post_id])
-          @post.image_post = @image_post
+        theme.image.attach(@image_post.image.blob) if @image_post.image.present?
 
-          theme = current_user.themes.build(
-            description: @image_post.description,
-            image_post: @image_post
-          )
+        theme.save
+        @post.theme = theme
+      end
 
-          if @image_post.image.present?
-            theme.image.attach(@image_post.image.blob)
-          end
+      tag_id = session[:post_params]['tag_id']
+      if tag_id.present?
+        tag = Tag.find_by(id: tag_id)
+        @post.tags << tag if tag
+      end
 
-          theme.save
-          @post.theme = theme
-        end
+      if @post.save
+        session[:post_params] = nil
+        session.delete(:image_post_id)
+        session.delete(:theme_id)
+        session.delete(:no_image)
+        session.delete(:from_confirm)
+        redirect_to posts_path, notice: '投稿が完了しました'
+      else
+        errors = @post.errors.full_messages
+        flash[:alert] = errors.join('<br>').html_safe
 
-        tag_id = session[:post_params]['tag_id']
-        if tag_id.present?
-          tag = Tag.find_by(id: tag_id)
-          @post.tags << tag if tag
-        end
-
-        if @post.save
-          session[:post_params] = nil
-          session.delete(:image_post_id)
-          session.delete(:theme_id)
-          session.delete(:no_image)
-          session.delete(:from_confirm)
-          redirect_to posts_path, notice: '投稿が完了しました'
+        if @post.tags.empty?
+          redirect_to new_type_posts_path
+        elsif @post.reading.blank?
+          redirect_to new_reading_posts_path
+        elsif @post.display_content.blank?
+          redirect_to new_content_posts_path
         else
-          errors = @post.errors.full_messages
-          flash[:alert] = errors.join("<br>").html_safe
-
-          if @post.tags.empty?
-            redirect_to new_type_posts_path
-          elsif @post.reading.blank?
-            redirect_to new_reading_posts_path
-          elsif @post.display_content.blank?
-            redirect_to new_content_posts_path
-          else
-            redirect_to new_type_posts_path
-          end
+          redirect_to new_type_posts_path
         end
       end
-    rescue => e
-      logger.error "Error in posts#create: #{e.message}"
-      logger.error e.backtrace.join("\n")
-      redirect_to new_type_posts_path, alert: '投稿中にエラーが発生しました'
     end
+  rescue StandardError => e
+    logger.error "Error in posts#create: #{e.message}"
+    logger.error e.backtrace.join("\n")
+    redirect_to new_type_posts_path, alert: '投稿中にエラーが発生しました'
   end
 
   def destroy
@@ -234,18 +222,18 @@ class PostsController < ApplicationController
       ActiveRecord::Base.transaction do
         if @post.image_post.present?
           theme = Theme.find_by(image_post_id: @post.image_post.id)
-          theme.destroy! if theme
+          theme&.destroy!
 
           remaining_posts = Post.where(image_post_id: @post.image_post.id)
-                              .where.not(id: @post.id)
-                              .exists?
+                                .where.not(id: @post.id)
+                                .exists?
           @post.image_post.destroy! unless remaining_posts
         end
 
         @post.destroy!
         flash[:notice] = '投稿を削除しました'
       end
-    rescue => e
+    rescue StandardError => e
       logger.error "Post destroy error: #{e.class}: #{e.message}"
       logger.error e.backtrace.join("\n")
       flash[:alert] = '削除中にエラーが発生しました'
@@ -271,9 +259,9 @@ class PostsController < ApplicationController
 
   def ensure_correct_user
     @post = Post.find(params[:id])
-    unless @post.user == current_user
-      redirect_to posts_path, status: :see_other
-    end
+    return if @post.user == current_user
+
+    redirect_to posts_path, status: :see_other
   end
 
   def set_theme
@@ -297,10 +285,10 @@ class PostsController < ApplicationController
   end
 
   def ensure_tags_exist
-    if Tag.count == 0
+    if Tag.count.zero?
       Tag.find_or_create_by!(name: '俳句')
       Tag.find_or_create_by!(name: '川柳')
     end
-    @tags = Tag.where(name: ['俳句', '川柳'])
+    @tags = Tag.where(name: %w[俳句 川柳])
   end
 end

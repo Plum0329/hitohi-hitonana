@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class UserSessionsController < ApplicationController
-  skip_before_action :require_login, only: [:new, :create]
+  skip_before_action :require_login, only: %i[new create]
 
   def new
     @user = User.new
@@ -9,7 +11,7 @@ class UserSessionsController < ApplicationController
     @user = User.find_by(email: params[:email])
 
     if @user.nil?
-      flash.now[:error] = "メールアドレスまたはパスワードが間違っています"
+      flash.now[:error] = 'メールアドレスまたはパスワードが間違っています'
       flash.now[:notice] = "アカウントをお持ちでない方は#{view_context.link_to('新規登録', signup_path)}を行ってください"
       render :new, status: :unprocessable_entity
       return

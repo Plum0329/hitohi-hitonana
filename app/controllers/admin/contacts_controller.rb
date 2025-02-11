@@ -1,31 +1,34 @@
-class Admin::ContactsController < Admin::BaseController
-  before_action :set_contact, only: [:show, :update]
+# frozen_string_literal: true
 
-  def index
-    @contacts = Contact.recent
-                      .by_status(params[:status])
-                      .by_category(params[:category])
-                      .page(params[:page])
-  end
+module Admin
+  class ContactsController < Admin::BaseController
+    before_action :set_contact, only: %i[show update]
 
-  def show
-  end
-
-  def update
-    if @contact.update(contact_params)
-      redirect_to admin_contact_path(@contact), notice: '更新しました'
-    else
-      render :show
+    def index
+      @contacts = Contact.recent
+                         .by_status(params[:status])
+                         .by_category(params[:category])
+                         .page(params[:page])
     end
-  end
 
-  private
+    def show; end
 
-  def set_contact
-    @contact = Contact.find(params[:id])
-  end
+    def update
+      if @contact.update(contact_params)
+        redirect_to admin_contact_path(@contact), notice: '更新しました'
+      else
+        render :show
+      end
+    end
 
-  def contact_params
-    params.require(:contact).permit(:status, :admin_memo)
+    private
+
+    def set_contact
+      @contact = Contact.find(params[:id])
+    end
+
+    def contact_params
+      params.require(:contact).permit(:status, :admin_memo)
+    end
   end
 end

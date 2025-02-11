@@ -1,56 +1,58 @@
-class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :deactivate, :activate]
+# frozen_string_literal: true
 
-  def index
-    @users = User.order(created_at: :desc).page(params[:page]).per(20)
-  end
+module Admin
+  class UsersController < Admin::BaseController
+    before_action :set_user, only: %i[show edit update destroy deactivate activate]
 
-  def show
-  end
-
-  def edit
-  end
-
-  def update
-    if @user.update(user_params)
-      redirect_to admin_user_path(@user), success: t('.success')
-    else
-      flash.now[:error] = t('.fail')
-      render :edit
+    def index
+      @users = User.order(created_at: :desc).page(params[:page]).per(20)
     end
-  end
 
-  def deactivate
-    if @user.deactivate
-      redirect_to admin_users_path, success: "アカウントを無効化しました"
-    else
-      redirect_to admin_users_path, error: "アカウントの無効化に失敗しました"
+    def show; end
+
+    def edit; end
+
+    def update
+      if @user.update(user_params)
+        redirect_to admin_user_path(@user), success: t('.success')
+      else
+        flash.now[:error] = t('.fail')
+        render :edit
+      end
     end
-  end
 
-  def activate
-    if @user.activate
-      redirect_to admin_users_path, success: "アカウントを有効化しました"
-    else
-      redirect_to admin_users_path, error: "アカウントの有効化に失敗しました"
+    def deactivate
+      if @user.deactivate
+        redirect_to admin_users_path, success: 'アカウントを無効化しました'
+      else
+        redirect_to admin_users_path, error: 'アカウントの無効化に失敗しました'
+      end
     end
-  end
 
-  def destroy
-    if @user.destroy
-      redirect_to admin_users_path, success: "ユーザーを完全に削除しました"
-    else
-      redirect_to admin_users_path, error: "ユーザーの削除に失敗しました"
+    def activate
+      if @user.activate
+        redirect_to admin_users_path, success: 'アカウントを有効化しました'
+      else
+        redirect_to admin_users_path, error: 'アカウントの有効化に失敗しました'
+      end
     end
-  end
 
-  private
+    def destroy
+      if @user.destroy
+        redirect_to admin_users_path, success: 'ユーザーを完全に削除しました'
+      else
+        redirect_to admin_users_path, error: 'ユーザーの削除に失敗しました'
+      end
+    end
 
-  def set_user
-    @user = User.find(params[:id])
-  end
+    private
 
-  def user_params
-    params.require(:user).permit(:name, :email, :role)
+    def set_user
+      @user = User.find(params[:id])
+    end
+
+    def user_params
+      params.require(:user).permit(:name, :email, :role)
+    end
   end
 end

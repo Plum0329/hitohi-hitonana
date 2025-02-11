@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImagePostsController < ApplicationController
   before_action :require_login
 
@@ -12,10 +14,10 @@ class ImagePostsController < ApplicationController
       session[:image_post_id] = @image_post.id
     else
       @image_post = if session[:temp_image_post]
-        ImagePost.new(session[:temp_image_post].except('image'))
-      else
-        ImagePost.new
-      end
+                      ImagePost.new(session[:temp_image_post].except('image'))
+                    else
+                      ImagePost.new
+                    end
     end
   end
 
@@ -26,15 +28,15 @@ class ImagePostsController < ApplicationController
       redirect_to new_type_posts_path
       return
     end
-  
+
     @image_post = ImagePost.new(image_post_params)
-  
+
     if @image_post.save
       if session[:image_post_id].present?
         old_image_post = ImagePost.find_by(id: session[:image_post_id])
         old_image_post&.destroy
       end
-      
+
       session[:image_post_id] = @image_post.id
       session.delete(:temp_image_post)
       session.delete(:no_image)

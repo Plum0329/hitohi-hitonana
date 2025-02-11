@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   authenticates_with_sorcery!
   has_many :posts
@@ -18,7 +20,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, presence: true
   validates :name, presence: true
 
-  enum role: { general: 0, admin: 1 }
+  enum :role, { general: 0, admin: 1 }
 
   def likes?(likeable)
     likes.exists?(likeable: likeable)
@@ -28,7 +30,7 @@ class User < ApplicationRecord
     deleted_at.present?
   end
 
-  alias_method :deleted?, :inactive?
+  alias deleted? inactive?
 
   def deactivate
     update(deleted_at: Time.current)

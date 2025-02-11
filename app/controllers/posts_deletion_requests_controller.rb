@@ -1,23 +1,27 @@
+# frozen_string_literal: true
+
 class PostsDeletionRequestsController < ApplicationController
   before_action :require_login
-  before_action :set_post, only: [:new, :confirm, :create]
-  before_action :ensure_post_owner, only: [:new, :confirm, :create]
+  before_action :set_post, only: %i[new confirm create]
+  before_action :ensure_post_owner, only: %i[new confirm create]
+
+  def show
+    @posts_deletion_request = current_user.posts_deletion_requests.find(params[:id])
+  end
 
   def new
     @posts_deletion_request = if params[:posts_deletion_request].present?
-      PostsDeletionRequest.new(posts_deletion_request_params.merge(post: @post))
-    else
-      PostsDeletionRequest.new(post: @post)
-    end
+                                PostsDeletionRequest.new(posts_deletion_request_params.merge(post: @post))
+                              else
+                                PostsDeletionRequest.new(post: @post)
+                              end
   end
 
   def confirm
     @posts_deletion_request = current_user.posts_deletion_requests.build(posts_deletion_request_params)
     @posts_deletion_request.post = @post
 
-    unless @posts_deletion_request.valid?
-      return render :new
-    end
+    return render :new unless @posts_deletion_request.valid?
 
     render :confirm
   end
@@ -38,10 +42,6 @@ class PostsDeletionRequestsController < ApplicationController
     end
   end
 
-  def show
-    @posts_deletion_request = current_user.posts_deletion_requests.find(params[:id])
-  end
-
   private
 
   def posts_deletion_request_params
@@ -55,8 +55,8 @@ class PostsDeletionRequestsController < ApplicationController
   end
 
   def ensure_post_owner
-    unless @post.user == current_user
-      redirect_to root_path, alert: '権限がありません'
-    end
+    return if @post.user == current_user
+
+    redirect_to root_path, alert: '権限がありません'
   end
 end

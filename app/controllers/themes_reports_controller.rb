@@ -1,23 +1,27 @@
+# frozen_string_literal: true
+
 class ThemesReportsController < ApplicationController
   before_action :require_login
-  before_action :set_theme, only: [:new, :confirm, :create]
-  before_action :ensure_not_theme_owner, only: [:new, :confirm, :create]
+  before_action :set_theme, only: %i[new confirm create]
+  before_action :ensure_not_theme_owner, only: %i[new confirm create]
+
+  def show
+    @themes_report = current_user.themes_reports.find(params[:id])
+  end
 
   def new
     @themes_report = if params[:themes_report].present?
-      ThemesReport.new(themes_report_params.merge(theme: @theme))
-    else
-      ThemesReport.new(theme: @theme)
-    end
+                       ThemesReport.new(themes_report_params.merge(theme: @theme))
+                     else
+                       ThemesReport.new(theme: @theme)
+                     end
   end
 
   def confirm
     @themes_report = current_user.themes_reports.build(themes_report_params)
     @themes_report.theme = @theme
 
-    unless @themes_report.valid?
-      return render :new
-    end
+    return render :new unless @themes_report.valid?
 
     render :confirm
   end
@@ -38,10 +42,6 @@ class ThemesReportsController < ApplicationController
     end
   end
 
-  def show
-    @themes_report = current_user.themes_reports.find(params[:id])
-  end
-
   private
 
   def themes_report_params
@@ -55,8 +55,8 @@ class ThemesReportsController < ApplicationController
   end
 
   def ensure_not_theme_owner
-    if @theme.user == current_user
-      redirect_to root_path, alert: '自分のお題は報告できません'
-    end
+    return unless @theme.user == current_user
+
+    redirect_to root_path, alert: '自分のお題は報告できません'
   end
 end
