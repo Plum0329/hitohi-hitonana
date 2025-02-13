@@ -15,6 +15,9 @@ AllCops:
     - 'tmp/**/*'
     - 'node_modules/**/*'
 
+Bundler/OrderedGems:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
