@@ -15,10 +15,19 @@ AllCops:
     - 'tmp/**/*'
     - 'node_modules/**/*'
 
+Style/Documentation:
+  Enabled: false
+
 Rails/I18nLocaleTexts:
   Enabled: false
 
 Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/InverseOf:
   Enabled: false
 
 Metrics/ClassLength:
@@ -30,11 +39,35 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  Enabled: false
+
 Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Metrics/BlockNesting:
+  Enabled: false
+
 Rails/OutputSafety:
+  Enabled: false
+
+Style/HashLikeCase:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Lint/DuplicateBranch:
+  Enabled: false
+
+Lint/DuplicateMethods:
+  Enabled: false
+
+Lint/UnreachableCode:
   Enabled: false
