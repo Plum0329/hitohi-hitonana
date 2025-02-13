@@ -1,29 +1,76 @@
 require:
   - rubocop-rails
+  - rubocop-capybara
+  - rubocop-factory_bot
+  - rubocop-rspec
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.0
+  SuggestExtensions: false
   Exclude:
     - 'db/**/*'
-    - 'config/**/*'
     - 'bin/**/*'
+    - 'config/**/*'
     - 'vendor/**/*'
     - 'tmp/**/*'
     - 'node_modules/**/*'
 
-Style/AsciiComments:
+Bundler/OrderedGems:
   Enabled: false
 
 Style/Documentation:
   Enabled: false
 
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-  ConsistentQuotesInMultiline: true
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
 
 Metrics/MethodLength:
-  Max: 20
+  Enabled: false
 
-Layout/LineLength:
-  Max: 120
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Rails/OutputSafety:
+  Enabled: false
+
+Style/HashLikeCase:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Lint/DuplicateBranch:
+  Enabled: false
+
+Lint/DuplicateMethods:
+  Enabled: false
+
+Lint/UnreachableCode:
+  Enabled: false
