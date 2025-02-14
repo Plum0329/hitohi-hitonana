@@ -88,7 +88,7 @@ ja:
               blank: を入力してください
               too_short: は%{count}文字以上で入力してください
               too_long: は%{count}文字以下で入力してください
-        theme_deletion_request:
+        themes_deletion_request:
           attributes:
             reason:
               blank: を入力してください
@@ -167,7 +167,7 @@ ja:
         pending: '審査中'
         approved: '承認済み'
         rejected: '却下'
-    theme_deletion_request:
+    themes_deletion_request:
       status:
         pending: '審査中'
         approved: '承認済み'

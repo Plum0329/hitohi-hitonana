@@ -33,7 +33,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :theme_deletion_requests do
+    resources :themes_deletion_requests do
       member do
         patch :approve
         patch :reject
@@ -143,13 +143,13 @@ Rails.application.routes.draw do
   resources :posts_deletion_requests, only: [:show]
 
   resources :themes do
-    resources :theme_deletion_requests, only: [:new, :create] do
+    resources :themes_deletion_requests, only: [:new, :create] do
       collection do
         post :confirm
       end
     end
   end
-  resources :theme_deletion_requests, only: [:show]
+  resources :themes_deletion_requests, only: [:show]
 
   resources :posts do
     resources :posts_reports, only: [:new, :create] do
