@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :liked_posts, through: :likes, source: :likeable, source_type: 'Post'
   has_many :liked_themes, through: :likes, source: :likeable, source_type: 'Theme'
   has_many :posts_deletion_requests
-  has_many :theme_deletion_requests
+  has_many :themes_deletion_requests
   has_many :posts_reports
   has_many :themes_reports
 

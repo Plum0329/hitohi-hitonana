@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ThemeDeletionRequest < ApplicationRecord
+class ThemesDeletionRequest < ApplicationRecord
   belongs_to :user
   belongs_to :theme
 
@@ -31,7 +31,7 @@ class ThemeDeletionRequest < ApplicationRecord
   private
 
   def no_duplicate_requests
-    return unless ThemeDeletionRequest.exists?(theme_id: theme_id, status: :pending)
+    return unless ThemesDeletionRequest.exists?(theme_id: theme_id, status: :pending)
 
     errors.add(:base, '既にこのお題の削除申請が提出されています')
   end

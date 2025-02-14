@@ -285,10 +285,8 @@ class PostsController < ApplicationController
   end
 
   def ensure_tags_exist
-    if Tag.count.zero?
-      Tag.find_or_create_by!(name: '俳句')
-      Tag.find_or_create_by!(name: '川柳')
-    end
+    Tag.find_or_create_by!(name: '俳句')
+    Tag.find_or_create_by!(name: '川柳')
     @tags = Tag.where(name: %w[俳句 川柳])
   end
 end

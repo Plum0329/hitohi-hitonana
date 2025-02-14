@@ -7,7 +7,7 @@ class Theme < ApplicationRecord
   has_one_attached :image
   has_many :likes, as: :likeable, dependent: :destroy
   has_many :users_who_liked, through: :likes, source: :user
-  has_many :theme_deletion_requests, dependent: :destroy
+  has_many :themes_deletion_requests, dependent: :destroy
   has_many :themes_reports, dependent: :destroy, class_name: 'ThemesReport'
 
   validates :description, presence: { message: 'お題を入力してください' }
