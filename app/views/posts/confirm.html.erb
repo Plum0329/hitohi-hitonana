@@ -19,7 +19,7 @@
             </div>
           <% else %>
             <div class="mb-4">
-              <h2 class="h5 mb-3">画像</h2>
+              <h2 class="h5 mb-3">選択した画像</h2>
               <% if @image_post.present? && @image_post.image.present? %>
                 <div class="image-container">
                   <%= image_tag url_for(@image_post.image), class: "w-100 rounded-lg" %>

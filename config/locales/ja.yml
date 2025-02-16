@@ -4,6 +4,7 @@ ja:
       user: 'ユーザー'
       post: '句'
       tag: 'タグ'
+      image_post: '画像投稿'
       contact: 'お問い合わせ'
       posts_deletion_request: '削除申請'
       themes_deletion_request: '削除申請'
@@ -23,6 +24,9 @@ ja:
         post_tags: 'タグ'
       tag:
         name: 'タグ名'
+      image_post:
+        description: '説明文'
+        image: '画像'
       contact:
         name: 'お名前'
         email: 'メールアドレス'
@@ -69,6 +73,10 @@ ja:
             base:
               tag_required: '俳句か川柳を選択してください'
               one_tag_only: '俳句か川柳のどちらか1つのみ選択できます'
+        image_post:
+          attributes:
+            description:
+              too_long: 'は%{count}文字以内で入力してください'
         contact:
           attributes:
             name:

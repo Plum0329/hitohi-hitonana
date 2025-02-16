@@ -20,7 +20,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/graduation_project_development
+      DATABASE_URL: postgres://postgres:password@db:5432/hitohi_hitonana_development
       RAILS_ENV: development
       RAILS_SERVE_STATIC_FILES: "true"
       RAILS_LOG_TO_STDOUT: "true"
