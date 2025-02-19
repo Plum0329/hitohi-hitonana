@@ -2,9 +2,11 @@
 
 FactoryBot.define do
   factory :contact do
-    name { |n| "user#{n}@example.com" }
-    email { |n| "User #{n}" }
-    category { 'service' }
+    sequence(:name) { |n| "User#{n}" }
+    sequence(:email) { |n| "user#{n}@example.com" }
+    category { "general" }
+    sequence(:content) { |n| "これはテストのお問い合わせ内容#{n}です。" }
     privacy_policy_agreed { true }
+    status { "pending" }
   end
 end

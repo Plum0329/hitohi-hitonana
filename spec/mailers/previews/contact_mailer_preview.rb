@@ -6,7 +6,7 @@ class ContactMailerPreview < ActionMailer::Preview
     contact = Contact.new(
       name: 'Preview User',
       email: 'preview@example.com',
-      category: 'service',
+      category: 'general',
       content: "これはテストのお問い合わせ内容です。\n改行を含む内容です。"
     )
     ContactMailer.confirmation_email(contact)
