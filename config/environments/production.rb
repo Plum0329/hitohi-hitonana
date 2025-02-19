@@ -63,6 +63,23 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "app_production"
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: 'hitohi-hitonana.com', protocol: 'https' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.smtp_settings = {
+    address: 'mail1033.onamae.ne.jp',
+    port: 587,
+    domain: 'hitohi-hitonana.com',
+    user_name: 'noreply@hitohi-hitonana.com',
+    password: ENV['MAIL_PASSWORD'],
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_options = {
+    from: 'noreply@hitohi-hitonana.com'
+  }
+
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

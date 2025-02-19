@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>メールアドレスの確認</h1>
+    <p><%= @user.name %>様</p>
+    <p>ひとひ一七をご利用いただきありがとうございます。</p>
+    <p>以下のリンクをクリックして、メールアドレスの確認を完了してください：</p>
+    <p><%= link_to 'メールアドレスを確認する', @url %></p>
+    <p>このリンクは24時間有効です。</p>
+    <p>※このメールに心当たりがない場合は、このメールを破棄してください。</p>
+  </body>
+</html>
