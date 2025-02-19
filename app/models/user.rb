@@ -20,6 +20,8 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, presence: true
   validates :name, presence: true
 
+  before_create :generate_confirmation_token
+
   enum :role, { general: 0, admin: 1 }
 
   def likes?(likeable)
@@ -42,5 +44,18 @@ class User < ApplicationRecord
 
   def active_for_authentication?
     !inactive?
+  end
+
+  def confirm_email
+    self.email_confirmed = true
+    self.confirmation_token = nil
+    save
+  end
+
+  private
+
+  def generate_confirmation_token
+    self.confirmation_token = SecureRandom.urlsafe_base64
+    self.confirmation_sent_at = Time.current
   end
 end

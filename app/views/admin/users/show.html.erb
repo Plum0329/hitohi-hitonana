@@ -13,6 +13,21 @@
     </div>
 
     <div class="row mb-3">
+      <div class="col-md-3 fw-bold">メール確認状態</div>
+      <div class="col-md-9">
+        <% if @user.email_confirmed? %>
+          <span class="badge bg-success">確認済み</span>
+        <% else %>
+          <span class="badge bg-warning">未確認</span>
+          <% if @user.confirmation_sent_at %>
+            <br>
+            <small>確認メール送信日時: <%= l @user.confirmation_sent_at %></small>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
       <div class="col-md-3 fw-bold">ロール</div>
       <div class="col-md-9">
         <span class="badge bg-<%= @user.admin? ? 'danger' : 'secondary' %>">

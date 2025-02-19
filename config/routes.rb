@@ -125,6 +125,7 @@ Rails.application.routes.draw do
   get 'terms', to: 'pages#terms', as: :terms
   get 'privacy', to: 'pages#privacy', as: :privacy
   get 'contact', to: 'pages#contact', as: :contact
+  get 'confirm_email/:confirmation_token', to: 'users#confirm_email', as: 'confirm_email'
 
   resources :contacts, only: [:create] do
     collection do
@@ -168,4 +169,14 @@ Rails.application.routes.draw do
     end
   end
   resources :themes_reports, only: [:show]
+
+  resources :users do
+    member do
+      post :resend_confirmation
+    end
+  end
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 end
