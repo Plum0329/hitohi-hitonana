@@ -13,10 +13,14 @@ RSpec.describe ContactMailer, type: :mailer do
       expect(mail.from).to eq(['noreply@hitohi-hitonana.com'])
     end
 
-    it 'renders the body' do
-      expect(mail.body.encoded).to match(contact.name)
-      expect(mail.body.encoded).to match(contact.email)
-      expect(mail.body.encoded).to match(contact.content)
+    it "renders the body" do
+      expect(mail.text_part.body.decoded).to include(contact.name)
+      expect(mail.text_part.body.decoded).to include(contact.email)
+      expect(mail.text_part.body.decoded).to include(contact.content)
+
+      expect(mail.html_part.body.decoded).to include(contact.name)
+      expect(mail.html_part.body.decoded).to include(contact.email)
+      expect(mail.html_part.body.decoded).to include(contact.content)
     end
   end
 end
