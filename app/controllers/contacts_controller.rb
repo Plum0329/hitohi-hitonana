@@ -20,6 +20,7 @@ class ContactsController < ApplicationController
     end
 
     if @contact.save
+      ContactMailer.confirmation_email(@contact).deliver_later
       redirect_to thanks_contacts_path, notice: 'お問い合わせを受け付けました。'
     else
       render 'pages/contact'

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h2>下記のお問い合わせを受け付けました。</h2>
+
+    <div style="margin: 20px 0;">
+      <div style="margin-bottom: 15px;">
+        <div style="font-weight: bold;">お名前</div>
+        <div><%= @contact.name %></div>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <div style="font-weight: bold;">メールアドレス</div>
+        <div><%= @contact.email %></div>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <div style="font-weight: bold;">お問い合わせ種別</div>
+        <div><%= t("enums.contact.category.#{@contact.category}") %></div>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <div style="font-weight: bold;">お問い合わせ内容</div>
+        <div><%= simple_format(h(@contact.content)) %></div>
+      </div>
+    </div>
+  </body>
+</html>
