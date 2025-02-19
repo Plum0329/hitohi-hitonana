@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe UserMailer, type: :mailer do
+  include Rails.application.routes.url_helpers
+
   describe 'confirmation_email' do
     let(:user) { create(:user) }
     let(:mail) { described_class.with(user: user).confirmation_email }
@@ -15,7 +17,7 @@ RSpec.describe UserMailer, type: :mailer do
 
     it 'renders the body' do
       expect(mail.body.encoded).to match(user.name)
-      expect(mail.body.encoded).to match(user.confirmation_token)
+      expect(mail.body.encoded).to match(confirm_email_url(confirmation_token: user.confirmation_token))
     end
   end
 end
