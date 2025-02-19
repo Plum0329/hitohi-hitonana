@@ -13,22 +13,40 @@ RSpec.describe UserMailer, type: :mailer do
       Rails.application.routes.default_url_options[:host] = 'example.com'
     end
 
-    it 'renders the headers' do
-      expect(mail.subject).to eq('メールアドレスの確認')
-      expect(mail.to).to eq([user.email])
-      expect(mail.from).to eq(['noreply@hitohi-hitonana.com'])
+    describe 'headers' do
+      it 'renders the subject' do
+        expect(mail.subject).to eq('メールアドレスの確認')
+      end
+
+      it 'renders the receiver email' do
+        expect(mail.to).to eq([user.email])
+      end
+
+      it 'renders the sender email' do
+        expect(mail.from).to eq(['noreply@hitohi-hitonana.com'])
+      end
     end
 
-    it 'renders the body' do
-      expect(mail.text_part.body.decoded).to include(user.name)
-      expect(mail.text_part.body.decoded).to include(
-        confirm_email_url(confirmation_token: user.confirmation_token)
-      )
+    describe 'body' do
+      it 'includes user name in text part' do
+        expect(mail.text_part.body.decoded).to include(user.name)
+      end
 
-      expect(mail.html_part.body.decoded).to include(user.name)
-      expect(mail.html_part.body.decoded).to include(
-        confirm_email_url(confirmation_token: user.confirmation_token)
-      )
+      it 'includes confirmation URL in text part' do
+        expect(mail.text_part.body.decoded).to include(
+          confirm_email_url(confirmation_token: user.confirmation_token)
+        )
+      end
+
+      it 'includes user name in HTML part' do
+        expect(mail.html_part.body.decoded).to include(user.name)
+      end
+
+      it 'includes confirmation URL in HTML part' do
+        expect(mail.html_part.body.decoded).to include(
+          confirm_email_url(confirmation_token: user.confirmation_token)
+        )
+      end
     end
   end
 end
