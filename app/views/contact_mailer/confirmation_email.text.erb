@@ -1,0 +1,13 @@
+下記のお問い合わせを受け付けました。
+
+お名前
+<%= @contact.name %>
+
+メールアドレス
+<%= @contact.email %>
+
+お問い合わせ種別
+<%= t("enums.contact.category.#{@contact.category}") %>
+
+お問い合わせ内容
+<%= @contact.content %>
