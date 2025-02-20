@@ -78,5 +78,52 @@
         </div>
       <% end %>
     </div>
+
+  <% if @contact.replied? %>
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3 class="card-title h5 mb-0">返信内容</h3>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>返信日時</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= l @contact.replied_at, format: :long %>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <strong>返信内容</strong>
+          </div>
+          <div class="col-sm-9">
+            <%= simple_format(h(@contact.reply_content)) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3 class="card-title h5 mb-0">返信</h3>
+      </div>
+      <div class="card-body">
+        <%= form_with(url: confirm_reply_admin_contact_path(@contact), method: :get, local: true) do |f| %>
+          <div class="mb-3">
+            <label class="form-label">返信内容</label>
+            <%= f.text_area :reply_content,
+                rows: 10,
+                class: "form-control" %>
+          </div>
+
+          <div class="text-center">
+            <%= f.submit "内容を確認する", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
   </div>
 </div>

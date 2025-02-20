@@ -54,7 +54,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :contacts, only: [:index, :show, :update]
+    resources :contacts do
+      member do
+        get :confirm_reply
+        post :reply
+      end
+    end
   end
 
   root 'home#index'

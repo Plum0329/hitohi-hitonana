@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_19_043045) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_20_014920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_19_043045) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "contact_reply_templates", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "content", null: false
+    t.string "category", null: false
+    t.boolean "default", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category", "default"], name: "index_contact_reply_templates_on_category_and_default"
+  end
+
   create_table "contacts", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -53,6 +63,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_19_043045) do
     t.datetime "responded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "reply_content"
+    t.datetime "replied_at"
     t.index ["category"], name: "index_contacts_on_category"
     t.index ["created_at"], name: "index_contacts_on_created_at"
     t.index ["status"], name: "index_contacts_on_status"
