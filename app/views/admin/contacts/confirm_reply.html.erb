@@ -1,0 +1,45 @@
+<div class="container py-4">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title h5 mb-0">返信内容の確認</h2>
+    </div>
+
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-sm-3">
+          <strong>宛先</strong>
+        </div>
+        <div class="col-sm-9">
+          <%= @contact.name %> (<%= @contact.email %>)
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-3">
+          <strong>お問い合わせ内容</strong>
+        </div>
+        <div class="col-sm-9">
+          <%= simple_format(h(@contact.content)) %>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-3">
+          <strong>返信内容</strong>
+        </div>
+        <div class="col-sm-9">
+          <%= simple_format(h(@reply_content)) %>
+        </div>
+      </div>
+
+      <%= form_with(url: reply_admin_contact_path(@contact), local: true) do |f| %>
+        <%= f.hidden_field :reply_content, value: @reply_content %>
+
+        <div class="text-center">
+          <%= link_to "修正する", admin_contact_path(@contact), class: "btn btn-secondary me-2" %>
+          <%= f.submit "送信する", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

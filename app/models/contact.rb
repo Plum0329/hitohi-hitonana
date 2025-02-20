@@ -21,9 +21,23 @@ class Contact < ApplicationRecord
     bug_report: 'bug_report',
     feature_request: 'feature_request',
     other: 'other'
-  }, default: 'pending'
+  }, default: 'general'
 
   scope :recent, -> { order(created_at: :desc) }
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :by_category, ->(category) { where(category: category) if category.present? }
+
+  def reply(content)
+    return false if content.blank?
+
+    update(
+      reply_content: content,
+      replied_at: Time.current,
+      status: :completed
+    )
+  end
+
+  def replied?
+    replied_at.present?
+  end
 end
