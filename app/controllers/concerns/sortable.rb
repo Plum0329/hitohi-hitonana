@@ -11,11 +11,11 @@ module Sortable
       records.order(created_at: :asc)
     when 'most_likes'
       records.left_joins(:likes)
-             .group("#{records.table.name}.id")
+             .group(records.table_name)
              .order('COUNT(likes.id) DESC, created_at DESC')
     when 'least_likes'
       records.left_joins(:likes)
-             .group("#{records.table.name}.id")
+             .group(records.table_name)
              .order('COUNT(likes.id) ASC, created_at DESC')
     when 'most_posts'
       if records.model == Theme
