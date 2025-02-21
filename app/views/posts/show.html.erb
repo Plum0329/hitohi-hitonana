@@ -40,6 +40,10 @@
 
         <%= render partial: 'posts/post_content', locals: { content: @post.display_content } %>
 
+        <div class="text-muted mt-2">
+          <small>読み方：<%= @post.reading %></small>
+        </div>
+
         <div class="d-flex justify-content-end mt-3">
           <% if @show_like_button %>
             <%= render 'shared/like_button', likeable: @post %>
