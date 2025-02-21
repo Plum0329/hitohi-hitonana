@@ -82,6 +82,8 @@ GEM
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
+    brakeman (7.0.0)
+      racc
     builder (3.3.0)
     capybara (3.40.0)
       addressable
@@ -237,6 +239,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.10)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-test (2.1.0)
       rack (>= 1.3)
     rails (7.0.8.6)
@@ -323,6 +327,7 @@ GEM
       ffi (~> 1.12)
       logger
     rubyzip (2.3.2)
+    secure_headers (7.1.0)
     selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -386,6 +391,7 @@ DEPENDENCIES
   active_storage_validations
   activestorage-cloudinary-service
   bootsnap
+  brakeman
   capybara
   cloudinary
   cssbundling-rails
@@ -402,6 +408,7 @@ DEPENDENCIES
   mini_magick
   pg (~> 1.1)
   puma (~> 5.0)
+  rack-attack
   rails (~> 7.0.4, >= 7.0.4.3)
   recaptcha
   rspec-rails
@@ -410,6 +417,7 @@ DEPENDENCIES
   rubocop-factory_bot
   rubocop-rails
   rubocop-rspec
+  secure_headers
   selenium-webdriver
   sidekiq
   sorcery

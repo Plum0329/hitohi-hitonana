@@ -20,6 +20,8 @@ module App
 
     config.active_storage.variant_processor = :mini_magick
 
+    config.middleware.use Rack::Attack
+
     # config.active_job.queue_adapter = :sidekiq
 
     # Configuration for the application, engines, and railties goes here.
