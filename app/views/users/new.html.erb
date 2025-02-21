@@ -21,11 +21,13 @@
 
         <div class="mb-3">
           <%= f.label :email, 'メールアドレス', class: 'form-label' %>
+          <span class="text-muted small d-block">※登録後、確認メールが送信されます</span>
           <%= f.email_field :email, class: 'form-control' %>
         </div>
 
         <div class="mb-3">
-          <%= f.label :password, 'パスワード(3文字以上)', class: 'form-label' %>
+          <%= f.label :password, 'パスワード', class: 'form-label' %>
+          <span class="text-muted small d-block">(半角英字と数字をそれぞれ1文字以上含む8文字以上)</span>
           <%= f.password_field :password, class: 'form-control' %>
         </div>
 

@@ -61,10 +61,13 @@ ja:
               taken: 'は既に使用されています'
             password:
               blank: 'を入力してください'
-              too_short: 'は3文字以上で入力してください'
+              too_short: 'は%{count}文字以上で入力してください'
+              invalid: は半角英字と数字をそれぞれ1文字以上含む必要があります
             password_confirmation:
               blank: 'を入力してください'
               confirmation: 'とパスワードの入力が一致しません'
+        messages:
+          record_invalid: 'バリデーションに失敗しました: %{errors}'
         post:
           attributes:
             reading:
