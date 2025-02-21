@@ -66,6 +66,8 @@ ja:
             password_confirmation:
               blank: 'を入力してください'
               confirmation: 'とパスワードの入力が一致しません'
+        messages:
+          record_invalid: 'バリデーションに失敗しました: %{errors}'
         post:
           attributes:
             reading:
