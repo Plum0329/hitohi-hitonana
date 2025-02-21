@@ -167,19 +167,21 @@ class PostsController < ApplicationController
       if session[:theme_id]
         @theme = Theme.find(session[:theme_id])
         @post.theme = @theme
-      elsif session[:image_post_id]
-        @image_post = ImagePost.find(session[:image_post_id])
-        @post.image_post = @image_post
+      elsif session[:image_post_id] && !session[:no_image]
+        @image_post = ImagePost.find_by(id: session[:image_post_id])
+        if @image_post
+          @post.image_post = @image_post
 
-        theme = current_user.themes.build(
-          description: @image_post.description,
-          image_post: @image_post
-        )
+          theme = current_user.themes.build(
+            description: @image_post.description,
+            image_post: @image_post
+          )
 
-        theme.image.attach(@image_post.image.blob) if @image_post.image.present?
+          theme.image.attach(@image_post.image.blob) if @image_post.image.present?
 
-        theme.save
-        @post.theme = theme
+          theme.save
+          @post.theme = theme
+        end
       end
 
       tag_id = session[:post_params]['tag_id']
