@@ -14,7 +14,13 @@ class User < ApplicationRecord
   has_many :posts_reports
   has_many :themes_reports
 
-  validates :password, length: { minimum: 3 }, if: -> { new_record? || changes[:crypted_password] }
+  validates :password,
+            length: { minimum: 8 },
+            format: {
+              with: /\A(?=.*?[a-zA-Z])(?=.*?\d)[a-zA-Z\d]+\z/,
+              message: 'は半角英字と数字をそれぞれ1文字以上含む必要があります'
+            },
+            if: -> { new_record? || changes[:crypted_password] }
   validates :password, confirmation: true, if: -> { new_record? || changes[:crypted_password] }
   validates :password_confirmation, presence: true, if: -> { new_record? || changes[:crypted_password] }
   validates :email, uniqueness: true, presence: true
