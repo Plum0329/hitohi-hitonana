@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_20_014920) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_22_000144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -202,9 +202,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_20_014920) do
     t.boolean "email_confirmed", default: false
     t.string "confirmation_token"
     t.datetime "confirmation_sent_at"
+    t.datetime "last_posted_at"
+    t.datetime "last_general_post_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["last_general_post_at"], name: "index_users_on_last_general_post_at"
+    t.index ["last_posted_at"], name: "index_users_on_last_posted_at"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

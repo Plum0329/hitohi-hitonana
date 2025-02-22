@@ -19,7 +19,7 @@
         <%= link_to '句一覧を見る', posts_path, class: 'button button-info' %>
         <%= link_to 'お題一覧を見る', themes_path, class: 'button button-info' %>
         <div>
-          <%= link_to '句を詠む', new_image_post_path, class: 'button button-success' %>
+          <%= render 'shared/compose_button' %>
         </div>
       </div>
     <% end %>

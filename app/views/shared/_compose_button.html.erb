@@ -1,0 +1,11 @@
+<% if logged_in? %>
+  <% if current_user.can_post_general? %>
+    <%= link_to '句を詠む', new_image_post_path, class: 'button button-success ms-3' %>
+  <% else %>
+    <span data-tooltip="本日の投稿制限に達しました。明日また句を詠んでください。">
+      <button class="button ms-3 button-disabled" disabled>
+        句を詠む
+      </button>
+    </span>
+  <% end %>
+<% end %>

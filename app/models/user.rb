@@ -58,6 +58,12 @@ class User < ApplicationRecord
     save
   end
 
+  def can_post_general?
+    return true if last_general_post_at.nil?
+
+    last_general_post_at.in_time_zone('Asia/Tokyo').to_date < Date.current.in_time_zone('Asia/Tokyo').to_date
+  end
+
   private
 
   def generate_confirmation_token
