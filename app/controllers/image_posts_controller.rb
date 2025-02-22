@@ -4,6 +4,12 @@ class ImagePostsController < ApplicationController
   before_action :require_login
 
   def new
+    if !params[:theme_id] && !current_user.can_post_general?
+      flash[:alert] = '本日の投稿制限に達しました。明日また句を詠んでください。'
+      redirect_to root_path
+      return
+    end
+
     if params[:from_confirm]
       session[:from_confirm] = true
       session[:post_params] = {} unless session[:post_params].is_a?(Hash)

@@ -167,18 +167,16 @@ class PostsController < ApplicationController
       if session[:theme_id]
         @theme = Theme.find(session[:theme_id])
         @post.theme = @theme
+
       elsif session[:image_post_id] && !session[:no_image]
         @image_post = ImagePost.find_by(id: session[:image_post_id])
         if @image_post
           @post.image_post = @image_post
-
           theme = current_user.themes.build(
             description: @image_post.description,
             image_post: @image_post
           )
-
           theme.image.attach(@image_post.image.blob) if @image_post.image.present?
-
           theme.save
           @post.theme = theme
         end
@@ -191,6 +189,10 @@ class PostsController < ApplicationController
       end
 
       if @post.save
+        current_user.update(last_general_post_at: Time.current) unless @post.theme_id
+
+        current_user.update(last_general_post_at: Time.current) unless session[:theme_id]
+
         session[:post_params] = nil
         session.delete(:image_post_id)
         session.delete(:theme_id)
@@ -213,8 +215,8 @@ class PostsController < ApplicationController
       end
     end
   rescue StandardError => e
-    logger.error "Error in posts#create: #{e.message}"
-    logger.error e.backtrace.join("\n")
+    Rails.logger.error "Create Error: #{e.class} - #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
     redirect_to new_type_posts_path, alert: '投稿中にエラーが発生しました'
   end
 

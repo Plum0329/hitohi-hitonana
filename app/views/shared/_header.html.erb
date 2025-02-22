@@ -13,7 +13,7 @@
         <%= link_to profile_path, class: 'text-decoration-none text-dark' do %>
           <span class="fw-medium"><%= current_user.name %></span>
         <% end %>
-        <%= link_to '句を詠む', new_image_post_path, class: 'button button-success ms-3' %>
+        <%= render 'shared/compose_button' %>
       <% else %>
         <%= link_to 'ログイン', login_path, class: 'button' %>
         <%= link_to '新規登録', signup_path, class: 'button' %>

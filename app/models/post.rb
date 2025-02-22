@@ -53,8 +53,8 @@ class Post < ApplicationRecord
     syllable_count = count_syllables(reading)
     if syllable_count.zero?
       errors.add(:reading, :syllable_blank_reading)
-    elsif syllable_count > 20
-      errors.add(:reading, :syllable_count, count: 20, current: syllable_count)
+    elsif syllable_count > 24
+      errors.add(:reading, :syllable_count, count: 24, current: syllable_count)
     end
   end
 
