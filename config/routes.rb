@@ -60,6 +60,13 @@ Rails.application.routes.draw do
         post :reply
       end
     end
+
+    resources :announcements do
+      member do
+        patch :publish
+        patch :archive
+      end
+    end
   end
 
   root 'home#index'
@@ -178,6 +185,12 @@ Rails.application.routes.draw do
   resources :users do
     member do
       post :resend_confirmation
+    end
+  end
+
+  resources :announcements, only: [:index, :show] do
+    member do
+      post :mark_as_read
     end
   end
 

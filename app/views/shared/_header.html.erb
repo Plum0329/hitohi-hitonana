@@ -10,6 +10,17 @@
 
     <div class="header-right">
       <% if logged_in? %>
+        <%= link_to announcements_path, class: 'text-decoration-none text-dark me-3' do %>
+          <span class="fw-medium">
+            お知らせ
+            <% if current_user.unread_announcements.exists? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                <%= current_user.unread_announcements.count %>
+                <span class="visually-hidden">未読のお知らせ</span>
+              </span>
+            <% end %>
+          </span>
+        <% end %>
         <%= link_to profile_path, class: 'text-decoration-none text-dark' do %>
           <span class="fw-medium"><%= current_user.name %></span>
         <% end %>

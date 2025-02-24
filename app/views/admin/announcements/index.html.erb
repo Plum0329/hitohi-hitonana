@@ -1,0 +1,44 @@
+<h2>お知らせ一覧</h2>
+
+<div class="mb-3">
+  <%= link_to '新規作成', new_admin_announcement_path, class: 'btn btn-primary' %>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>タイトル</th>
+            <th>ステータス</th>
+            <th>優先度</th>
+            <th>公開日時</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @announcements.each do |announcement| %>
+            <tr>
+              <td><%= announcement.title %></td>
+              <td><span class="badge bg-<%= announcement.draft? ? 'secondary' : (announcement.published? ? 'success' : 'dark') %>"><%= announcement.status_i18n %></span></td>
+              <td><span class="badge bg-<%= announcement.urgent? ? 'danger' : (announcement.important? ? 'warning' : 'info') %>"><%= announcement.priority_i18n %></span></td>
+              <td><%= l announcement.published_at if announcement.published_at %></td>
+              <td>
+                <%= link_to '編集', edit_admin_announcement_path(announcement), class: 'btn btn-sm btn-outline-primary me-1' %>
+                <% if announcement.draft? %>
+                  <%= button_to '公開', publish_admin_announcement_path(announcement), method: :patch, class: 'btn btn-sm btn-outline-success', form: { class: 'd-inline-block' } %>
+                <% elsif announcement.published? %>
+                  <%= button_to 'アーカイブ', archive_admin_announcement_path(announcement), method: :patch, class: 'btn btn-sm btn-outline-secondary', form: { class: 'd-inline-block' } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer">
+    <%= paginate @announcements %>
+  </div>
+</div>

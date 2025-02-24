@@ -13,6 +13,8 @@ class User < ApplicationRecord
   has_many :themes_deletion_requests
   has_many :posts_reports
   has_many :themes_reports
+  has_many :announcement_reads, dependent: :destroy
+  has_many :read_announcements, through: :announcement_reads, source: :announcement
 
   validates :password,
             length: { minimum: 8 },
@@ -62,6 +64,10 @@ class User < ApplicationRecord
     return true if last_general_post_at.nil?
 
     last_general_post_at.in_time_zone('Asia/Tokyo').to_date < Date.current.in_time_zone('Asia/Tokyo').to_date
+  end
+
+  def unread_announcements
+    Announcement.active.where.not(id: read_announcements.pluck(:id))
   end
 
   private

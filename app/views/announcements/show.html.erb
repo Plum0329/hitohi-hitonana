@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title mb-3"><%= @announcement.title %></h3>
+      <div class="mb-3">
+        <span class="badge bg-<%= @announcement.urgent? ? 'danger' : (@announcement.important? ? 'warning' : 'info') %>">
+          <%= @announcement.priority_i18n %>
+        </span>
+        <small class="text-muted ms-2">
+          <%= l @announcement.published_at if @announcement.published_at %>
+        </small>
+      </div>
+      <div class="card-text">
+        <%= simple_format @announcement.content %>
+      </div>
+      <%= link_to '一覧に戻る', announcements_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
