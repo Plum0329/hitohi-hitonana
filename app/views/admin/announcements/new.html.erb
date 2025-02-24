@@ -1,0 +1,48 @@
+<h2>お知らせ新規作成</h2>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with(model: [:admin, @announcement], local: true) do |f| %>
+      <% if @announcement.errors.any? %>
+        <div class="alert alert-danger">
+          <h5><%= pluralize(@announcement.errors.count, 'error') %>が発生しました:</h5>
+          <ul>
+            <% @announcement.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= f.label :title, class: 'form-label' %>
+        <%= f.text_field :title, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :content, class: 'form-label' %>
+        <%= f.text_area :content, rows: 10, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :status, class: 'form-label' %>
+        <%= f.select :status, Announcement.statuses_i18n.invert, {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :priority, class: 'form-label' %>
+        <%= f.select :priority, Announcement.priorities_i18n.invert, {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :published_at, class: 'form-label' %>
+        <%= f.datetime_field :published_at, class: 'form-control' %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= f.submit class: 'btn btn-primary' %>
+        <%= link_to '戻る', admin_announcements_path, class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>
