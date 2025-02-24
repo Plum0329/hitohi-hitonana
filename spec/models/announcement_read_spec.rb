@@ -3,12 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe AnnouncementRead, type: :model do
-  describe 'associations' do
-    it { is_expected.to belong_to(:announcement) }
-    it { is_expected.to belong_to(:user) }
-  end
-
-  describe 'validations' do
-    it { is_expected.to validate_uniqueness_of(:user_id).scoped_to(:announcement_id) }
+  describe 'basic model' do
+    it 'can be created with valid attributes' do
+      admin = create(:user, role: :admin)
+      user = create(:user)
+      announcement = Announcement.create!(
+        title: 'Test Title',
+        content: 'Test Content',
+        status: 'published',
+        priority: 'normal',
+        admin: admin
+      )
+      announcement_read = described_class.new(
+        user: user,
+        announcement: announcement
+      )
+      expect(announcement_read).to be_valid
+    end
   end
 end

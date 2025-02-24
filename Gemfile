@@ -84,6 +84,8 @@ group :development, :test do
   gem 'faker'
   gem 'rspec-rails'
   gem 'timecop'
+  gem 'rails-controller-testing'
+  gem 'shoulda-matchers'
 end
 
 group :development do
