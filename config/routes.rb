@@ -67,6 +67,13 @@ Rails.application.routes.draw do
         patch :archive
       end
     end
+
+    resources :direct_messages do
+      member do
+        patch :publish
+        patch :archive
+      end
+    end
   end
 
   root 'home#index'
@@ -189,6 +196,12 @@ Rails.application.routes.draw do
   end
 
   resources :announcements, only: [:index, :show] do
+    member do
+      post :mark_as_read
+    end
+  end
+
+  resources :direct_messages, only: [:index, :show] do
     member do
       post :mark_as_read
     end

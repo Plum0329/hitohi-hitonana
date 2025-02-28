@@ -2,28 +2,50 @@
   <h2 class="mb-4">お知らせ一覧</h2>
 
   <div class="row">
-    <% @announcements.each do |announcement| %>
-      <div class="col-12 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><%= link_to announcement.title, announcement_path(announcement) %></h5>
-            <div class="mb-2">
-              <span class="badge bg-<%= announcement.urgent? ? 'danger' : (announcement.important? ? 'warning' : 'info') %>">
-                <%= announcement.priority_i18n %>
-              </span>
-              <small class="text-muted ms-2">
-                <%= l announcement.published_at if announcement.published_at %>
-              </small>
+    <% @notifications.each do |notification| %>
+      <div class="col-12 mb-2">
+        <% if notification.is_a?(Announcement) %>
+          <%= link_to announcement_path(notification), class: "text-decoration-none" do %>
+            <div class="card">
+              <div class="card-body py-2">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-megaphone text-primary"></i>
+                  <span class="badge bg-<%= notification.urgent? ? 'danger' : (notification.important? ? 'warning' : 'info') %>">
+                    <%= notification.priority_i18n %>
+                  </span>
+                  <span class="text-dark"><%= notification.title %></span>
+                  <small class="text-muted ms-auto"><%= l notification.published_at, format: :short if notification.published_at %></small>
+                  <% if logged_in? && !notification.announcement_reads.exists?(user: current_user) %>
+                    <span class="badge bg-success">新着</span>
+                  <% end %>
+                </div>
+              </div>
             </div>
-            <p class="card-text"><%= truncate(announcement.content, length: 200) %></p>
-            <%= link_to '続きを読む', announcement_path(announcement), class: 'btn btn-link p-0' %>
-          </div>
-        </div>
+          <% end %>
+        <% else %>
+          <%= link_to direct_message_path(notification), class: "text-decoration-none" do %>
+            <div class="card border-info">
+              <div class="card-body py-2">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-envelope text-info"></i>
+                  <span class="badge bg-<%= notification.urgent? ? 'danger' : (notification.important? ? 'warning' : 'info') %>">
+                    <%= notification.priority_i18n %>
+                  </span>
+                  <span class="text-dark"><%= notification.title %></span>
+                  <% if logged_in? && !notification.direct_message_reads.exists?(user: current_user) %>
+                    <span class="badge bg-success">新着</span>
+                  <% end %>
+                  <small class="text-muted ms-auto"><%= l notification.published_at, format: :short if notification.published_at %></small>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
   </div>
 
-  <div class="d-flex justify-content-center">
-    <%= paginate @announcements %>
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @notifications %>
   </div>
 </div>

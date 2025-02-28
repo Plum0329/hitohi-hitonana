@@ -1,0 +1,53 @@
+<h2>ダイレクトメッセージ新規作成</h2>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with(model: [:admin, @direct_message], local: true) do |f| %>
+      <% if @direct_message.errors.any? %>
+        <div class="alert alert-danger">
+          <h5><%= pluralize(@direct_message.errors.count, 'error') %>が発生しました:</h5>
+          <ul>
+            <% @direct_message.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= f.label :recipient_id, '送信先', class: 'form-label' %>
+        <%= f.collection_select :recipient_id, @users, :id, :name, { prompt: '選択してください' }, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :title, class: 'form-label' %>
+        <%= f.text_field :title, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :content, class: 'form-label' %>
+        <%= f.text_area :content, rows: 10, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :status, class: 'form-label' %>
+        <%= f.select :status, DirectMessage.statuses_i18n.invert, {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :priority, class: 'form-label' %>
+        <%= f.select :priority, DirectMessage.priorities_i18n.invert, {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :published_at, class: 'form-label' %>
+        <%= f.datetime_field :published_at, class: 'form-control' %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= f.submit class: 'btn btn-primary' %>
+        <%= link_to '戻る', admin_direct_messages_path, class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

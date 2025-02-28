@@ -49,5 +49,10 @@
         class: "list-group-item list-group-item-action #{controller_name == 'announcements' ? 'active' : ''}" do %>
       お知らせ管理
     <% end %>
+
+    <%= link_to admin_direct_messages_path,
+        class: "list-group-item list-group-item-action #{controller_name == 'direct_messages' ? 'active' : ''}" do %>
+      メッセージ管理
+    <% end %>
   </div>
 </div>
