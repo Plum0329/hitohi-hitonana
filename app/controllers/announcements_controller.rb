@@ -2,7 +2,21 @@
 
 class AnnouncementsController < ApplicationController
   def index
-    @announcements = Announcement.active.recent.page(params[:page])
+    @announcements = Announcement.active.recent
+
+    if logged_in?
+      @direct_messages = current_user.received_direct_messages
+                                     .active
+                                     .recent
+
+      @notifications = (@announcements + @direct_messages)
+                       .sort_by { |n| n.published_at || n.created_at }
+                       .reverse
+    else
+      @notifications = @announcements
+    end
+
+    @notifications = Kaminari.paginate_array(@notifications).page(params[:page])
   end
 
   def show

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_24_054758) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_27_160620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,16 +64,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_24_054758) do
     t.index ["admin_id"], name: "index_announcements_on_admin_id"
   end
 
-  create_table "contact_reply_templates", force: :cascade do |t|
-    t.string "title", null: false
-    t.text "content", null: false
-    t.string "category", null: false
-    t.boolean "default", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category", "default"], name: "index_contact_reply_templates_on_category_and_default"
-  end
-
   create_table "contacts", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -90,6 +80,30 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_24_054758) do
     t.index ["category"], name: "index_contacts_on_category"
     t.index ["created_at"], name: "index_contacts_on_created_at"
     t.index ["status"], name: "index_contacts_on_status"
+  end
+
+  create_table "direct_message_reads", force: :cascade do |t|
+    t.bigint "direct_message_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["direct_message_id", "user_id"], name: "index_direct_message_reads_on_direct_message_id_and_user_id", unique: true
+    t.index ["direct_message_id"], name: "index_direct_message_reads_on_direct_message_id"
+    t.index ["user_id"], name: "index_direct_message_reads_on_user_id"
+  end
+
+  create_table "direct_messages", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "content", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "priority", default: 0, null: false
+    t.datetime "published_at"
+    t.bigint "admin_id", null: false
+    t.bigint "recipient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_direct_messages_on_admin_id"
+    t.index ["recipient_id"], name: "index_direct_messages_on_recipient_id"
   end
 
   create_table "image_posts", force: :cascade do |t|
@@ -224,13 +238,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_24_054758) do
     t.boolean "email_confirmed", default: false
     t.string "confirmation_token"
     t.datetime "confirmation_sent_at"
-    t.datetime "last_posted_at"
     t.datetime "last_general_post_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["last_general_post_at"], name: "index_users_on_last_general_post_at"
-    t.index ["last_posted_at"], name: "index_users_on_last_posted_at"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -238,6 +250,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_24_054758) do
   add_foreign_key "announcement_reads", "announcements"
   add_foreign_key "announcement_reads", "users"
   add_foreign_key "announcements", "users", column: "admin_id"
+  add_foreign_key "direct_message_reads", "direct_messages"
+  add_foreign_key "direct_message_reads", "users"
+  add_foreign_key "direct_messages", "users", column: "admin_id"
+  add_foreign_key "direct_messages", "users", column: "recipient_id"
   add_foreign_key "likes", "users"
   add_foreign_key "post_tags", "posts"
   add_foreign_key "post_tags", "tags"

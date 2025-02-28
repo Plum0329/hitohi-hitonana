@@ -31,4 +31,18 @@ module ApplicationHelper
       'bg-gray-100 border border-gray-400 text-gray-700'
     end
   end
+
+  def unread_notifications_count
+    return 0 unless logged_in?
+
+    unread_announcements = Announcement.active
+                                       .where.not(id: current_user.announcement_reads.select(:announcement_id))
+                                       .count
+
+    unread_messages = current_user.received_direct_messages.active
+                                  .where.not(id: current_user.direct_message_reads.select(:direct_message_id))
+                                  .count
+
+    unread_announcements + unread_messages
+  end
 end

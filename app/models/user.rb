@@ -15,6 +15,10 @@ class User < ApplicationRecord
   has_many :themes_reports
   has_many :announcement_reads, dependent: :destroy
   has_many :read_announcements, through: :announcement_reads, source: :announcement
+  has_many :direct_message_reads, dependent: :destroy
+  has_many :read_direct_messages, through: :direct_message_reads, source: :direct_message
+  has_many :received_direct_messages, class_name: 'DirectMessage', foreign_key: 'recipient_id'
+  has_many :sent_direct_messages, class_name: 'DirectMessage', foreign_key: 'admin_id'
 
   validates :password,
             length: { minimum: 8 },
@@ -68,6 +72,10 @@ class User < ApplicationRecord
 
   def unread_announcements
     Announcement.active.where.not(id: read_announcements.pluck(:id))
+  end
+
+  def unread_direct_messages
+    received_direct_messages.active.where.not(id: read_direct_messages.pluck(:id))
   end
 
   private

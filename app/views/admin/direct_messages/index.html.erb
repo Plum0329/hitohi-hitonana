@@ -1,0 +1,46 @@
+<h2>ダイレクトメッセージ一覧</h2>
+
+<div class="mb-3">
+  <%= link_to '新規作成', new_admin_direct_message_path, class: 'btn btn-primary' %>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>タイトル</th>
+            <th>送信先</th>
+            <th>ステータス</th>
+            <th>優先度</th>
+            <th>公開日時</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @direct_messages.each do |direct_message| %>
+            <tr>
+              <td><%= direct_message.title %></td>
+              <td><%= direct_message.recipient.name %></td>
+              <td><span class="badge bg-<%= direct_message.draft? ? 'secondary' : (direct_message.published? ? 'success' : 'dark') %>"><%= direct_message.status_i18n %></span></td>
+              <td><span class="badge bg-<%= direct_message.urgent? ? 'danger' : (direct_message.important? ? 'warning' : 'info') %>"><%= direct_message.priority_i18n %></span></td>
+              <td><%= l direct_message.published_at if direct_message.published_at %></td>
+              <td>
+                <%= link_to '編集', edit_admin_direct_message_path(direct_message), class: 'btn btn-sm btn-outline-primary me-1' %>
+                <% if direct_message.draft? %>
+                  <%= button_to '公開', publish_admin_direct_message_path(direct_message), method: :patch, class: 'btn btn-sm btn-outline-success', form: { class: 'd-inline-block' } %>
+                <% elsif direct_message.published? %>
+                  <%= button_to 'アーカイブ', archive_admin_direct_message_path(direct_message), method: :patch, class: 'btn btn-sm btn-outline-secondary', form: { class: 'd-inline-block' } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer">
+    <%= paginate @direct_messages %>
+  </div>
+</div>

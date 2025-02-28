@@ -12,6 +12,7 @@ ja:
       themes_report: 'お題報告'
       contact_reply_template: '返信テンプレート'
       announcement: 'お知らせ'
+      direct_message: 'ダイレクトメッセージ'
     attributes:
       user:
         name: '名前'
@@ -55,6 +56,13 @@ ja:
         content: '内容'
         status: 'ステータス'
         priority: '優先度'
+        published_at: '公開日時'
+      direct_message:
+        title: 'タイトル'
+        content: '内容'
+        status: 'ステータス'
+        priority: '優先度'
+        recipient_id: '送信先'
         published_at: '公開日時'
 
     errors:
@@ -229,6 +237,15 @@ ja:
           normal: '通常'
           important: '重要'
           urgent: '緊急'
+    direct_message:
+      status:
+        draft: '下書き'
+        published: '公開済'
+        archived: 'アーカイブ'
+      priority:
+        normal: '通常'
+        important: '重要'
+        urgent: '緊急'
 
   user_sessions:
     new:
