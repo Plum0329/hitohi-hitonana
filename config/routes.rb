@@ -72,6 +72,7 @@ Rails.application.routes.draw do
       member do
         patch :publish
         patch :archive
+        get :new_reply
       end
     end
   end
@@ -204,6 +205,7 @@ Rails.application.routes.draw do
   resources :direct_messages, only: [:index, :show] do
     member do
       post :mark_as_read
+      post :create_reply
     end
   end
 

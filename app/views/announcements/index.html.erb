@@ -23,6 +23,9 @@
             </div>
           <% end %>
         <% else %>
+          <%
+            is_unread = !notification.direct_message_reads.exists?(user: current_user)
+          %>
           <%= link_to direct_message_path(notification), class: "text-decoration-none" do %>
             <div class="card border-info">
               <div class="card-body py-2">
@@ -32,10 +35,12 @@
                     <%= notification.priority_i18n %>
                   </span>
                   <span class="text-dark"><%= notification.title %></span>
-                  <% if logged_in? && !notification.direct_message_reads.exists?(user: current_user) %>
-                    <span class="badge bg-success">新着</span>
-                  <% end %>
-                  <small class="text-muted ms-auto"><%= l notification.published_at, format: :short if notification.published_at %></small>
+                  <div class="ms-auto d-flex align-items-center gap-2">
+                    <% if is_unread %>
+                      <span class="badge bg-primary">新着</span>
+                    <% end %>
+                    <small class="text-muted"><%= l notification.published_at, format: :short if notification.published_at %></small>
+                  </div>
                 </div>
               </div>
             </div>
