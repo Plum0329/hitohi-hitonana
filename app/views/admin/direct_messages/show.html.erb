@@ -1,0 +1,75 @@
+<h2>ダイレクトメッセージ詳細</h2>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h3 class="card-title mb-3"><%= @direct_message.title %></h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <span class="badge bg-<%= @direct_message.urgent? ? 'danger' : (@direct_message.important? ? 'warning' : 'info') %>">
+          <%= @direct_message.priority_i18n %>
+        </span>
+        <span class="badge bg-<%= @direct_message.published? ? 'success' : (@direct_message.draft? ? 'secondary' : 'dark') %> ms-2">
+          <%= @direct_message.status_i18n %>
+        </span>
+        <small class="text-muted ms-2">
+          送信日時: <%= l @direct_message.published_at if @direct_message.published_at %>
+        </small>
+        <small class="text-muted ms-2">
+          送信先: <%= @direct_message.recipient.name %>
+        </small>
+        <% if @direct_message.allow_reply? %>
+          <span class="badge bg-success ms-2">返信許可</span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card-text mb-3">
+      <%= simple_format @direct_message.content %>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <%= link_to '一覧に戻る', admin_direct_messages_path, class: 'btn btn-secondary' %>
+        <%= link_to '編集', edit_admin_direct_message_path(@direct_message), class: 'btn btn-primary ms-2' %>
+        <%= link_to 'メッセージに返信', new_reply_admin_direct_message_path(@direct_message), class: 'btn btn-info ms-2' %>
+      </div>
+      <div>
+        <% if @direct_message.draft? %>
+          <%= button_to '公開する', publish_admin_direct_message_path(@direct_message), method: :patch, class: 'btn btn-success' %>
+        <% elsif @direct_message.published? %>
+          <%= button_to 'アーカイブする', archive_admin_direct_message_path(@direct_message), method: :patch, class: 'btn btn-warning' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @replies.any? %>
+  <h3>返信一覧</h3>
+  <div class="list-group mb-4">
+    <% @replies.each do |reply| %>
+      <div class="list-group-item <%= reply.admin.admin? ? 'bg-light' : '' %>">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5><%= reply.title %></h5>
+          <small class="text-muted">
+            <%= l reply.created_at, format: :long %>
+          </small>
+        </div>
+        <p class="mb-1">
+          <%= simple_format reply.content %>
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+          <small class="text-muted">
+            送信者: <%= reply.admin.admin? ? "
+            <% if reply.allow_reply? %>
+              <span class="badge bg-success ms-2">返信許可</span>
+            <% end %>
+          </small>
+          <div>
+            <%= link_to 'この返信に返信', new_reply_admin_direct_message_path(reply), class: 'btn btn-sm btn-outline-primary ms-2' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

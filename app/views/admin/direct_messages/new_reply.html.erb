@@ -1,0 +1,76 @@
+<h2>返信メッセージ作成</h2>
+
+<div class="card mb-4">
+  <div class="card-header">
+    <%= @original_reply ? "以下のメッセージへの返信" : "元のメッセージ" %>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"><%= @original_reply&.title || @parent_message.title %></h5>
+    <p class="card-text"><%= simple_format @original_reply&.content || @parent_message.content %></p>
+    <p class="card-text">
+      <small class="text-muted">
+        送信者: <%= (@original_reply || @parent_message).admin.name %>
+        <% if (@original_reply || @parent_message).admin.admin? %>
+          (管理者)
+        <% end %>
+        <br>
+        日時: <%= l (@original_reply || @parent_message).created_at, format: :long %>
+      </small>
+    </p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with(model: [:admin, @direct_message], local: true) do |f| %>
+      <% if @direct_message.errors.any? %>
+        <div class="alert alert-danger">
+          <h5><%= pluralize(@direct_message.errors.count, 'error') %>が発生しました:</h5>
+          <ul>
+            <% @direct_message.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= f.hidden_field :parent_id %>
+      <%= f.hidden_field :recipient_id %>
+
+      <div class="mb-3">
+        <%= f.label :title, class: 'form-label' %>
+        <%= f.text_field :title, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :content, class: 'form-label' %>
+        <%= f.text_area :content, rows: 10, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :status, class: 'form-label' %>
+        <%= f.select :status, DirectMessage.statuses_i18n.invert, {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :priority, class: 'form-label' %>
+        <%= f.select :priority, DirectMessage.priorities_i18n.invert, {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :published_at, class: 'form-label' %>
+        <%= f.datetime_field :published_at, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= f.check_box :allow_reply, class: 'form-check-input' %>
+        <%= f.label :allow_reply, '返信を許可する', class: 'form-check-label' %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= f.submit class: 'btn btn-primary' %>
+        <%= link_to '戻る', admin_direct_message_path(@parent_message.root? ? @parent_message : @parent_message.parent), class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

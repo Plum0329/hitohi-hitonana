@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="card">
+  <div class="card mb-4">
     <div class="card-body">
       <h3 class="card-title mb-3"><%= @direct_message.title %></h3>
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -22,4 +22,64 @@
       </div>
     </div>
   </div>
+
+  <% if @replies.any? %>
+    <h4 class="mt-4 mb-3">返信履歴</h4>
+    <div class="list-group mb-4">
+      <% @replies.each do |reply| %>
+        <div class="list-group-item <%= reply.admin.admin? ? 'bg-light' : '' %>">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5><%= reply.title %></h5>
+            <small class="text-muted">
+              <%= l reply.created_at, format: :long %>
+            </small>
+          </div>
+          <p class="mb-1">
+            <%= simple_format reply.content %>
+          </p>
+          <div class="d-flex align-items-center">
+            <% if reply.allow_reply? %>
+              <span class="badge bg-success">返信可</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @reply %>
+    <div class="card mt-4">
+      <div class="card-header">
+        返信する
+      </div>
+      <div class="card-body">
+        <%= form_with model: @reply, url: create_reply_direct_message_path(@direct_message), local: true do |f| %>
+          <% if @reply&.errors&.any? %>
+            <div class="alert alert-danger">
+              <h5><%= pluralize(@reply.errors.count, 'error') %>が発生しました:</h5>
+              <ul>
+                <% @reply.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= f.label :title, class: 'form-label' %>
+            <%= f.text_field :title, value: "Re:
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :content, class: 'form-label' %>
+            <%= f.text_area :content, rows: 5, class: 'form-control', placeholder: '返信内容を入力してください' %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit '返信を送信', class: 'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>

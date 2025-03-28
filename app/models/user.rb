@@ -75,7 +75,30 @@ class User < ApplicationRecord
   end
 
   def unread_direct_messages
-    received_direct_messages.active.where.not(id: read_direct_messages.pluck(:id))
+    root_message_ids = received_direct_messages.roots.active.pluck(:id)
+    unread_roots = received_direct_messages.roots.active.where.not(id: read_direct_messages.pluck(:id))
+
+    read_root_ids = direct_message_reads
+                    .joins(:direct_message)
+                    .where(direct_messages: { id: root_message_ids, status: DirectMessage.statuses[:published] })
+                    .pluck(:direct_message_id)
+
+    messages_with_new_replies = []
+
+    read_root_ids.each do |root_id|
+      root_message = DirectMessage.find_by(id: root_id)
+      next unless root_message
+
+      dm_read = direct_message_reads.find_by(direct_message_id: root_id)
+      read_at = dm_read&.updated_at || dm_read&.created_at
+      next unless read_at
+
+      latest_replies = root_message.replies.active.where('created_at > ?', read_at)
+
+      messages_with_new_replies << root_message if latest_replies.exists?
+    end
+
+    (unread_roots + messages_with_new_replies).uniq
   end
 
   private

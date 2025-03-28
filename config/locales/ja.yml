@@ -64,6 +64,8 @@ ja:
         priority: '優先度'
         recipient_id: '送信先'
         published_at: '公開日時'
+        allow_reply: '返信許可'
+        parent_id: '親メッセージ'
 
     errors:
       models:
@@ -268,6 +270,23 @@ ja:
     user_sessions:
       destroy:
         success: 'ログアウトしました'
+    direct_messages:
+      publish:
+        success: 'メッセージを公開しました'
+        failure: 'メッセージの公開に失敗しました'
+      archive:
+        success: 'メッセージをアーカイブしました'
+        failure: 'メッセージのアーカイブに失敗しました'
+      create:
+        success: 'メッセージを作成しました'
+      update:
+        success: 'メッセージを更新しました'
+
+  direct_messages:
+    create_reply:
+      success: '返信を送信しました'
+      failure: '返信の送信に失敗しました'
+      not_allowed: 'このメッセージには返信できません'
 
   posts_reports:
     reason_categories:

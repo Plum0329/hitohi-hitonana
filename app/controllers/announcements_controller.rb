@@ -6,6 +6,7 @@ class AnnouncementsController < ApplicationController
 
     if logged_in?
       @direct_messages = current_user.received_direct_messages
+                                     .roots
                                      .active
                                      .recent
 

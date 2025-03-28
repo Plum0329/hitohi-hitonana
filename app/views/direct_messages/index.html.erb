@@ -1,0 +1,56 @@
+<div class="container">
+  <h2>受信メッセージ一覧</h2>
+
+  <% if @direct_messages.any? %>
+    <div class="list-group mb-4">
+      <% @direct_messages.each do |message| %>
+        <%
+          is_unread = !current_user.read_direct_messages.include?(message)
+
+          has_new_replies = false
+          read_at = current_user.direct_message_reads.find_by(direct_message: message)&.created_at
+
+          if read_at && message.replies.exists?
+            latest_reply = message.replies.active.order(created_at: :desc).first
+            has_new_replies = latest_reply && latest_reply.created_at > read_at
+          end
+        %>
+
+        <%= link_to direct_message_path(message), class: "list-group-item list-group-item-action #{is_unread || has_new_replies ? 'list-group-item-light' : ''}" do %>
+          <div class="d-flex w-100 justify-content-between align-items-center">
+            <h5 class="mb-1">
+              <%= message.title %>
+              <% if is_unread %>
+                <span class="badge rounded-pill bg-primary ms-2">未読</span>
+              <% elsif has_new_replies %>
+                <span class="badge rounded-pill bg-info ms-2">新着返信</span>
+              <% end %>
+            </h5>
+            <small class="text-muted">
+              <%= l message.published_at, format: :long if message.published_at %>
+            </small>
+          </div>
+          <div class="d-flex w-100 justify-content-between align-items-center">
+            <div>
+              <span class="badge bg-<%= message.urgent? ? 'danger' : (message.important? ? 'warning' : 'info') %>">
+                <%= message.priority_i18n %>
+              </span>
+              <% if message.allow_reply? %>
+                <span class="badge bg-success ms-1">返信可</span>
+              <% end %>
+              <% if message.replies.exists? %>
+                <span class="badge bg-secondary ms-1">返信 <%= message.replies.count %> 件</span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%= paginate @direct_messages %>
+  <% else %>
+    <div class="alert alert-info">
+      受信メッセージはありません。
+    </div>
+  <% end %>
+</div>

@@ -44,6 +44,11 @@
         <%= f.datetime_field :published_at, class: 'form-control' %>
       </div>
 
+      <div class="mb-3 form-check">
+        <%= f.check_box :allow_reply, class: 'form-check-input' %>
+        <%= f.label :allow_reply, '返信を許可する', class: 'form-check-label' %>
+      </div>
+
       <div class="d-flex gap-2">
         <%= f.submit class: 'btn btn-primary' %>
         <%= link_to '戻る', admin_direct_messages_path, class: 'btn btn-secondary' %>

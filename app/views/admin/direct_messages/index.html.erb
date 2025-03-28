@@ -15,6 +15,7 @@
             <th>ステータス</th>
             <th>優先度</th>
             <th>公開日時</th>
+            <th>返信</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -27,6 +28,15 @@
               <td><span class="badge bg-<%= direct_message.urgent? ? 'danger' : (direct_message.important? ? 'warning' : 'info') %>"><%= direct_message.priority_i18n %></span></td>
               <td><%= l direct_message.published_at if direct_message.published_at %></td>
               <td>
+                <% if direct_message.replies.exists? %>
+                  <span class="badge bg-info"><%= direct_message.replies.count %> 件</span>
+                <% end %>
+                <% if direct_message.allow_reply? %>
+                  <span class="badge bg-success">返信許可</span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to '詳細', admin_direct_message_path(direct_message), class: 'btn btn-sm btn-outline-info me-1' %>
                 <%= link_to '編集', edit_admin_direct_message_path(direct_message), class: 'btn btn-sm btn-outline-primary me-1' %>
                 <% if direct_message.draft? %>
                   <%= button_to '公開', publish_admin_direct_message_path(direct_message), method: :patch, class: 'btn btn-sm btn-outline-success', form: { class: 'd-inline-block' } %>
